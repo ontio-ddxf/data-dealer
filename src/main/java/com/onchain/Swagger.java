@@ -30,7 +30,7 @@ public class Swagger {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sst"))
+                .apis(RequestHandlerSelectors.basePackage("com.onchain"))
                 .paths(PathSelectors.any())
                 .build().globalOperationParameters(pars)  ;
     }
@@ -38,10 +38,10 @@ public class Swagger {
     @SuppressWarnings("deprecation")
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("测试")
+                .title("data_dealer")
                 .description("测试")
                 .termsOfServiceUrl("")
-                .contact("测试")
+                .contact("lj")
                 .version("1.0")
                 .build();
     }

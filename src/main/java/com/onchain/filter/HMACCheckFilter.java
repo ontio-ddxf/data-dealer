@@ -37,8 +37,8 @@ import static com.onchain.utils.Constant.EXPIRED_SECOND;
  * @date 2018/8/27
  */
 @Slf4j
-@Order(2)
-@Component
+//@Order(2)
+//@Component
 public class HMACCheckFilter implements Filter {
 
     private static final String TEST_URI = "/api/v1/ontid/test/";
@@ -57,18 +57,19 @@ public class HMACCheckFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
+
         MyHttpRequest myrequest = new MyHttpRequest((HttpServletRequest) servletRequest);
         String appVersion = myrequest.getHeader("Version");
         //只针对有风险的API做检查
         String reqUri = myrequest.getRequestURI();
-        if (!reqUri.contains(TEST_URI)) {
-            try {
-                checkReqHeaderHmac(myrequest);
-            } catch (Exception e) {
-                log.error("header-error:{}", e.toString());
-                throw new OntIdException("HMAC verify", ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
-            }
-        }
+//        if (!reqUri.contains(TEST_URI)) {
+//            try {
+//                checkReqHeaderHmac(myrequest);
+//            } catch (Exception e) {
+//                log.error("header-error:{}", e.toString());
+//                throw new OntIdException("HMAC verify", ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
+//            }
+//        }
         chain.doFilter(myrequest, response);
     }
 

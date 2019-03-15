@@ -1,5 +1,6 @@
 package com.onchain.filter;
 
+import com.onchain.utils.Helper;
 import org.apache.commons.io.IOUtils;
 
 import org.slf4j.Logger;
@@ -83,7 +84,11 @@ public class MyHttpRequest extends HttpServletRequestWrapper {
     public Map<String, List<String>> doParameter() throws UnsupportedEncodingException {
         if (readMap == 0) {
             //这里把post里的参数和地址栏参数结合到一起,然后解析
-            body = new String(bytes, getCharacterEncoding()) + "&" + queryString;
+            if (Helper.isEmptyOrNull(queryString)) {
+                body = new String(bytes, getCharacterEncoding());
+            } else {
+                body = new String(bytes, getCharacterEncoding()) + "&" + queryString;
+            }
             String[] nameVals = body.split("&");
             map = new HashMap<String, List<String>>();
             for (String nameVal : nameVals) {
