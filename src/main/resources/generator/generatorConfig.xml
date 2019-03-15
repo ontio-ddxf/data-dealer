@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE generatorConfiguration
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="" />
+        <property name="endingDelimiter" value="" />
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper" />
+            <property name="caseSensitive" value="true" />
+        </plugin>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://139.219.136.188:3306/ontid?characterEncoding=UTF-8" userId="root"
+            password="ontidpasswd" />
+
+
+        <javaModelGenerator targetPackage="com.onchain.dao" targetProject="src/main/java">
+            <!-- 是否对model添加 构造函数 -->
+            <property name="constructorBased" value="false" />
+            <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 是否对类CHAR类型的列的数据进行trim操作 -->
+            <property name="trimStrings" value="true" />
+            <!-- 建立的Model对象是否 不可改变  即生成的Model对象不会有 setter方法，只有构造方法 -->
+            <property name="immutable" value="false" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.onchain.mapper" targetProject="src/main/java"
+            type="XMLMAPPER">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        <table tableName="tbl_ont_developer" domainObjectName="Developer">
+            <generatedKey column="id" sqlStatement="JDBC" />
+        </table>
+        <table tableName="tbl_ontid" domainObjectName="OntId">
+            <generatedKey column="id" sqlStatement="JDBC" />
+        </table>
+        <table tableName="tbl_sms" domainObjectName="SMS">
+            <generatedKey column="id" sqlStatement="JDBC" />
+        </table>
+        <table tableName="tbl_secure" domainObjectName="Secure">
+            <generatedKey column="id" sqlStatement="JDBC" />
+        </table>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onchain.mapper.OntIdMapper">
+  <resultMap id="BaseResultMap" type="com.onchain.dao.OntId">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ontid" jdbcType="VARCHAR" property="ontid" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="keystore" jdbcType="LONGVARCHAR" property="keystore" />
+    <result column="tx" jdbcType="LONGVARCHAR" property="tx" />
+  </resultMap>
+</mapper>
