@@ -29,7 +29,7 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderMapper orderMapper;
 
     @Override
-    public void purchaseData(String action, String ontid, String password, String supplyOntid, List<Integer> productIds, Double price) throws Exception {
+    public void purchaseData(String action, String ontid, String password, String supplyOntid, List<Integer> productIds, String price) throws Exception {
         OntId ontId = new OntId();
         ontId.setOntid(ontid);
         ontId = ontIdMapper.selectOne(ontId);
@@ -49,6 +49,11 @@ public class BuyerServiceImpl implements BuyerService {
         String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
 
         Order order = new Order();
+        order.setOntid(ontid);
+        order.setSupplyOntid(supplyOntid);
+        order.setTx(txHash);
+        order.setState(1);
+        orderMapper.insertSelective(order);
     }
 
 }
