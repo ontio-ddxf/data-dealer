@@ -73,10 +73,15 @@ CREATE TABLE `tbl_sms` (
 -- ----------------------------
 DROP TABLE IF EXISTS `tbl_order`;
 CREATE TABLE `tbl_order` (
-  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `ontid` varchar(255) DEFAULT NULL,
-  `supply_ontid` varchar(255) DEFAULT NULL,
-  `tx` text,
-  `state` int(2) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+`id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+`buyer_ontid` varchar(255) DEFAULT NULL,
+`supply_ontid` varchar(255) DEFAULT NULL,
+`buyer_tx` text,
+`supply_tx` text,
+`buyer_event` text,
+`supply_event` text,
+`buyer_height` int(10) DEFAULT NULL,
+`supply_height` int(10) DEFAULT NULL,
+`state` int(2) DEFAULT NULL,
+PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

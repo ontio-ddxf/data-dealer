@@ -43,6 +43,41 @@ method：POST
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回ontid，失败返回""  |
 
+### 获取验证码
+```text
+url : /api/v1/ontid/getcode/phone
+method:POST
+```
+
+请求：
+```json
+{
+    "number":"86*15821703553"
+}
+```
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    number|   String|  区号+*+手机号码  |
+
+返回：
+```json
+{
+    "action":"getVerifyCode",
+    "version":"v1",
+    "error":0,
+    "desc":"SUCCESS",
+    "result": true
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   bool|  发送结果（成功，失败）  |
+
 ### keystore注册
 1. [获取验证码](#获取验证码)
 2. 提交号码，验证码，keystore，keystore对应的密码

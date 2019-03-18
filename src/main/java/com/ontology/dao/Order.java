@@ -13,11 +13,21 @@ public class Order {
     @GeneratedValue(generator = "JDBC")
     private Integer id;
 
-    private String ontid;
+    private String buyerOntid;
+
+    private String buyerTx;
 
     private String supplyOntid;
 
-    private String tx;
+    private String supplyTx;
+
+    private String buyerEvent;
+
+    private String supplyEvent;
+
+    private Integer buyerHeight;
+
+    private Integer supplyHeight;
 
     private Integer state;
 

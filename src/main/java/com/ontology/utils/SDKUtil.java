@@ -113,7 +113,7 @@ public class SDKUtil {
         return account;
     }
 
-    public String invokeContract(byte[] params, Account buyerAcct,Account payerAcct, long gaslimit, long gasprice, boolean preExec) throws Exception{
+    public String invokeContract(byte[] params, Account Acct,Account payerAcct, long gaslimit, long gasprice, boolean preExec) throws Exception{
         OntSdk ontSdk = getOntSdk();
         if(payerAcct == null){
             throw new SDKException("params should not be null");
@@ -125,7 +125,7 @@ public class SDKUtil {
         Transaction tx = ontSdk.vm().makeInvokeCodeTransaction(null,null,params,payerAcct.getAddressU160().toBase58(),gaslimit,gasprice);
 
         ontSdk.addSign(tx, payerAcct);
-        ontSdk.addSign(tx,buyerAcct);
+        ontSdk.addSign(tx,Acct);
 
         Object result = null;
         if(preExec) {
@@ -142,9 +142,20 @@ public class SDKUtil {
         return account;
     }
 
-    public Transaction checkTx(String txHash) throws Exception {
+    public Object checkEvent(String txHash) throws Exception {
         OntSdk ontSdk = getOntSdk();
-        Transaction tx = ontSdk.getConnect().getTransaction(txHash);
-        return tx;
+        Object event = ontSdk.getConnect().getSmartCodeEvent(txHash);
+        return event;
+    }
+
+    public String getPublicKeys(String ontid) throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        return ontSdk.nativevm().ontId().sendGetPublicKeys(ontid);
+    }
+
+    public int getBlockHeight(String txHash) throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        int height = ontSdk.getConnect().getBlockHeightByTxHash(txHash);
+        return height;
     }
 }
