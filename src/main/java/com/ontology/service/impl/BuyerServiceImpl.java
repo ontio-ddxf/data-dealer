@@ -59,6 +59,7 @@ public class BuyerServiceImpl implements BuyerService {
                     while (tx == null) {
                         sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
                         Thread.sleep(6*1000);
+                        tx = sdk.checkTx(txHash);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
