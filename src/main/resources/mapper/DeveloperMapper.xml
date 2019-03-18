@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.onchain.mapper.DeveloperMapper">
-  <resultMap id="BaseResultMap" type="com.onchain.dao.Developer">
+<mapper namespace="com.ontology.mapper.DeveloperMapper">
+  <resultMap id="BaseResultMap" type="com.ontology.dao.Developer">
     <!--
       WARNING - @mbg.generated
     -->

@@ -52,7 +52,7 @@
    </logger>  
   
   <!-- For loggers in the these namespaces, log at DEBUG levels above. -->
-    <logger name="com.onchain.projects" level="DEBUG" additivity="false">
+    <logger name="com.ontology.projects" level="DEBUG" additivity="false">
     	<appender-ref ref="STDOUT"/>
     	<appender-ref ref="FILE" />  
    </logger>

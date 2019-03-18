@@ -19,7 +19,7 @@
             password="ontidpasswd" />
 
 
-        <javaModelGenerator targetPackage="com.onchain.dao" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.ontology.dao" targetProject="src/main/java">
             <!-- 是否对model添加 构造函数 -->
             <property name="constructorBased" value="false" />
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
@@ -34,8 +34,8 @@
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
-        <javaClientGenerator targetPackage="com.onchain.mapper" targetProject="src/main/java"
-            type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.ontology.mapper" targetProject="src/main/java"
+                             type="XMLMAPPER">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
         <table tableName="tbl_ont_developer" domainObjectName="Developer">

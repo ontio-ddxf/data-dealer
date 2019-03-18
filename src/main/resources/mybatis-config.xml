@@ -9,9 +9,9 @@
 	</settings>
 	<!-- 
 	<typeAliases>
-		<typeAlias alias="acctInfo" type="com.onchain.projects.domain.AcctInfo" />
-		<typeAlias alias="transinNotice" type="com.onchain.projects.domain.TransinNotice" />
-		<typeAlias alias="acctOprDtl" type="com.onchain.projects.domain.AcctOprDtl" />
+		<typeAlias alias="acctInfo" type="com.ontologyy.projects.domain.AcctInfo" />
+		<typeAlias alias="transinNotice" type="com.ontologyy.projects.domain.TransinNotice" />
+		<typeAlias alias="acctOprDtl" type="com.ontologyy.projects.domain.AcctOprDtl" />
 	</typeAliases>
 
 	<mappers>
