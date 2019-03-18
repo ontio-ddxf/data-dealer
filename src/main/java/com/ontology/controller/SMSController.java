@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 
 @RestController
-@RequestMapping(value = "/api/v1/ontid")
+@RequestMapping(value = "/api/v0.0.1/ontid")
 public class SMSController {
 
     private Logger logger = LoggerFactory.getLogger(SMSController.class);

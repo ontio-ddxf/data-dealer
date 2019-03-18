@@ -24,7 +24,7 @@ public class SupplyController {
     SupplyService supplyService;
 
     @ApiOperation(value="数据发货接口", notes="数据发货接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/data/dealer/supply", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/data/dealer/supply", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result purchaseData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "delivery";
         String ontid = (String) obj.get("ontid");

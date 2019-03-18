@@ -20,7 +20,7 @@ public class BuyerController {
     BuyerService buyerService;
 
     @ApiOperation(value="数据交易请求接口", notes="数据交易请求接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/data/dealer/buy", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/data/dealer/buy", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result purchaseData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "purchase";
         String ontid = (String) obj.get("ontid");

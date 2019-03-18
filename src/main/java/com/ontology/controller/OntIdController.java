@@ -41,7 +41,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/register/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/register/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result registerOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "register";
         if (!method.equals("phone")) {
@@ -69,7 +69,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/login/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/login/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result loginOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "login";
         String phone = (String) obj.get("phone");
@@ -117,7 +117,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/edit/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/edit/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result updateOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "edit";
         switch (method) {
@@ -168,7 +168,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/export/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/export/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result exportOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "export";
         switch (method) {
@@ -215,7 +215,7 @@ public class OntIdController {
      *
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/binding", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/binding", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result bindingOntId(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "binding";
         String phone = (String) obj.get("phone");
@@ -239,7 +239,7 @@ public class OntIdController {
      *
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/verify", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/verify", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result verifyOntId(@RequestBody LinkedHashMap<String, Object> obj) throws NoSuchAlgorithmException {
         String action = "verify";
         return verifyOntid(action, (String) obj.get("ontid"), (String) obj.get("password"));
@@ -267,7 +267,7 @@ public class OntIdController {
      *
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/decrypt/claim", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/decrypt/claim", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result decryptData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "decrypt";
         ArrayList<String> list = ((ArrayList<String>) obj.get("message"));
@@ -299,7 +299,7 @@ public class OntIdController {
      *
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/gettx/register/ontid", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v0.0.1/ontid/gettx/register/ontid", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result getTransaction(@RequestBody LinkedHashMap<String, Object> obj) throws NoSuchAlgorithmException {
         String action = "getTx";
         String ontid = (String) obj.get("ontid");
