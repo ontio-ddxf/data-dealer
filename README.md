@@ -63,7 +63,7 @@ method：POST
 2. 返回ontid
 
 ```text
-url：/api/v1/ontid/login/password
+url：/api/v1/ontid/login
 method：POST
 ```
 
@@ -138,7 +138,7 @@ method：POST
 
 ```json
 {
-	"action":"purchase",
+	"action":"buy",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
@@ -173,7 +173,7 @@ method：POST
 {
 	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password": "123456",
-	"orderId": 5765
+	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
 ```
 
@@ -181,13 +181,13 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    ontid|   String|  买方ontid  |
 |    password|   String|  买方密码  |
-|    orderId|   Integer|  订单ID  |
+|    orderId|   String|  订单ID  |
 
 - 响应：
 
 ```json
 {
-	"action":"purchase",
+	"action":"buyerCancel",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
@@ -222,7 +222,7 @@ method：POST
 {
 	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password": "123456",
-	"orderId": 5765
+	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
 ```
 
@@ -230,13 +230,13 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    ontid|   String|  买方ontid  |
 |    password|   String|  买方密码  |
-|    orderId|   Integer|  订单ID  |
+|    orderId|   String|  订单ID  |
 
 - 响应：
 
 ```json
 {
-	"action":"purchase",
+	"action":"confirm",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
@@ -271,7 +271,7 @@ method：POST
 {
 	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password":"123456",
-	"orderId": 123,
+	"orderId": "WfbSPxMR1BNxtenRCCGps",
 	"url": "http://data.com",
 	"dataPwd": "654321"
 }
@@ -281,14 +281,14 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    ontid|   String|  卖方ontid  |
 |    password|   String|  卖方密码  |
-|    orderId|   Integer|  订单id  |
+|    orderId|   String|  订单id  |
 |    url|   String|  数据url  |
 |    dataPwd|   String|  一次性密码  |
 
 - 响应：
 ```json
 {
-	"action":"purchase",
+	"action":"deliver",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
@@ -323,7 +323,7 @@ method：POST
 {
 	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password":"123456",
-	"orderId": 123
+	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
 ```
 
@@ -331,12 +331,12 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    ontid|   String|  卖方ontid  |
 |    password|   String|  卖方密码  |
-|    orderId|   Integer|  订单id  |
+|    orderId|   Sting|  订单id  |
 
 - 响应：
 ```json
 {
-	"action":"purchase",
+	"action":"sellerCancel",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
