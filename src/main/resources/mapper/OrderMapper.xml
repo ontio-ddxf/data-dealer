@@ -5,15 +5,21 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="buyer_ontid" jdbcType="VARCHAR" property="buyerOntid" />
-    <result column="supply_ontid" jdbcType="VARCHAR" property="supplyOntid" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="buyer_tx" jdbcType="LONGVARCHAR" property="buyerTx" />
-    <result column="supply_tx" jdbcType="LONGVARCHAR" property="supplyTx" />
-    <result column="buyer_event" jdbcType="LONGVARCHAR" property="buyerEvent" />
-    <result column="supply_event" jdbcType="LONGVARCHAR" property="supplyEvent" />
-    <result column="buyer_height" jdbcType="INTEGER" property="buyerHeight" />
-    <result column="supply_height" jdbcType="INTEGER" property="supplyHeight" />
+    <result column="seller_ontid" jdbcType="VARCHAR" property="sellerOntid" />
+    <result column="buy_tx" jdbcType="LONGVARCHAR" property="buyTx" />
+    <result column="sell_tx" jdbcType="LONGVARCHAR" property="sellTx" />
+    <result column="cancel_tx" jdbcType="LONGVARCHAR" property="cancelTx" />
+    <result column="confirm_tx" jdbcType="LONGVARCHAR" property="confirmTx" />
+    <result column="buy_event" jdbcType="LONGVARCHAR" property="buyEvent" />
+    <result column="sell_event" jdbcType="LONGVARCHAR" property="sellEvent" />
+    <result column="cancel_event" jdbcType="LONGVARCHAR" property="cancelEvent" />
+    <result column="confirm_event" jdbcType="LONGVARCHAR" property="confirmEvent" />
+    <result column="buy_date" jdbcType="DATE" property="buyDate" />
+    <result column="sell_date" jdbcType="DATE" property="sellDate" />
+    <result column="cancel_date" jdbcType="DATE" property="cancelDate" />
+    <result column="confirm_date" jdbcType="DATE" property="confirmDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
   </resultMap>
 </mapper>

@@ -5,30 +5,43 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Table(name = "tbl_order")
 @Data
 public class Order {
     @Id
     @GeneratedValue(generator = "JDBC")
-    private Integer id;
+    private String id;
 
     private String buyerOntid;
 
-    private String buyerTx;
+    private String sellerOntid;
 
-    private String supplyOntid;
+    private String buyTx;
 
-    private String supplyTx;
+    private String sellTx;
 
-    private String buyerEvent;
+    private String cancelTx;
 
-    private String supplyEvent;
+    private String confirmTx;
 
-    private Integer buyerHeight;
+    private String buyEvent;
 
-    private Integer supplyHeight;
+    private String sellEvent;
 
-    private Integer state;
+    private String cancelEvent;
+
+    private String confirmEvent;
+
+    private Date buyDate;
+
+    private Date sellDate;
+
+    private Date cancelDate;
+
+    private Date confirmDate;
+
+    private String state;
 
 }

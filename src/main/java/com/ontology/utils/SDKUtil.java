@@ -135,7 +135,19 @@ public class SDKUtil {
         }
         return tx.hash().toString();
     }
-
+    public Object invokeContract(String str, Account acct,Account payerAcct, boolean preExec) throws Exception{
+        OntSdk ontSdk = getOntSdk();
+        Transaction[] txs1 = ontSdk.makeTransactionByJson(str);
+        ontSdk.addSign(txs1[0], acct);
+        ontSdk.addSign(txs1[0], payerAcct);
+        Object result = null;
+        if(preExec) {
+            result = ontSdk.getConnect().sendRawTransactionPreExec(txs1[0].toHexString());
+        }else {
+            result = ontSdk.getConnect().sendRawTransaction(txs1[0].toHexString());
+        }
+        return result;
+    }
     public Account getPayerAcct() throws Exception {
         OntSdk ontSdk = getOntSdk();
         Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), getOntSdk().getWalletMgr().getSignatureScheme());

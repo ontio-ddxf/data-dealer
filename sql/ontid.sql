@@ -72,16 +72,24 @@ CREATE TABLE `tbl_sms` (
 -- Table structure for tbl_order
 -- ----------------------------
 DROP TABLE IF EXISTS `tbl_order`;
-CREATE TABLE `tbl_order` (
-`id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-`buyer_ontid` varchar(255) DEFAULT NULL,
-`supply_ontid` varchar(255) DEFAULT NULL,
-`buyer_tx` text,
-`supply_tx` text,
-`buyer_event` text,
-`supply_event` text,
-`buyer_height` int(10) DEFAULT NULL,
-`supply_height` int(10) DEFAULT NULL,
-`state` int(2) DEFAULT NULL,
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `tbl_order`
+(
+  `id`            varchar(255) NOT NULL,
+  `buyer_ontid`   varchar(255) DEFAULT NULL,
+  `seller_ontid`  varchar(255) DEFAULT NULL,
+  `buy_tx`        text,
+  `sell_tx`       text,
+  `cancel_tx`     text,
+  `confirm_tx`    text,
+  `buy_event`     text,
+  `sell_event`    text,
+  `cancel_event`  text,
+  `confirm_event` text,
+  `buy_date`      datetime     DEFAULT NULL,
+  `sell_date`     datetime     DEFAULT NULL,
+  `cancel_date`   datetime     DEFAULT NULL,
+  `confirm_date`  datetime     DEFAULT NULL,
+  `state`         varchar(255) DEFAULT NULL COMMENT 'bought;boughtOnchain;delivered;deliveredOnchain;buyerCancel;buyerCancelOnchain;sellerCancel;sellerCancelOnchain;buyerConfirm;buyerConfirmOnchain',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = latin1;
