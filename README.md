@@ -2,17 +2,18 @@
 
 * [手机注册Ontid](#手机注册Ontid)
 * [手机密码登录](#手机密码登录)
+* [需求方查询订单](#需求方查询订单)
 * [需求方购买数据](#需求方购买数据)
 * [需求方取消购买](#需求方取消购买)
 * [需求方确认收货](#需求方确认收货)
+* [提供方查询订单](#提供方查询订单)
 * [提供方发货](#提供方发货)
 * [提供方取消订单](#提供方取消订单)
 
 ## 接口规范
 
-### 注册
 
-#### 手机注册Ontid
+### 手机注册Ontid
 
 1. 提交号码，密码
 2. 返回 `ONT ID`
@@ -100,6 +101,47 @@ method：POST
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回ontid，失败返回""  |
+
+### 需求方查询订单
+
+1. 提供买方信息
+2. 返回购买订单列表
+
+```text
+url：/api/v1/datadealer/buyer/list
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    dataDemander|   String|  数据需求方ontid  |
+
+- 响应：
+```json
+{
+	"action":"buyerList",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": [{"id":"WfbSPxMR1BNxtenRCCGps","sellerOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL","dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],"buyDate": "2019-3-20","state": "deliveredOnchain"}]
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回orderList，失败返回""  |
 
 
 ### 需求方购买数据
@@ -259,6 +301,48 @@ method：POST
 |    result|   String|  成功返回true，失败返回""  |
 
 
+### 提供方查询订单
+
+1. 提供卖方信息
+2. 返回收到订单列表
+
+```text
+url：/api/v1/datadealer/seller/list
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+| dataProvider|   String|  数据提供方ontid  |
+
+- 响应：
+```json
+{
+	"action":"sellerList",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": [{"id":"WfbSPxMR1BNxtenRCCGps","sellerOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL","dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],"buyDate": "2019-3-20","state": "deliveredOnchain"}]
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回orderList，失败返回""  |
+
+
 ### 提供方发货
 
 1. 提供卖方信息，订单ID，url，一次性密码
@@ -278,8 +362,7 @@ method：POST
 	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
 	"password":"123456",
 	"orderId": "WfbSPxMR1BNxtenRCCGps",
-	"encMessageList": ["http://data1.com","http://data2.com"],
-	"dataPwd": "654321"
+	"encMessageList": ["http://data1.com","http://data2.com"]
 }
 ```
 
@@ -289,7 +372,6 @@ method：POST
 |    password|   String|  数据提供方密码  |
 |    orderId|   String|  订单id  |
 |    encMessageList|   List|  加密消息列表，数据提供方在其中添加数据需求方用于提取数据所必须的加密信息  |
-|    dataPwd|   String|  一次性密码  |
 
 - 响应：
 ```json
