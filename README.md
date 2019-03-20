@@ -118,21 +118,27 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password": "123456",
-	"supplyOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
-	"productIds": [1,2,3],
-	"price": "10000"
+	"dataProvider": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
+	"tokenContractAddress": "16edbe366d1337eb510c2ff61099424c94aeef02",
+	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b","d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35","4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"],
+	"priceList": ["100","500","1000"],
+	"waitSendEncListTime": 5000,
+	"waitReceiveEncListTime": 5000
 }
 ```
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-|    ontid|   String|  买方ontid  |
-|    password|   String|  买方密码  |
-|    supplyOntid|   String|  卖方ontid  |
-|    productIds|   List|  数据id  |
-|    price|   String|  数据总价  |
+|    dataDemander|   String|  数据需求方ontid  |
+|    password|   String|  数据需求方密码  |
+|    dataProvider|   String|  数据提供方ontid  |
+|    tokenContractAddress|   String|  同质化通证的合约地址  |
+|    dataIdList|   List|  所购数据的 `SHA256` 哈希值列表  |
+|    priceList|   List|  所购数据的价格列表  |
+|    waitSendEncListTime|   Integer|  等待数据提供方在合约中抵押提取数据所必须的加密信息列表的最大时间上限  |
+|    waitReceiveEncListTime|   Integer|  等待数据需求方从合约中取出提取数据所必须的加密信息列表的最大时间上限  |
 
 - 响应：
 
@@ -171,7 +177,7 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password": "123456",
 	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
@@ -179,7 +185,7 @@ method：POST
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-|    ontid|   String|  买方ontid  |
+|    dataDemander|   String|  数据需求方ontid  |
 |    password|   String|  买方密码  |
 |    orderId|   String|  订单ID  |
 
@@ -220,7 +226,7 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password": "123456",
 	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
@@ -228,7 +234,7 @@ method：POST
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-|    ontid|   String|  买方ontid  |
+|    dataDemander|   String|  数据需求方ontid  |
 |    password|   String|  买方密码  |
 |    orderId|   String|  订单ID  |
 
@@ -269,20 +275,20 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
 	"password":"123456",
 	"orderId": "WfbSPxMR1BNxtenRCCGps",
-	"url": "http://data.com",
+	"encMessageList": ["http://data1.com","http://data2.com"],
 	"dataPwd": "654321"
 }
 ```
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-|    ontid|   String|  卖方ontid  |
-|    password|   String|  卖方密码  |
+|    dataProvider|   String|  数据提供方ontid  |
+|    password|   String|  数据提供方密码  |
 |    orderId|   String|  订单id  |
-|    url|   String|  数据url  |
+|    encMessageList|   List|  加密消息列表，数据提供方在其中添加数据需求方用于提取数据所必须的加密信息  |
 |    dataPwd|   String|  一次性密码  |
 
 - 响应：
@@ -321,7 +327,7 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
 	"password":"123456",
 	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
@@ -329,7 +335,7 @@ method：POST
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-|    ontid|   String|  卖方ontid  |
+|    dataProvider|   String|  数据提供方ontid  |
 |    password|   String|  卖方密码  |
 |    orderId|   Sting|  订单id  |
 
