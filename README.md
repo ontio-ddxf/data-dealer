@@ -9,6 +9,8 @@
 * [提供方查询订单](#提供方查询订单)
 * [提供方发货](#提供方发货)
 * [提供方取消订单](#提供方取消订单)
+* [调用合约](#调用合约)
+
 
 ## 接口规范
 
@@ -425,6 +427,57 @@ method：POST
 ```json
 {
 	"action":"sellerCancel",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": true
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回true，失败返回""  |
+
+
+### 调用合约
+
+1. 提供调用方信息，合约地址，方法，参数
+2. 验证调用方信息
+3. 返回true
+
+```text
+url：/api/v1/datadealer/contract/invoke
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
+	"password": "123456",
+	"contractHash": "16edbe366d1337eb510c2ff61099424c94aeef02",
+	"method": "testInvoke",
+	"argsList": [{"name": "arg0","value": "String:hello"},{"name": "arg1","value": "Address:AUr5QUfeBADq6BMY6Tp5yuMsUNGpsD7nLZ"}]
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+| ontid|   String|  调用方ontid  |
+| password|   String|  调用方密码  |
+| contractHash|   String|  合约地址  |
+| method|   String|  合约方法  |
+| argsList|   String|  合约参数  |
+
+- 响应：
+```json
+{
+	"action":"invokeContract",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
