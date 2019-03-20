@@ -26,8 +26,8 @@ method：POST
 
 ```json
 {
-	"phone":"86*15821703553",
-	"password":"12345678"
+    "phone":"86*15821703553",
+    "password":"12345678"
 }
 ```
 
@@ -41,10 +41,10 @@ method：POST
 ```json
 {
     "action":"register",
-	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
-	"result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+    "version":"v1",
+    "error":0,
+    "desc":"SUCCESS",
+    "result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
 }
 ```
 
