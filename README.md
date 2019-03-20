@@ -22,7 +22,7 @@ url：/api/v1/ontid/register/phone
 method：POST
 ```
 
-- - 请求：
+- 请求：
 
 ```json
 {
@@ -36,7 +36,7 @@ method：POST
 | phone     | String | 手机号码    |
 | password   | String | 设置密码    |
 
-- - 响应：
+- 响应：
 
 ```json
 {
@@ -99,7 +99,7 @@ method：POST
 |    version|   String|  版本号  |
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |**
+|    result|   String|  成功返回ontid，失败返回""  |
 
 
 ### 需求方购买数据
@@ -107,7 +107,7 @@ method：POST
 1. 提供买方，卖方，数据信息
 2. 验证信息
 3. 调用合约处理交易
-4. 返回ontid
+4. 返回true
 
 ```text
 url：/api/v1/datadealer/buyer/buy
@@ -142,7 +142,7 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"result": true
 }
 ```
 
@@ -152,7 +152,7 @@ method：POST
 |    version|   String|  版本号  |
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |
+|    result|   String|  成功返回true，失败返回""  |
 
 
 ### 需求方取消购买
@@ -160,7 +160,7 @@ method：POST
 1. 提供买方信息，订单ID
 2. 验证信息
 3. 调用合约取消交易
-4. 返回ontid
+4. 返回true
 
 ```text
 url：/api/v1/datadealer/buyer/cancel
@@ -191,7 +191,7 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"result": true
 }
 ```
 
@@ -201,7 +201,7 @@ method：POST
 |    version|   String|  版本号  |
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |
+|    result|   String|  成功返回true，失败返回""  |
 
 
 ### 需求方确认收货
@@ -209,7 +209,7 @@ method：POST
 1. 提供买方信息，订单ID
 2. 验证信息
 3. 调用合约提取数据，确认交易
-4. 返回ontid
+4. 返回true
 
 ```text
 url：/api/v1/datadealer/buyer/confirm
@@ -240,7 +240,7 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"result": true
 }
 ```
 
@@ -250,7 +250,7 @@ method：POST
 |    version|   String|  版本号  |
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |
+|    result|   String|  成功返回true，失败返回""  |
 
 
 ### 提供方发货
@@ -258,7 +258,7 @@ method：POST
 1. 提供卖方信息，订单ID，url，一次性密码
 2. 获取买方信息
 3. 将一次性密码和数据地址用买方公钥加密,并锁到只能合约
-4. 返回ontid
+4. 返回true
 
 ```text
 url：/api/v1/datadealer/seller/sell
@@ -292,7 +292,7 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"result": true
 }
 ```
 
@@ -302,7 +302,7 @@ method：POST
 |    version|   String|  版本号  |
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |
+|    result|   String|  成功返回true，失败返回""  |
 
 
 ### 提供方取消订单
@@ -310,7 +310,7 @@ method：POST
 1. 提供卖方信息，订单ID
 2. 验证信息
 3. 调用合约取消交易
-4. 返回ontid
+4. 返回true
 
 ```text
 url：/api/v1/datadealer/seller/cancel
@@ -340,7 +340,7 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"result": true
 }
 ```
 
@@ -350,4 +350,4 @@ method：POST
 |    version|   String|  版本号  |
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |
+|    result|   String|  成功返回true，失败返回""  |
