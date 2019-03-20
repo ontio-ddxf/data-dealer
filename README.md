@@ -78,7 +78,7 @@ method：POST
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-**|    phone|   String|  手机号码  |
+|    phone|   String|  手机号码  |
 |    password|   String|  用户密码  |
 
 - 响应：
@@ -186,7 +186,7 @@ method：POST
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
 |    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  买方密码  |
+|    password|   String|  数据需求方密码  |
 |    orderId|   String|  订单ID  |
 
 - 响应：
@@ -235,7 +235,7 @@ method：POST
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
 |    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  买方密码  |
+|    password|   String|  数据需求方密码  |
 |    orderId|   String|  订单ID  |
 
 - 响应：
@@ -336,7 +336,7 @@ method：POST
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
 |    dataProvider|   String|  数据提供方ontid  |
-|    password|   String|  卖方密码  |
+|    password|   String|  数据提供方密码  |
 |    orderId|   Sting|  订单id  |
 
 - 响应：
