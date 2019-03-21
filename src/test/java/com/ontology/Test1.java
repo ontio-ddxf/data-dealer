@@ -3,6 +3,7 @@ package com.ontology;
 import com.alibaba.fastjson.JSON;
 import com.ontology.dao.Order;
 import com.ontology.mapper.OrderMapper;
+import com.ontology.utils.Base64ConvertUtil;
 import com.ontology.utils.Helper;
 import com.ontology.utils.SDKUtil;
 import org.junit.Test;

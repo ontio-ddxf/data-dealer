@@ -161,7 +161,7 @@ public class SecureConfig {
 
     public String getWalletPwd() {
         try {
-            return SecureConfig.WALLET_PWD;
+            return Base64ConvertUtil.decode(SecureConfig.WALLET_PWD);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

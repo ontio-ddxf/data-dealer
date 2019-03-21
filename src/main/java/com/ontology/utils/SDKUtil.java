@@ -154,7 +154,6 @@ public class SDKUtil {
         OntSdk ontSdk = getOntSdk();
 //        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), ontSdk.getWalletMgr().getSignatureScheme());
 //        Account account = ontSdk.getWalletMgr().getWallet().getAccounts()[0];
-        System.out.println(secureConfig.getWalletPwd());
         Account acct = ontSdk.getWalletMgr().getAccount("AGW2QrJZMf2ZWuG7bzwczYE1yHACXjnpZG", secureConfig.getWalletPwd());
         return acct;
     }
