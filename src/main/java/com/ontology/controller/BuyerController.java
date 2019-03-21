@@ -30,8 +30,8 @@ public class BuyerController {
         String ontid = (String) obj.get("ontid");
         String password = (String) obj.get("password");
         String supplyOntid = (String) obj.get("supplyOntid");
-        List<Integer> productIds = (List<Integer>) obj.get("productIds");
-        String price = (String) obj.get("price");
+        List<String> productIds = (List<String>) obj.get("productIds");
+        List<String> price = (List<String>) obj.get("price");
 
         helpCheckPwd(action,password);
 

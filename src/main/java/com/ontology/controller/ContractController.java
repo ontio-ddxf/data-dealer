@@ -22,7 +22,7 @@ public class ContractController {
     IOntIdService ontIdService;
 
     @ApiOperation(value="合约调用接口", notes="合约调用接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/contract/invoke", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v1/datadealer/contract/invoke", method = RequestMethod.POST)
     public Result invokeContract(@RequestBody ContractVo contractVo) throws Exception {
         String action = "invokeContract";
         contractService.invokeContract(action,contractVo);

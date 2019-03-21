@@ -36,7 +36,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/register/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v1/ontid/register/{method}", method = RequestMethod.POST)
     public Result registerOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "register";
         if (!method.equals("phone")) {

@@ -16,9 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -31,22 +29,55 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderMapper orderMapper;
 
     @Override
-    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<Integer> productIds, String price) throws Exception {
+    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<String> productIds, List<String> priceList) throws Exception {
         OntId ontId = getOntId(action,ontid,password);
 
         Account payerAcct = sdk.getPayerAcct();
         Account buyerAcct = sdk.getAccount(ontId.getKeystore(),password);
 
-        byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
-        byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
+        byte[] buyerAddr = ontid.replace("did:ont:","").getBytes();
+        byte[] sellerAddr = sellerOntid.replace("did:ont:","").getBytes();
+
+//        byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
+//        byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
+
 
         // TODO 拼接参数
+        String contractHash = "7a929de3dcf464d92e79f4ad04c41f56245998e5";
         List argsList = new ArrayList();
-
-        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        Map arg0 = new HashMap();
+        arg0.put("name","data_demander");
+        arg0.put("value","bytearray:"+Arrays.toString(buyerAddr));
+        Map arg1 = new HashMap();
+        arg1.put("name","data_provider");
+        arg1.put("value","bytearray:"+Arrays.toString(sellerAddr));
+        Map arg2 = new HashMap();
+        arg2.put("name","token_contract_address");
+        arg2.put("value","bytearray:"+Arrays.toString("d7b6a47966770c1545bf74c16426b26c0a238b16".getBytes()));
+        Map arg3 = new HashMap();
+        arg3.put("name","data_id_list");
+        arg3.put("value","list:"+JSON.toJSONString(productIds));
+        Map arg4 = new HashMap();
+        arg4.put("name","price_list");
+        arg4.put("value","list:"+JSON.toJSONString(priceList));
+        Map arg5 = new HashMap();
+        arg5.put("name","wait_send_enc_list_time");
+        arg5.put("value","int:5000");
+        Map arg6 = new HashMap();
+        arg6.put("name","wait_receive_enc_list_time");
+        arg6.put("value","int:5000");
+        argsList.add(arg0);
+        argsList.add(arg1);
+        argsList.add(arg2);
+        argsList.add(arg3);
+        argsList.add(arg4);
+        argsList.add(arg5);
+        argsList.add(arg6);
+        String params = Helper.getParams(ontid,contractHash,"send_token",argsList,payerAcct.getAddressU160().toBase58());
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         Order order = new Order();
+        order.setId(""+System.currentTimeMillis());
         order.setBuyerOntid(ontid);
         order.setSellerOntid(sellerOntid);
         order.setBuyTx(txHash);
