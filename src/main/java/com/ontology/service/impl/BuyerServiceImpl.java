@@ -3,8 +3,6 @@ package com.ontology.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.ontio.account.Account;
 import com.github.ontio.common.Address;
-import com.github.ontio.core.transaction.Transaction;
-import com.github.ontio.smartcontract.neovm.abi.BuildParams;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
@@ -18,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -40,16 +40,10 @@ public class BuyerServiceImpl implements BuyerService {
         byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
         byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
 
-//        List paramList = new ArrayList();
-//        paramList.add(buyerAddr);
-//        paramList.add(supplyAddr);
-
         // TODO 拼接参数
-//        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        //String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
-
-        String params = getParams(action,ontid,"","",null,null,null,payerAcct.getAddressU160().toBase58());
+        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         Order order = new Order();
@@ -99,11 +93,11 @@ public class BuyerServiceImpl implements BuyerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
 
-        List paramList = new ArrayList();
         // TODO 拼接参数
-        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+        String params =  Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         cancelOrder.setCancelTx(txHash);
         cancelOrder.setState("buyerCancel");
@@ -116,7 +110,7 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -146,11 +140,11 @@ public class BuyerServiceImpl implements BuyerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
 
-        List paramList = new ArrayList();
         // TODO 拼接参数
-        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         confirmOrder.setConfirmTx(txHash);
         confirmOrder.setState("buyerConfirm");
@@ -163,7 +157,7 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -177,6 +171,14 @@ public class BuyerServiceImpl implements BuyerService {
                 }
             }
         }){}.start();
+    }
+
+    @Override
+    public List<Order> findSellList(String action, String buyerOntid) {
+        Order order = new Order();
+        order.setSellerOntid(buyerOntid);
+        List<Order> orderList = orderMapper.select(order);
+        return orderList;
     }
 
     private OntId getOntId(String action, String ontid, String password) {
@@ -193,40 +195,5 @@ public class BuyerServiceImpl implements BuyerService {
         return ontId;
     }
 
-    private String getParams(String action,String ontid,String contractHash,String method,List valueList,Map valueMap,String valueStr,String payer) {
-        Map parms = new HashMap();
-        Map invokeConfig = new HashMap();
-        List functions = new ArrayList();
-        Map function = new HashMap();
-        function.put("operation",method);
-        List args = new ArrayList();
-        Map argList = new HashMap();
-        argList.put("name","arg0-list");
-        argList.put("value",valueList);
-        args.add(argList);
-
-        Map argMap = new HashMap();
-        argMap.put("name","arg1-map");
-        argMap.put("value",valueMap);
-        args.add(argMap);
-
-        Map argStr = new HashMap();
-        argStr.put("name","arg2-str");
-        argStr.put("value",valueStr);
-        args.add(argStr);
-
-        function.put("args",args);
-
-        functions.add(function);
-        invokeConfig.put("contractHash",contractHash);
-        invokeConfig.put("functions",functions);
-        invokeConfig.put("payer",payer);
-        invokeConfig.put("gasLimit",20000);
-        invokeConfig.put("gasPrice",500);
-        parms.put("action",action);
-        parms.put("invokeConfig",invokeConfig);
-        parms.put("ontid",ontid);
-        return JSON.toJSONString(parms);
-    }
 
 }

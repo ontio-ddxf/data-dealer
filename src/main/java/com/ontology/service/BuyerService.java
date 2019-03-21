@@ -1,6 +1,8 @@
 package com.ontology.service;
 
 
+import com.ontology.dao.Order;
+
 import java.util.List;
 
 public interface BuyerService {
@@ -9,4 +11,6 @@ public interface BuyerService {
     void cancelExchange(String action, String ontid, String password, String orderId) throws Exception;
 
     void confirmExchange(String action, String ontid, String password, String orderId) throws Exception;
+
+    List<Order> findSellList(String action, String buyerOntid);
 }

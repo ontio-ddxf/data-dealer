@@ -1,5 +1,6 @@
 package com.ontology.controller;
 
+import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
 import com.ontology.service.BuyerService;
@@ -7,7 +8,10 @@ import com.ontology.utils.ErrorInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,7 +37,7 @@ public class BuyerController {
 
         buyerService.purchaseData(action,ontid,password,supplyOntid,productIds,price);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
     }
 
     private void helpCheckPwd(String action, String pwd) {
@@ -54,7 +58,7 @@ public class BuyerController {
 
         buyerService.cancelExchange(action,ontid,password,orderId);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
     }
 
     @ApiOperation(value="需求方确认收货接口", notes="需求方确认收货接口" ,httpMethod="POST")
@@ -69,7 +73,17 @@ public class BuyerController {
 
         buyerService.confirmExchange(action,ontid,password,orderId);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
+    }
+
+    @ApiOperation(value="提供方订单查询接口", notes="提供方订单查询接口" ,httpMethod="POST")
+    @RequestMapping(value = "/api/v1/datadealer/buyer/list", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    public Result findSellList(String buyerOntid) throws Exception {
+        String action = "buyerList";
+
+        List<Order> orderList = buyerService.findSellList(action,buyerOntid);
+
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }
 
 }

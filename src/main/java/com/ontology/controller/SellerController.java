@@ -1,5 +1,6 @@
 package com.ontology.controller;
 
+import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
 import com.ontology.service.SellerService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @RestController
 @Api("数据提供方接口")
@@ -23,7 +25,7 @@ public class SellerController {
 
     @ApiOperation(value="数据发货接口", notes="数据发货接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/seller/sell", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
-    public Result purchaseData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+    public Result deliverData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "deliver";
         String ontid = (String) obj.get("ontid");
         String password = (String) obj.get("password");
@@ -35,7 +37,7 @@ public class SellerController {
 
         sellerService.deliverData(action,ontid,password,orderId,url,dataPwd);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
     }
 
     private void helpCheckPwd(String action, String pwd) {
@@ -56,6 +58,16 @@ public class SellerController {
 
         sellerService.cancelExchange(action,ontid,password,orderId);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
+    }
+
+    @ApiOperation(value="提供方订单查询接口", notes="提供方订单查询接口" ,httpMethod="POST")
+    @RequestMapping(value = "/api/v1/datadealer/seller/list", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    public Result findSellList(String sellerOntid) throws Exception {
+        String action = "sellerList";
+
+        List<Order> orderList = sellerService.findSellList(action,sellerOntid);
+
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }
 }

@@ -1,9 +1,9 @@
 package com.ontology.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.ontio.crypto.Digest;
 import com.ontology.exception.OntIdException;
-
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -13,8 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author zhouq
@@ -256,5 +255,35 @@ public class Helper {
         if (Helper.isEmptyOrNull(split) || split.length != 2 || phone.contains("+")) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
+    }
+
+    /**
+     * 拼接JSON格式参数
+     * lijie 2019/3/20
+     */
+    public static String getParams(String ontid, String contractHash, String method, List argsList, String payer) {
+        Map str = new HashMap();
+        Map parms = new HashMap();
+        Map invokeConfig = new HashMap();
+        List functions = new ArrayList();
+        Map function = new HashMap();
+
+        function.put("operation",method);
+        function.put("args",argsList);
+
+        functions.add(function);
+
+        invokeConfig.put("contractHash",contractHash);
+        invokeConfig.put("functions",functions);
+        invokeConfig.put("payer",payer);
+        invokeConfig.put("gasLimit",20000);
+        invokeConfig.put("gasPrice",500);
+
+        parms.put("invokeConfig",invokeConfig);
+        parms.put("ontid",ontid);
+
+        str.put("action","invoke");
+        str.put("params",parms);
+        return JSON.toJSONString(str);
     }
 }

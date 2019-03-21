@@ -5,18 +5,13 @@ import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
 import com.ontology.service.IOntIdService;
 import com.ontology.service.ISmsService;
+import com.ontology.utils.Base64ConvertUtil;
 import com.ontology.utils.ErrorInfo;
 import com.ontology.utils.Helper;
-import com.ontology.utils.Base64ConvertUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
