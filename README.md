@@ -12,8 +12,6 @@
 * [提供方取消订单](#提供方取消订单)
 * [添加ontid属性](#添加ontid属性)
 * [获取DDO](#获取DDO)
-* [调用合约](#调用合约)
-
 
 
 ## 接口规范
@@ -387,8 +385,13 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": [{"id":"WfbSPxMR1BNxtenRCCGps","sellerOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL","dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],"buyDate": "2019-3-20","state": "deliveredOnchain"}]
-}
+	"result": [{
+              	"id": "WfbSPxMR1BNxtenRCCGps",
+              	"sellerOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+              	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
+              	"buyDate": "2019-3-20",
+              	"state": "deliveredOnchain"
+              }]}
 ```
 
 | Field_Name|     Type |   Description   | 
@@ -505,7 +508,7 @@ method：POST
 3. 返回true
 
 ```text
-url：/api/v1/ontid/addattributes
+url：/api/v1/ontid/addattribute
 method：POST
 ```
 
@@ -532,7 +535,7 @@ method：POST
 - 响应：
 ```json
 {
-	"action":"addAttributes",
+	"action":"addAttribute",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
@@ -578,8 +581,16 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": "DDO"
-}
+	"result": {
+              	"Attributes": [],
+              	"OntId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+              	"Owners": [{
+              		"Type": "ECDSA",
+              		"Curve": "P-256",
+              		"Value": "0206590ae715755f0f1fd235726957f8e11cd0b13b22c67c2404a5e3fd8d303b65",
+              		"PubKeyId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN#keys-1"
+              	}]
+              }}
 ```
 
 | Field_Name|     Type |   Description   | 

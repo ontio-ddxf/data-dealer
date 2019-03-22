@@ -142,7 +142,8 @@ public class OntIdServiceImpl implements IOntIdService {
         if (!Helper.sha256(password).equals(ontId.getPwd())) {
             throw new OntIdException(action, ErrorInfo.VERIFY_FAILED.descCN(), ErrorInfo.VERIFY_FAILED.descEN(), ErrorInfo.VERIFY_FAILED.code());
         }
-        sdk.addAttributes(ontId,password,key,valueType,value);
+        String txHash = sdk.addAttributes(ontId,password,key,valueType,value);
+        System.out.println(txHash);
     }
 
     @Override

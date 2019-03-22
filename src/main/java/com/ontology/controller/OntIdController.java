@@ -95,7 +95,7 @@ public class OntIdController {
      * @param  obj
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/login/", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v1/ontid/login/", method = RequestMethod.POST)
     public Result loginOntId(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "login";
         String phone = (String) obj.get("phone");
@@ -134,9 +134,9 @@ public class OntIdController {
      * @param  req
      * @return true
      */
-    @RequestMapping(value = "/api/v1/ontid/addattributes/", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/ontid/addattribute", method = RequestMethod.POST)
     public Result addAttributes(@RequestBody AttributeVo req) throws Exception {
-        String action = "addAttributes";
+        String action = "addAttribute";
         String ontid = req.getOntid();
         String password = req.getPassword();
         String key = req.getKey();
@@ -157,7 +157,7 @@ public class OntIdController {
      * @param  ontid
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/getddo/", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/ontid/getddo", method = RequestMethod.POST)
     public Result getDDO(@RequestBody String ontid) throws Exception {
         String action = "getDDO";
         if (Helper.isEmptyOrNull(ontid)) {

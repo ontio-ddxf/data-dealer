@@ -189,7 +189,7 @@ public class SDKUtil {
         return DDO;
     }
 
-    public void addAttributes(OntId ontId, String password, String key, String valueType, String value) throws Exception {
+    public String addAttributes(OntId ontId, String password, String key, String valueType, String value) throws Exception {
         OntSdk ontSdk = getOntSdk();
         String ontid = ontId.getOntid();
         String keystore = ontId.getKeystore().replace("\\", "");
@@ -199,7 +199,7 @@ public class SDKUtil {
         Attribute[] attributes = new Attribute[1];
         attributes[0] = new Attribute(key.getBytes(),valueType.getBytes(),value.getBytes());
         Account payerAcct = getPayerAcct();
-        ontSdk.nativevm().ontId().sendAddAttributes(ontid,password,salt,attributes,payerAcct,20000,500);
+        return ontSdk.nativevm().ontId().sendAddAttributes(ontid,password,salt,attributes,payerAcct,20000,500);
     }
 
     public void getWalletPk() throws Exception {
