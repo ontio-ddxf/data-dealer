@@ -1,6 +1,7 @@
 # Data Dealer
 
-* [手机注册Ontid](#手机注册Ontid)
+* [需求方手机注册Ontid](#需求方手机注册Ontid)
+* [提供方手机注册Ontid](#提供方手机注册Ontid)
 * [手机密码登录](#手机密码登录)
 * [需求方查询订单](#需求方查询订单)
 * [需求方购买数据](#需求方购买数据)
@@ -9,18 +10,20 @@
 * [提供方查询订单](#提供方查询订单)
 * [提供方发货](#提供方发货)
 * [提供方取消订单](#提供方取消订单)
+* [添加ontid属性](#添加ontid属性)
+* [获取DDO](#获取DDO)
 
 
 ## 接口规范
 
 
-### 手机注册Ontid
+### 需求方手机注册Ontid
 
-1. 提交号码，密码
+1. 提交手机号码，密码
 2. 返回 `ONT ID`
 
 ```text
-url：/api/v1/ontid/register/phone
+url：/api/v1/ontid/register/demander/phone
 method：POST
 ```
 
@@ -42,7 +45,52 @@ method：POST
 
 ```json
 {
-    "action":"register",
+    "action":"demanderRegister",
+    "version":"v1",
+    "error":0,
+    "desc":"SUCCESS",
+    "result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+}
+```
+
+| Field_Name | Type   | Description                   |
+|:-----------|:-------|:------------------------------|
+| action     | String | 动作标志                      |
+| version    | String | 版本号                        |
+| error      | int    | 错误码                        |
+| desc       | String | 成功为SUCCESS，失败为错误描述 |
+| result     | String | 成功返回ontid，失败返回""     |
+
+
+### 提供方手机注册Ontid
+
+1. 提交手机号码，密码
+2. 返回 `ONT ID`
+
+```text
+url：/api/v1/ontid/register/provider/phone
+method：POST
+```
+
+- 请求：
+
+```json
+{
+    "phone":"86*15821703553",
+    "password":"12345678"
+}
+```
+
+| Field_Name | Type   | Description |
+|:-----------|:-------|:------------|
+| phone     | String | 手机号码    |
+| password   | String | 设置密码    |
+
+- 响应：
+
+```json
+{
+    "action":"providerRegister",
     "version":"v1",
     "error":0,
     "desc":"SUCCESS",
@@ -446,3 +494,96 @@ method：POST
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回true，失败返回""  |
+
+
+### 添加ontid属性
+
+1. 提供ontid，密码，属性
+2. 验证信息，添加属性
+3. 返回true
+
+```text
+url：/api/v1/ontid/addattributes
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+	"password":"123456",
+	"key": "key99",
+	"valueType": "value99",
+	"value": "value01"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    ontid|   String|  需要添加属性的ontid  |
+|    password|   String|  ontid的密码  |
+|    key|   Sting|  属性的key  |
+|    key|   Sting|  属性的valueType  |
+|    key|   Sting|  属性的value  |
+
+- 响应：
+```json
+{
+	"action":"addAttributes",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": true
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回true，失败返回""  |
+
+
+### 获取DDO
+
+1. 提供ontid
+2. 返回DDO
+
+```text
+url：/api/v1/ontid/getddo
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    ontid|   String|  ontid  |
+
+- 响应：
+```json
+{
+	"action":"getDDO",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": "DDO"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回DDO，失败返回""  |

@@ -1,10 +1,11 @@
 package com.ontology;
 
 import com.alibaba.fastjson.JSON;
+import com.github.ontio.common.Address;
+import com.github.ontio.common.Helper;
 import com.ontology.dao.Order;
 import com.ontology.mapper.OrderMapper;
 import com.ontology.utils.Base64ConvertUtil;
-import com.ontology.utils.Helper;
 import com.ontology.utils.SDKUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,6 +74,42 @@ public class Test1 {
     @Test
     public void testBlance() throws Exception {
         sdkUtil.queryBlance();
+    }
+
+    @Test
+    public void testGetPk() throws Exception {
+        sdkUtil.getWalletPk();
+    }
+
+    @Test
+    public void testGetPayer() throws Exception {
+        sdkUtil.getPayerAcct2();
+    }
+
+    @Test
+    public void testHexString() throws Exception {
+        // 方法名，十六进制转成字节，再转成String
+        System.out.println(new String(Helper.hexToBytes("7472616e73666572"),"utf-8"));
+        // 地址，解析十六进制字符串，再Base58加密
+        System.out.println(Address.parse("66d5850e8a78e67325428ad77f91c913f7919ace").toBase58());
+        System.out.println(Address.parse("281bc93aaa774edf88a3bdf7680fc8d119452607").toBase58());
+        // ExchangeId 不用解析，十六进制字符串，调用时当作字节数组作为参数
+        System.out.println("cab8d1c0eee964aeb39099be215cab6107bcca7c");
+        // 数据地址，十六进制转成字节，再转成String
+        System.out.println(new String(Helper.hexToBytes("687474703a2f2f64617461312e636f6d23687474703a2f2f64617461322e636f6d23"),"utf-8"));
+        // 超时时间
+        System.out.println(new String(Helper.hexToBytes("5802"),"utf-8"));
+    }
+    @Test
+    public void testList(){
+        List productIds = new ArrayList();
+        productIds.add("ijiojojsdjsiod");
+        productIds.add("weijodjqoiwewq");
+        productIds.add("ijiojojasdnasdjojsdjsiod");
+        Map arg3 = new HashMap();
+        arg3.put("name","data_id_list");
+        arg3.put("value","list:"+JSON.toJSONString(productIds));
+        System.out.println(JSON.toJSONString(arg3));
     }
 
     @Test

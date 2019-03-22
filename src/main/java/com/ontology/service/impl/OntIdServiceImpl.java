@@ -41,7 +41,7 @@ public class OntIdServiceImpl implements IOntIdService {
 
 
     @Override
-    public String createOntId(String phone, String pwd) throws Exception {
+    public String createOntId(String phone, String pwd, Integer type) throws Exception {
         Map<String, String> createRes = sdk.createOntId(pwd);
         String ontid = createRes.get("ontid");
         String keystore = createRes.get("keystore");
@@ -53,6 +53,7 @@ public class OntIdServiceImpl implements IOntIdService {
         ontidBean.setMethod("phone");
         ontidBean.setPwd(Helper.sha256(pwd));
         ontidBean.setTx(tx);
+        ontidBean.setType(type);
         mapper.insertSelective(ontidBean);
 
         insertOrUpdateSecrue(ontid, pwd);
@@ -136,6 +137,22 @@ public class OntIdServiceImpl implements IOntIdService {
         }
     }
 
+    @Override
+    public void addAttributes(String action, OntId ontId, String password, String key, String valueType, String value) throws Exception {
+        if (!Helper.sha256(password).equals(ontId.getPwd())) {
+            throw new OntIdException(action, ErrorInfo.VERIFY_FAILED.descCN(), ErrorInfo.VERIFY_FAILED.descEN(), ErrorInfo.VERIFY_FAILED.code());
+        }
+        sdk.addAttributes(ontId,password,key,valueType,value);
+    }
+
+    @Override
+    public String getDDO(String action, String ontid) throws Exception {
+        String DDO = sdk.getDDO(ontid);
+        if (Helper.isEmptyOrNull(DDO)) {
+            throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
+        }
+        return DDO;
+    }
 
     @Override
     public OntId queryOntIdByOntid(String ontid) {

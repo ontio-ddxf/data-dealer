@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="exchange_id" jdbcType="VARCHAR" property="exchangeId" />
     <result column="buyer_ontid" jdbcType="VARCHAR" property="buyerOntid" />
     <result column="seller_ontid" jdbcType="VARCHAR" property="sellerOntid" />
     <result column="buy_tx" jdbcType="LONGVARCHAR" property="buyTx" />

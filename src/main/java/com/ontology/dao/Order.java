@@ -14,6 +14,8 @@ public class Order {
     @GeneratedValue(generator = "JDBC")
     private String id;
 
+    private String exchangeId;
+
     private String buyerOntid;
 
     private String sellerOntid;
