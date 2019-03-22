@@ -276,7 +276,7 @@ public class Helper {
         invokeConfig.put("contractHash",contractHash);
         invokeConfig.put("functions",functions);
         invokeConfig.put("payer",payer);
-        invokeConfig.put("gasLimit",20000);
+        invokeConfig.put("gasLimit",40000);
         invokeConfig.put("gasPrice",500);
 
         parms.put("invokeConfig",invokeConfig);

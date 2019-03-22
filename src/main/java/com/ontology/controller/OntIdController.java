@@ -1,5 +1,6 @@
 package com.ontology.controller;
 
+import com.ontology.controller.vo.AttributeVo;
 import com.ontology.dao.OntId;
 import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
@@ -31,14 +32,15 @@ public class OntIdController {
 
 
     /**
-     * 注册ontid
+     * 数据需求方注册ontid
      *
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/register/{method}", method = RequestMethod.POST)
-    public Result registerOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
-        String action = "register";
+    @RequestMapping(value = "/api/v1/ontid/register/demander/{method}", method = RequestMethod.POST)
+    public Result registerDemanderOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+        String action = "demanderRegister";
+        Integer type = 1;
         if (!method.equals("phone")) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
@@ -54,7 +56,36 @@ public class OntIdController {
 
 //        smsService.verifyPhone(action, number, verifyCode);
 
-        String ontidRes = ontIdService.createOntId(number, password);
+        String ontidRes = ontIdService.createOntId(number, password,type);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontidRes);
+    }
+
+    /**
+     * 数据提供方注册ontid
+     *
+     * @param method phone
+     * @return ontid
+     */
+    @RequestMapping(value = "/api/v1/ontid/register/provider/{method}", method = RequestMethod.POST)
+    public Result registerProviderOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+        String action = "providerRegister";
+        Integer type = 2;
+        if (!method.equals("phone")) {
+            throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
+        }
+        String number = (String) obj.get("number");
+
+        //todo 手机号校验，位数校验，dto注解验证
+        Helper.verifyPhone(action, number);
+
+//        String verifyCode = (String) obj.get("verifyCode");
+        String password = (String) obj.get("password");
+        helpCheckPwd(action, password);
+        ontIdService.checkOntIdExistByPhone(action, number);
+
+//        smsService.verifyPhone(action, number, verifyCode);
+
+        String ontidRes = ontIdService.createOntId(number, password, type);
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontidRes);
     }
 
@@ -95,6 +126,45 @@ public class OntIdController {
         } else {
             return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontId.getOntid());
         }
+    }
+
+    /**
+     * ontid 添加属性
+     *
+     * @param  req
+     * @return true
+     */
+    @RequestMapping(value = "/api/v1/ontid/addattributes/", method = RequestMethod.POST)
+    public Result addAttributes(@RequestBody AttributeVo req) throws Exception {
+        String action = "addAttributes";
+        String ontid = req.getOntid();
+        String password = req.getPassword();
+        String key = req.getKey();
+        String valueType = req.getValueType();
+        String value = req.getValue();
+        OntId ontId = ontIdService.queryOntIdByOntid(ontid);
+        if (ontId == null) {
+            throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
+        } else {
+            ontIdService.addAttributes(action,ontId,password,key,valueType,value);
+            return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
+        }
+    }
+
+    /**
+     * getDDO
+     *
+     * @param  ontid
+     * @return ontid
+     */
+    @RequestMapping(value = "/api/v1/ontid/getddo/", method = RequestMethod.POST)
+    public Result getDDO(@RequestBody String ontid) throws Exception {
+        String action = "getDDO";
+        if (Helper.isEmptyOrNull(ontid)) {
+            throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
+        }
+        String DDO = ontIdService.getDDO(action,ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), DDO);
     }
 
 

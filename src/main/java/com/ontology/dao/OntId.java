@@ -1,7 +1,10 @@
 package com.ontology.dao;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Table(name = "tbl_ontid")
 public class OntId {
     @Id
@@ -21,6 +24,8 @@ public class OntId {
     private String keystore;
 
     private String tx;
+
+    private Integer type;
 
     /**
      * @return id

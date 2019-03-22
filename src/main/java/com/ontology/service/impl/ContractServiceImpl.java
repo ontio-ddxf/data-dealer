@@ -39,29 +39,30 @@ public class ContractServiceImpl implements ContractService {
         OntId ontId = getOntId(action,ontid,password);
         Account payerAcct = sdk.getPayerAcct();
         Account Acct = sdk.getAccount(ontId.getKeystore(),password);
-//        String params = Helper.getParams(ontid, contractHash, method, argsList, payerAcct.getAddressU160().toBase58());
+        String params = Helper.getParams(ontid, contractHash, method, argsList, payerAcct.getAddressU160().toBase58());
 
-        List paramList = new ArrayList();
+//        List paramList = new ArrayList();
+//
+//        paramList.add(Address.decodeBase58("AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN").toArray());
+//        paramList.add(Address.decodeBase58("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y").toArray());
+//        paramList.add(com.github.ontio.common.Helper.hexToBytes("1ddbb682743e9d9e2b71ff419e97a9358c5c4ee9"));
+//        List data = new ArrayList();
+//        data.add("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
+//        data.add("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
+//        data.add("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
+//        paramList.add(data);
+//        List priceList = new ArrayList();
+//        priceList.add(1);
+//        priceList.add(2);
+//        priceList.add(3);
+//        paramList.add(priceList);
+//        paramList.add(5000);
+//        paramList.add(5000);
+//        byte[] params2 = BuildParams.createCodeParamsScript(paramList);
+//        String txHash = sdk.invokeContract(params2, Acct, payerAcct, 20000, 500, false);
 
-        paramList.add(Address.decodeBase58("AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN").toArray());
-        paramList.add(Address.decodeBase58("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y").toArray());
-        paramList.add(com.github.ontio.common.Helper.hexToBytes("1ddbb682743e9d9e2b71ff419e97a9358c5c4ee9"));
-        List data = new ArrayList();
-        data.add("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
-        data.add("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
-        data.add("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
-        paramList.add(data);
-        List priceList = new ArrayList();
-        priceList.add(1);
-        priceList.add(2);
-        priceList.add(3);
-        paramList.add(priceList);
-        paramList.add(5000);
-        paramList.add(5000);
-        byte[] params2 = BuildParams.createCodeParamsScript(paramList);
-        String txHash = sdk.invokeContract(params2, Acct, payerAcct, 20000, 500, false);
-
-//        String txHash = (String) sdk.invokeContract(params,Acct, payerAcct,false);
+//        String txHash = (String) sdk.invokeContract(params,Acct, payerAcct,true);
+        String txHash = (String) sdk.invokeContract(params,Acct, payerAcct,false);
 
         new Thread(new Runnable(){
             @Override

@@ -9,10 +9,12 @@ import com.github.ontio.common.Address;
 import com.github.ontio.common.Common;
 import com.github.ontio.common.Helper;
 import com.github.ontio.common.WalletQR;
+import com.github.ontio.core.ontid.Attribute;
 import com.github.ontio.core.transaction.Transaction;
 import com.github.ontio.sdk.exception.SDKException;
 import com.github.ontio.sdk.wallet.Identity;
 import com.ontology.ConfigParam;
+import com.ontology.dao.OntId;
 import com.ontology.secure.ECIES;
 
 import com.ontology.secure.SecureConfig;
@@ -179,5 +181,40 @@ public class SDKUtil {
         OntSdk ontSdk = getOntSdk();
         String s = ontSdk.neovm().oep4().queryBalanceOf("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y");
         System.out.println(s);
+    }
+
+    public String getDDO(String ontid) throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        String DDO = ontSdk.nativevm().ontId().sendGetDDO(ontid);
+        return DDO;
+    }
+
+    public void addAttributes(OntId ontId, String password, String key, String valueType, String value) throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        String ontid = ontId.getOntid();
+        String keystore = ontId.getKeystore().replace("\\", "");
+        JSONObject jsonObject = JSON.parseObject(keystore);
+        String saltStr = jsonObject.getString("salt");
+        byte[] salt = java.util.Base64.getDecoder().decode(saltStr);
+        Attribute[] attributes = new Attribute[1];
+        attributes[0] = new Attribute(key.getBytes(),valueType.getBytes(),value.getBytes());
+        Account payerAcct = getPayerAcct();
+        ontSdk.nativevm().ontId().sendAddAttributes(ontid,password,salt,attributes,payerAcct,20000,500);
+    }
+
+    public void getWalletPk() throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        String privateKey = Account.getGcmDecodedPrivateKey("hiqZ0Ecsd+OTy3AAzLNBIhdYVVYmDiR77meHuMT/v9EJmQIgHWRv54cDAjO1bP28", "87654321",
+                "AGW2QrJZMf2ZWuG7bzwczYE1yHACXjnpZG", Base64.decodeFast("oZ7Ulp8ltLc87z/i+dSLeA=="), 16384, ontSdk.getWalletMgr().getSignatureScheme());
+        System.out.println(Base64ConvertUtil.encode(privateKey));
+    }
+
+    public Account getPayerAcct2() throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        System.out.println(secureConfig.getWalletJavaPrivateKey());
+
+        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), ontSdk.getWalletMgr().getSignatureScheme());
+        System.out.println(JSON.toJSONString(account));
+        return account;
     }
 }

@@ -24,14 +24,14 @@ public class BuyerController {
     BuyerService buyerService;
 
     @ApiOperation(value="数据交易请求接口", notes="数据交易请求接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/buy", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v1/datadealer/buyer/buy", method = RequestMethod.POST)
     public Result purchaseData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "buy";
         String ontid = (String) obj.get("ontid");
         String password = (String) obj.get("password");
         String supplyOntid = (String) obj.get("supplyOntid");
         List<String> productIds = (List<String>) obj.get("productIds");
-        List<String> price = (List<String>) obj.get("price");
+        List<Integer> price = (List<Integer>) obj.get("price");
 
         helpCheckPwd(action,password);
 

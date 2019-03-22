@@ -33,17 +33,21 @@ CREATE TABLE `tbl_ont_developer` (
 -- Table structure for tbl_ontid
 -- ----------------------------
 DROP TABLE IF EXISTS `tbl_ontid`;
-CREATE TABLE `tbl_ontid` (
-  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `ontid` varchar(255) DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
+CREATE TABLE `tbl_ontid`
+(
+  `id`       int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `ontid`    varchar(255) DEFAULT NULL,
+  `phone`    varchar(255) DEFAULT NULL,
   `keystore` text,
-  `pwd` varchar(255) DEFAULT NULL,
-  `mail` varchar(255) DEFAULT NULL,
-  `method` varchar(255) DEFAULT NULL,
-  `tx` text,
+  `pwd`      varchar(255) DEFAULT NULL,
+  `mail`     varchar(255) DEFAULT NULL,
+  `method`   varchar(255) DEFAULT NULL,
+  `tx`       text,
+  `type`     int(2)       DEFAULT NULL COMMENT '1-数据需求方;2-数据提供方',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = latin1;
 
 -- ----------------------------
 -- Table structure for tbl_secure
@@ -75,6 +79,7 @@ DROP TABLE IF EXISTS `tbl_order`;
 CREATE TABLE `tbl_order`
 (
   `id`            varchar(255) NOT NULL,
+  `exchange_id`   varchar(255) DEFAULT NULL,
   `buyer_ontid`   varchar(255) DEFAULT NULL,
   `seller_ontid`  varchar(255) DEFAULT NULL,
   `buy_tx`        text,

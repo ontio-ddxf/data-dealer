@@ -1,6 +1,8 @@
 package com.ontology.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.ontio.account.Account;
 import com.github.ontio.common.Address;
 import com.ontology.dao.OntId;
@@ -29,51 +31,51 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderMapper orderMapper;
 
     @Override
-    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<String> productIds, List<String> priceList) throws Exception {
+    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<String> productIds, List<Integer> priceList) throws Exception {
         OntId ontId = getOntId(action,ontid,password);
 
         Account payerAcct = sdk.getPayerAcct();
         Account buyerAcct = sdk.getAccount(ontId.getKeystore(),password);
 
-        byte[] buyerAddr = ontid.replace("did:ont:","").getBytes();
-        byte[] sellerAddr = sellerOntid.replace("did:ont:","").getBytes();
+        String dataDemander = ontid.replace("did:ont:","");
+        String dataProvider = sellerOntid.replace("did:ont:","");
 
 //        byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
 //        byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
 
 
         // TODO 拼接参数
-        String contractHash = "7a929de3dcf464d92e79f4ad04c41f56245998e5";
+        String contractHash = "ee07eddc8da6de3eebb4c268b1efcfd9afa61f12";
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
         arg0.put("name","data_demander");
-        arg0.put("value","bytearray:"+Arrays.toString(buyerAddr));
+        arg0.put("value","Address:"+dataDemander);
         Map arg1 = new HashMap();
         arg1.put("name","data_provider");
-        arg1.put("value","bytearray:"+Arrays.toString(sellerAddr));
+        arg1.put("value","Address:"+dataProvider);
         Map arg2 = new HashMap();
         arg2.put("name","token_contract_address");
-        arg2.put("value","bytearray:"+Arrays.toString("d7b6a47966770c1545bf74c16426b26c0a238b16".getBytes()));
+        arg2.put("value","ByteArray:1ddbb682743e9d9e2b71ff419e97a9358c5c4ee9");
         Map arg3 = new HashMap();
         arg3.put("name","data_id_list");
-        arg3.put("value","list:"+JSON.toJSONString(productIds));
+        List<String> dataIdList = new ArrayList<>();
+        for (String s : productIds) {
+            dataIdList.add("String:"+s);
+        }
+        arg3.put("value",dataIdList);
         Map arg4 = new HashMap();
         arg4.put("name","price_list");
-        arg4.put("value","list:"+JSON.toJSONString(priceList));
+        arg4.put("value",priceList);
         Map arg5 = new HashMap();
         arg5.put("name","wait_send_enc_list_time");
-        arg5.put("value","int:5000");
-        Map arg6 = new HashMap();
-        arg6.put("name","wait_receive_enc_list_time");
-        arg6.put("value","int:5000");
+        arg5.put("value",600);
         argsList.add(arg0);
         argsList.add(arg1);
         argsList.add(arg2);
         argsList.add(arg3);
         argsList.add(arg4);
         argsList.add(arg5);
-        argsList.add(arg6);
-        String params = Helper.getParams(ontid,contractHash,"send_token",argsList,payerAcct.getAddressU160().toBase58());
+        String params = Helper.getParams(ontid,contractHash,"sendToken",argsList,payerAcct.getAddressU160().toBase58());
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         Order order = new Order();
@@ -95,9 +97,29 @@ public class BuyerServiceImpl implements BuyerService {
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
+                    String eventStr = JSON.toJSONString(event);
+                    System.out.println(eventStr);
+                    String exchangeId = null;
                     Order orderState = orderMapper.selectOne(order);
+                    JSONObject jsonObject = JSONObject.parseObject(eventStr);
+                    JSONArray notify = jsonObject.getJSONArray("Notify");
+                    for (int i = 0;i<notify.size();i++) {
+                        JSONObject obj = notify.getJSONObject(i);
+                        if ("ee07eddc8da6de3eebb4c268b1efcfd9afa61f12".equals(obj.getString("ContractAddress"))) {
+                            exchangeId = obj.getJSONArray("States").getString(1);
+                        }
+                    }
+//                    List notify = (List) JSON.parseObject(eventStr).get("Notify");
+//                    for (Object tmp : notify) {
+//                        Map map = (HashMap<String,String>) tmp;
+//                        if ("ee07eddc8da6de3eebb4c268b1efcfd9afa61f12".equals((String) map.get("ContractAddress"))) {
+//                            List<String> states = (List<String>) map.get("States");
+//                            exchangeId = states.get(1);
+//                        }
+//                    }
+                    orderState.setBuyEvent(eventStr);
+                    orderState.setExchangeId(exchangeId);
                     orderState.setState("boughtOnchain");
-                    orderState.setBuyEvent(JSON.toJSONString(event));
                     orderState.setBuyDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {

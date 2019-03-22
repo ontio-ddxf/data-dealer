@@ -13,5 +13,6 @@
     <result column="method" jdbcType="VARCHAR" property="method" />
     <result column="keystore" jdbcType="LONGVARCHAR" property="keystore" />
     <result column="tx" jdbcType="LONGVARCHAR" property="tx" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
 </mapper>

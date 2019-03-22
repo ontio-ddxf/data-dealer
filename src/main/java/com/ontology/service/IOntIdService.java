@@ -5,7 +5,7 @@ import com.ontology.dao.OntId;
 import java.security.NoSuchAlgorithmException;
 
 public interface IOntIdService {
-    String createOntId(String phone, String pwd) throws Exception;
+    String createOntId(String phone, String pwd, Integer type) throws Exception;
 
     OntId queryOntIdByPhone(String phone);
 
@@ -23,4 +23,8 @@ public interface IOntIdService {
     String decryptClaim(OntId ontId, String pwd, String[] data) throws Exception;
 
     String insertOntIdWithKeyStore(String action, String keystore, String pwd, String phone) throws Exception;
+
+    String getDDO(String action, String ontid) throws Exception;
+
+    void addAttributes(String action, OntId ontId, String password, String key, String valueType, String value) throws Exception;
 }
