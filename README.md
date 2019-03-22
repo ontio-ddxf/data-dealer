@@ -590,7 +590,8 @@ method：POST
               		"Value": "0206590ae715755f0f1fd235726957f8e11cd0b13b22c67c2404a5e3fd8d303b65",
               		"PubKeyId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN#keys-1"
               	}]
-              }}
+              }
+}
 ```
 
 | Field_Name|     Type |   Description   | 
