@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.github.ontio.account.Account;
 import com.ontology.filter.HMACSha256;
 import com.ontology.model.RequestBean;
 import com.ontology.model.Result;
@@ -16,6 +17,7 @@ import com.ontology.secure.MD5Utils;
 import com.ontology.utils.Base64ConvertUtil;
 import com.ontology.utils.Helper;
 
+import com.ontology.utils.SDKUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +36,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URL;
+import java.security.PrivateKey;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
@@ -58,17 +61,26 @@ public class IdentityServiceApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Before
-    public void setUp() throws Exception {
-//        port = 7070;
-        String url = String.format("http://localhost:%d/api/v1/ontid", port);
-//        String url = "http://139.219.136.188:10330";
+    @Autowired
+    private SDKUtil sdkUtil;
 
-        this.base = new URL(url);
-
-//		org.apache.shiro.mgt.SecurityManager securityManger = mock(org.apache.shiro.mgt.SecurityManager.class, RETURNS_DEEP_STUBS);
-//		ThreadContext.bind(securityManger);
-    }
+//    @Test
+//    public void sdk() throws Exception {
+//        Account payerAcct = sdkUtil.createPayerAcct();
+//        PrivateKey privateKey = payerAcct.getPrivateKey();
+//        System.out.println(privateKey.toString());
+//    }
+//    @Before
+//    public void setUp() throws Exception {
+////        port = 7070;
+//        String url = String.format("http://localhost:%d/api/v1/ontid", port);
+////        String url = "http://139.219.136.188:10330";
+//
+//        this.base = new URL(url);
+//
+////		org.apache.shiro.mgt.SecurityManager securityManger = mock(org.apache.shiro.mgt.SecurityManager.class, RETURNS_DEEP_STUBS);
+////		ThreadContext.bind(securityManger);
+//    }
 
     @Test
     public void contextLoads() {

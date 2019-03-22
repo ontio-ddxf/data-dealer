@@ -3,7 +3,6 @@ package com.ontology.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.ontio.account.Account;
 import com.github.ontio.sdk.manager.ECIES;
-import com.github.ontio.smartcontract.neovm.abi.BuildParams;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
@@ -36,7 +35,7 @@ public class SellerServiceImpl implements SellerService {
         OntId sellerOntId = getOntId(action,ontid,password);
 
         Account payerAcct = sdk.getPayerAcct();
-        Account supplyAcct = sdk.getAccount(sellerOntId.getKeystore(),password);
+        Account sellerAcct = sdk.getAccount(sellerOntId.getKeystore(),password);
 
         Order order = new Order();
         order.setId(orderId);
@@ -48,11 +47,11 @@ public class SellerServiceImpl implements SellerService {
         String securityUrl = JSON.toJSONString(ECIES.Encrypt(publicKeys,url.getBytes()));
         String securityDataPwd = JSON.toJSONString(ECIES.Encrypt(publicKeys,dataPwd.getBytes()));
 
-        List paramList = new ArrayList();
         // TODO 拼接参数
-        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        String txHash = sdk.invokeContract(params,supplyAcct, payerAcct, 20000, 500,true);
+        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String txHash = (String) sdk.invokeContract(params,sellerAcct, payerAcct,false);
 
         supplyOrder.setSellTx(txHash);
         supplyOrder.setState("delivered");
@@ -65,7 +64,7 @@ public class SellerServiceImpl implements SellerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (event == null) {
-                        sdk.invokeContract(params,supplyAcct, payerAcct, 20000, 500,true);
+                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -86,7 +85,7 @@ public class SellerServiceImpl implements SellerService {
         OntId sellerOntId = getOntId(action,ontid,password);
 
         Account payerAcct = sdk.getPayerAcct();
-        Account supplyAcct = sdk.getAccount(sellerOntId.getKeystore(),password);
+        Account sellerAcct = sdk.getAccount(sellerOntId.getKeystore(),password);
 
         Order order = new Order();
         order.setId(orderId);
@@ -95,11 +94,11 @@ public class SellerServiceImpl implements SellerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
 
-        List paramList = new ArrayList();
         // TODO 拼接参数
-        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        String txHash = sdk.invokeContract(params,supplyAcct, payerAcct, 20000, 500,true);
+        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String txHash = (String) sdk.invokeContract(params,sellerAcct, payerAcct,false);
 
         cancelOrder.setCancelTx(txHash);
         cancelOrder.setState("sellerCancel");
@@ -112,7 +111,7 @@ public class SellerServiceImpl implements SellerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (event == null) {
-                        sdk.invokeContract(params,supplyAcct, payerAcct, 20000, 500,true);
+                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -128,6 +127,14 @@ public class SellerServiceImpl implements SellerService {
         }){}.start();
     }
 
+    @Override
+    public List<Order> findSellList(String action, String sellerOntid) {
+        Order order = new Order();
+        order.setSellerOntid(sellerOntid);
+        List<Order> orderList = orderMapper.select(order);
+        return orderList;
+    }
+
     private OntId getOntId(String action, String ontid, String password) {
         OntId ontId = new OntId();
         ontId.setOntid(ontid);
@@ -141,4 +148,5 @@ public class SellerServiceImpl implements SellerService {
         }
         return ontId;
     }
+
 }

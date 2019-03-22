@@ -38,11 +38,13 @@ public class SDKUtil {
 
     public Map<String, String> createOntId(String pwd) throws Exception {
         OntSdk ontSdk = getOntSdk();
+        Account payerAcct = getPayerAcct();
         HashMap<String, String> res = new HashMap<>();
         Identity identity = ontSdk.getWalletMgr().createIdentity(pwd);
         Transaction transaction = ontSdk.nativevm().ontId().makeRegister(identity.ontid, identity.controls.get(0).publicKey, param.PAYER_ADDRESS, Constant.GAS_Limit, Constant.GAS_PRICE);
         Account account = ontSdk.getWalletMgr().getAccount(identity.ontid, pwd, identity.controls.get(0).getSalt());
         ontSdk.signTx(transaction, new Account[][]{{account}});
+        ontSdk.nativevm().ontId().sendRegister(identity,pwd,payerAcct,20000,500);
         Map keystore = WalletQR.exportIdentityQRCode(ontSdk.getWalletMgr().getWallet(), identity);
         res.put("ontid", identity.ontid);
         res.put("keystore", JSON.toJSONString(keystore));
@@ -122,7 +124,7 @@ public class SDKUtil {
             throw new SDKException("gaslimit or gasprice should not be less than 0");
         }
 
-        Transaction tx = ontSdk.vm().makeInvokeCodeTransaction(null,null,params,payerAcct.getAddressU160().toBase58(),gaslimit,gasprice);
+        Transaction tx = ontSdk.vm().makeInvokeCodeTransaction(Helper.reverse("04e1d2914999b485896f6c42b729565f8f92d625"),"send_token",params,payerAcct.getAddressU160().toBase58(),gaslimit,gasprice);
 
         ontSdk.addSign(tx, payerAcct);
         ontSdk.addSign(tx,Acct);
@@ -146,12 +148,14 @@ public class SDKUtil {
         }else {
             result = ontSdk.getConnect().sendRawTransaction(txs1[0].toHexString());
         }
-        return result;
+        return txs1[0].hash().toString();
     }
     public Account getPayerAcct() throws Exception {
         OntSdk ontSdk = getOntSdk();
-        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), getOntSdk().getWalletMgr().getSignatureScheme());
-        return account;
+//        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), ontSdk.getWalletMgr().getSignatureScheme());
+//        Account account = ontSdk.getWalletMgr().getWallet().getAccounts()[0];
+        Account acct = ontSdk.getWalletMgr().getAccount("AGW2QrJZMf2ZWuG7bzwczYE1yHACXjnpZG", secureConfig.getWalletPwd());
+        return acct;
     }
 
     public Object checkEvent(String txHash) throws Exception {
@@ -169,5 +173,11 @@ public class SDKUtil {
         OntSdk ontSdk = getOntSdk();
         int height = ontSdk.getConnect().getBlockHeightByTxHash(txHash);
         return height;
+    }
+
+    public void queryBlance() throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        String s = ontSdk.neovm().oep4().queryBalanceOf("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y");
+        System.out.println(s);
     }
 }

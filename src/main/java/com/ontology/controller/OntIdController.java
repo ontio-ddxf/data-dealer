@@ -5,18 +5,13 @@ import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
 import com.ontology.service.IOntIdService;
 import com.ontology.service.ISmsService;
+import com.ontology.utils.Base64ConvertUtil;
 import com.ontology.utils.ErrorInfo;
 import com.ontology.utils.Helper;
-import com.ontology.utils.Base64ConvertUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -41,7 +36,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/register/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @RequestMapping(value = "/api/v1/ontid/register/{method}", method = RequestMethod.POST)
     public Result registerOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "register";
         if (!method.equals("phone")) {

@@ -18,7 +18,7 @@ public interface ISmsService {
      * @param code
      * @return
      */
-    void verifyPhone(String action,String phone, String code) throws Exception;
+    void verifyPhone(String action, String phone, String code) throws Exception;
 
 
 }

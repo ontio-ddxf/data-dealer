@@ -3,8 +3,6 @@ package com.ontology.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.ontio.account.Account;
 import com.github.ontio.common.Address;
-import com.github.ontio.core.transaction.Transaction;
-import com.github.ontio.smartcontract.neovm.abi.BuildParams;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
@@ -31,28 +29,55 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderMapper orderMapper;
 
     @Override
-    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<Integer> productIds, String price) throws Exception {
+    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<String> productIds, List<String> priceList) throws Exception {
         OntId ontId = getOntId(action,ontid,password);
 
         Account payerAcct = sdk.getPayerAcct();
         Account buyerAcct = sdk.getAccount(ontId.getKeystore(),password);
 
-        byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
-        byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
+        byte[] buyerAddr = ontid.replace("did:ont:","").getBytes();
+        byte[] sellerAddr = sellerOntid.replace("did:ont:","").getBytes();
 
-//        List paramList = new ArrayList();
-//        paramList.add(buyerAddr);
-//        paramList.add(supplyAddr);
+//        byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
+//        byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
+
 
         // TODO 拼接参数
-//        byte[] params = BuildParams.createCodeParamsScript(paramList);
-
-        //String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
-
-        String params = getParams(action,ontid,"","",null,null,null,payerAcct.getAddressU160().toBase58());
+        String contractHash = "7a929de3dcf464d92e79f4ad04c41f56245998e5";
+        List argsList = new ArrayList();
+        Map arg0 = new HashMap();
+        arg0.put("name","data_demander");
+        arg0.put("value","bytearray:"+Arrays.toString(buyerAddr));
+        Map arg1 = new HashMap();
+        arg1.put("name","data_provider");
+        arg1.put("value","bytearray:"+Arrays.toString(sellerAddr));
+        Map arg2 = new HashMap();
+        arg2.put("name","token_contract_address");
+        arg2.put("value","bytearray:"+Arrays.toString("d7b6a47966770c1545bf74c16426b26c0a238b16".getBytes()));
+        Map arg3 = new HashMap();
+        arg3.put("name","data_id_list");
+        arg3.put("value","list:"+JSON.toJSONString(productIds));
+        Map arg4 = new HashMap();
+        arg4.put("name","price_list");
+        arg4.put("value","list:"+JSON.toJSONString(priceList));
+        Map arg5 = new HashMap();
+        arg5.put("name","wait_send_enc_list_time");
+        arg5.put("value","int:5000");
+        Map arg6 = new HashMap();
+        arg6.put("name","wait_receive_enc_list_time");
+        arg6.put("value","int:5000");
+        argsList.add(arg0);
+        argsList.add(arg1);
+        argsList.add(arg2);
+        argsList.add(arg3);
+        argsList.add(arg4);
+        argsList.add(arg5);
+        argsList.add(arg6);
+        String params = Helper.getParams(ontid,contractHash,"send_token",argsList,payerAcct.getAddressU160().toBase58());
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         Order order = new Order();
+        order.setId(""+System.currentTimeMillis());
         order.setBuyerOntid(ontid);
         order.setSellerOntid(sellerOntid);
         order.setBuyTx(txHash);
@@ -99,11 +124,11 @@ public class BuyerServiceImpl implements BuyerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
 
-        List paramList = new ArrayList();
         // TODO 拼接参数
-        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+        String params =  Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         cancelOrder.setCancelTx(txHash);
         cancelOrder.setState("buyerCancel");
@@ -116,7 +141,7 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -146,11 +171,11 @@ public class BuyerServiceImpl implements BuyerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
 
-        List paramList = new ArrayList();
         // TODO 拼接参数
-        byte[] params = BuildParams.createCodeParamsScript(paramList);
+        List argsList = new ArrayList();
 
-        String txHash = sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         confirmOrder.setConfirmTx(txHash);
         confirmOrder.setState("buyerConfirm");
@@ -163,7 +188,7 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct, 20000, 500,true);
+                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -177,6 +202,14 @@ public class BuyerServiceImpl implements BuyerService {
                 }
             }
         }){}.start();
+    }
+
+    @Override
+    public List<Order> findSellList(String action, String buyerOntid) {
+        Order order = new Order();
+        order.setSellerOntid(buyerOntid);
+        List<Order> orderList = orderMapper.select(order);
+        return orderList;
     }
 
     private OntId getOntId(String action, String ontid, String password) {
@@ -193,40 +226,5 @@ public class BuyerServiceImpl implements BuyerService {
         return ontId;
     }
 
-    private String getParams(String action,String ontid,String contractHash,String method,List valueList,Map valueMap,String valueStr,String payer) {
-        Map parms = new HashMap();
-        Map invokeConfig = new HashMap();
-        List functions = new ArrayList();
-        Map function = new HashMap();
-        function.put("operation",method);
-        List args = new ArrayList();
-        Map argList = new HashMap();
-        argList.put("name","arg0-list");
-        argList.put("value",valueList);
-        args.add(argList);
-
-        Map argMap = new HashMap();
-        argMap.put("name","arg1-map");
-        argMap.put("value",valueMap);
-        args.add(argMap);
-
-        Map argStr = new HashMap();
-        argStr.put("name","arg2-str");
-        argStr.put("value",valueStr);
-        args.add(argStr);
-
-        function.put("args",args);
-
-        functions.add(function);
-        invokeConfig.put("contractHash",contractHash);
-        invokeConfig.put("functions",functions);
-        invokeConfig.put("payer",payer);
-        invokeConfig.put("gasLimit",20000);
-        invokeConfig.put("gasPrice",500);
-        parms.put("action",action);
-        parms.put("invokeConfig",invokeConfig);
-        parms.put("ontid",ontid);
-        return JSON.toJSONString(parms);
-    }
 
 }

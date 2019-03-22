@@ -11,13 +11,11 @@ import com.ontology.service.IOntIdService;
 import com.ontology.utils.ErrorInfo;
 import com.ontology.utils.Helper;
 import com.ontology.utils.SDKUtil;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by ZhouQ on 2017/8/31.
