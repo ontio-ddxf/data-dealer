@@ -1,15 +1,22 @@
 # Data Dealer
 
-* [需求方手机注册Ontid](#需求方手机注册Ontid)
-* [提供方手机注册Ontid](#提供方手机注册Ontid)
+
+### 登录接口
 * [手机密码登录](#手机密码登录)
+
+### 需求方接口
+* [需求方手机注册Ontid](#需求方手机注册Ontid)
 * [需求方查询订单](#需求方查询订单)
 * [需求方购买数据](#需求方购买数据)
 * [需求方取消购买](#需求方取消购买)
-* [需求方确认收货](#需求方确认收货)
+
+### 提供方接口
+* [提供方手机注册Ontid](#提供方手机注册Ontid)
 * [提供方查询订单](#提供方查询订单)
 * [提供方发货](#提供方发货)
-* [提供方取消订单](#提供方取消订单)
+* [提供方确认收款](#提供方确认收款)
+
+### 存证接口
 * [添加ontid属性](#添加ontid属性)
 * [获取DDO](#获取DDO)
 
@@ -220,7 +227,7 @@ method：POST
 	"dataProvider": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
 	"tokenContractAddress": "16edbe366d1337eb510c2ff61099424c94aeef02",
 	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b","d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35","4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"],
-	"priceList": ["100","500","1000"],
+	"priceList": [1,1,1],
 	"waitSendEncListTime": 5000,
 	"waitReceiveEncListTime": 5000
 }
@@ -307,54 +314,6 @@ method：POST
 |    result|   String|  成功返回true，失败返回""  |
 
 
-### 需求方确认收货
-
-1. 提供买方信息，订单ID
-2. 验证信息
-3. 调用合约提取数据，确认交易
-4. 返回true
-
-```text
-url：/api/v1/datadealer/buyer/confirm
-method：POST
-```
-
-- 请求：
-
-```json
-{
-	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
-	"password": "123456",
-	"orderId": "WfbSPxMR1BNxtenRCCGps"
-}
-```
-
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  数据需求方密码  |
-|    orderId|   String|  订单ID  |
-
-- 响应：
-
-```json
-{
-	"action":"confirm",
-	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
-	"result": true
-}
-```
-
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
-
 
 ### 提供方查询订单
 
@@ -391,7 +350,8 @@ method：POST
               	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
               	"buyDate": "2019-3-20",
               	"state": "deliveredOnchain"
-              }]}
+              }]
+ }
 ```
 
 | Field_Name|     Type |   Description   | 
@@ -453,15 +413,12 @@ method：POST
 |    result|   String|  成功返回true，失败返回""  |
 
 
-### 提供方取消订单
+### 提供方确认收款
 
-1. 提供卖方信息，订单ID
-2. 验证信息
-3. 调用合约取消交易
-4. 返回true
+
 
 ```text
-url：/api/v1/datadealer/seller/cancel
+url：/api/v1/datadealer/seller/confirm
 method：POST
 ```
 
@@ -470,21 +427,22 @@ method：POST
 ```json
 {
 	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
-	"password":"123456",
+	"password": "123456",
 	"orderId": "WfbSPxMR1BNxtenRCCGps"
 }
 ```
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
-|    dataProvider|   String|  数据提供方ontid  |
-|    password|   String|  数据提供方密码  |
-|    orderId|   Sting|  订单id  |
+|    dataDemander|   String|  数据需求方ontid  |
+|    password|   String|  数据需求方密码  |
+|    orderId|   String|  订单ID  |
 
 - 响应：
+
 ```json
 {
-	"action":"sellerCancel",
+	"action":"confirm",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",

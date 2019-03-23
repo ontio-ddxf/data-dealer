@@ -44,7 +44,7 @@ public class OntIdController {
         if (!method.equals("phone")) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
-        String number = (String) obj.get("number");
+        String number = (String) obj.get("phone");
 
         //todo 手机号校验，位数校验，dto注解验证
         Helper.verifyPhone(action, number);
@@ -73,7 +73,7 @@ public class OntIdController {
         if (!method.equals("phone")) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
-        String number = (String) obj.get("number");
+        String number = (String) obj.get("phone");
 
         //todo 手机号校验，位数校验，dto注解验证
         Helper.verifyPhone(action, number);
@@ -95,7 +95,7 @@ public class OntIdController {
      * @param  obj
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/login/", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/ontid/login", method = RequestMethod.POST)
     public Result loginOntId(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "login";
         String phone = (String) obj.get("phone");

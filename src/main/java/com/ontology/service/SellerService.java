@@ -7,9 +7,8 @@ import java.util.List;
 
 public interface SellerService {
 
-    void deliverData(String action, String ontid, String password, String orderId, String url, String dataPwd) throws Exception;
+    void deliverData(String action, String ontid, String password, String orderId, List encMsgList) throws Exception;
 
-    void cancelExchange(String action, String ontid, String password, String orderId) throws Exception;
-
+    void confirmExchange(String action, String ontid, String password, String orderId) throws Exception;
     List<Order> findSellList(String action, String ontid);
 }

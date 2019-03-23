@@ -43,14 +43,13 @@ public class SDKUtil {
         Account payerAcct = getPayerAcct();
         HashMap<String, String> res = new HashMap<>();
         Identity identity = ontSdk.getWalletMgr().createIdentity(pwd);
-        Transaction transaction = ontSdk.nativevm().ontId().makeRegister(identity.ontid, identity.controls.get(0).publicKey, param.PAYER_ADDRESS, Constant.GAS_Limit, Constant.GAS_PRICE);
-        Account account = ontSdk.getWalletMgr().getAccount(identity.ontid, pwd, identity.controls.get(0).getSalt());
-        ontSdk.signTx(transaction, new Account[][]{{account}});
-        ontSdk.nativevm().ontId().sendRegister(identity,pwd,payerAcct,20000,500);
+        String txhash = ontSdk.nativevm().ontId().sendRegister(identity,pwd,payerAcct,Constant.GAS_Limit, Constant.GAS_PRICE);
+        ontSdk.getWalletMgr().getWallet().clearIdentity();
+        ontSdk.getWalletMgr().writeWallet();
         Map keystore = WalletQR.exportIdentityQRCode(ontSdk.getWalletMgr().getWallet(), identity);
         res.put("ontid", identity.ontid);
         res.put("keystore", JSON.toJSONString(keystore));
-        res.put("tx", transaction.toHexString());
+        res.put("tx", txhash);
         ontSdk.getWalletMgr().getWallet().clearIdentity();
         return res;
     }

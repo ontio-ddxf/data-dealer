@@ -31,31 +31,31 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderMapper orderMapper;
 
     @Override
-    public void purchaseData(String action, String ontid, String password, String sellerOntid, List<String> productIds, List<Integer> priceList) throws Exception {
-        OntId ontId = getOntId(action,ontid,password);
+    public void purchaseData(String action, String dataDemander, String password, String dataProvider, List<String> productIds, List<Long> priceList) throws Exception {
+        OntId ontId = getOntId(action,dataDemander,password);
 
         Account payerAcct = sdk.getPayerAcct();
         Account buyerAcct = sdk.getAccount(ontId.getKeystore(),password);
 
-        String dataDemander = ontid.replace("did:ont:","");
-        String dataProvider = sellerOntid.replace("did:ont:","");
+        String dataDemanderAddr = dataDemander.replace("did:ont:","");
+        String dataProviderAddr = dataProvider.replace("did:ont:","");
 
 //        byte[] buyerAddr = Address.addressFromPubKey(sdk.getPublicKeys(ontid)).toBase58().getBytes();
 //        byte[] supplyAddr = Address.addressFromPubKey(sdk.getPublicKeys(sellerOntid)).toBase58().getBytes();
 
 
         // TODO 拼接参数
-        String contractHash = "ee07eddc8da6de3eebb4c268b1efcfd9afa61f12";
+        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";//"16edbe366d1337eb510c2ff61099424c94aeef02";  //ee07eddc8da6de3eebb4c268b1efcfd9afa61f12
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
         arg0.put("name","data_demander");
-        arg0.put("value","Address:"+dataDemander);
+        arg0.put("value","Address:"+dataDemanderAddr);
         Map arg1 = new HashMap();
         arg1.put("name","data_provider");
-        arg1.put("value","Address:"+dataProvider);
+        arg1.put("value","Address:"+dataProviderAddr);
         Map arg2 = new HashMap();
         arg2.put("name","token_contract_address");
-        arg2.put("value","ByteArray:1ddbb682743e9d9e2b71ff419e97a9358c5c4ee9");
+        arg2.put("value","ByteArray:0000000000000000000000000000000000000002");//1ddbb682743e9d9e2b71ff419e97a9358c5c4ee9
         Map arg3 = new HashMap();
         arg3.put("name","data_id_list");
         List<String> dataIdList = new ArrayList<>();
@@ -68,20 +68,21 @@ public class BuyerServiceImpl implements BuyerService {
         arg4.put("value",priceList);
         Map arg5 = new HashMap();
         arg5.put("name","wait_send_enc_list_time");
-        arg5.put("value",600);
+        arg5.put("value",60000);
         argsList.add(arg0);
         argsList.add(arg1);
         argsList.add(arg2);
         argsList.add(arg3);
         argsList.add(arg4);
         argsList.add(arg5);
-        String params = Helper.getParams(ontid,contractHash,"sendToken",argsList,payerAcct.getAddressU160().toBase58());
+        String params = Helper.getParams(dataDemander,contractHash,"sendToken",argsList,payerAcct.getAddressU160().toBase58());
+        log.info("invoke params:{}",params);
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         Order order = new Order();
-        order.setId(""+System.currentTimeMillis());
-        order.setBuyerOntid(ontid);
-        order.setSellerOntid(sellerOntid);
+        order.setId(UUID.randomUUID().toString());
+        order.setBuyerOntid(dataDemander);
+        order.setSellerOntid(dataProvider);
         order.setBuyTx(txHash);
         order.setState("bought");
         orderMapper.insertSelective(order);
@@ -105,7 +106,7 @@ public class BuyerServiceImpl implements BuyerService {
                     JSONArray notify = jsonObject.getJSONArray("Notify");
                     for (int i = 0;i<notify.size();i++) {
                         JSONObject obj = notify.getJSONObject(i);
-                        if ("ee07eddc8da6de3eebb4c268b1efcfd9afa61f12".equals(obj.getString("ContractAddress"))) {
+                        if ("65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc".equals(obj.getString("ContractAddress"))) {
                             exchangeId = obj.getJSONArray("States").getString(1);
                         }
                     }
@@ -148,13 +149,19 @@ public class BuyerServiceImpl implements BuyerService {
 
         // TODO 拼接参数
         List argsList = new ArrayList();
+        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
+        Map arg0 = new HashMap();
+        arg0.put("name","exchange_id");
+        arg0.put("value","ByteArray:"+cancelOrder.getExchangeId());
+        argsList.add(arg0);
 
-        String params =  Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
+        String params =  Helper.getParams(ontid,contractHash,"cancelExchange",argsList,payerAcct.getAddressU160().toBase58());
+        log.info("cancelExchange:{}",params);
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         cancelOrder.setCancelTx(txHash);
         cancelOrder.setState("buyerCancel");
-        orderMapper.insertSelective(cancelOrder);
+        orderMapper.updateByPrimaryKey(cancelOrder);
 
         new Thread(new Runnable(){
             @Override
@@ -179,52 +186,7 @@ public class BuyerServiceImpl implements BuyerService {
         }){}.start();
     }
 
-    @Override
-    public void confirmExchange(String action, String ontid, String password, String orderId) throws Exception {
-        OntId buyerOntId = getOntId(action,ontid,password);
 
-        Account payerAcct = sdk.getPayerAcct();
-        Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
-
-        Order order = new Order();
-        order.setId(orderId);
-        Order confirmOrder = orderMapper.selectOne(order);
-        if (confirmOrder == null) {
-            throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
-        }
-
-        // TODO 拼接参数
-        List argsList = new ArrayList();
-
-        String params = Helper.getParams(ontid,"",null,argsList,payerAcct.getAddressU160().toBase58());
-        String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
-
-        confirmOrder.setConfirmTx(txHash);
-        confirmOrder.setState("buyerConfirm");
-        orderMapper.insertSelective(confirmOrder);
-
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(6*1000);
-                    Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
-                        Thread.sleep(6*1000);
-                        event = sdk.checkEvent(txHash);
-                    }
-                    Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("buyerConfirmOnchain");
-                    orderState.setConfirmEvent(JSON.toJSONString(event));
-                    orderState.setConfirmDate(new Date());
-                    orderMapper.updateByPrimaryKeySelective(orderState);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }){}.start();
-    }
 
     @Override
     public List<Order> findSellList(String action, String buyerOntid) {
