@@ -13,10 +13,12 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 @tk.mybatis.spring.annotation.MapperScan("com.ontology.mapper")
 @EnableTransactionManagement
+@EnableSwagger2
 //@EnableAspectJAutoProxy
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 public class OntidManageApplication {

@@ -9,15 +9,19 @@ import com.ontology.service.ISmsService;
 import com.ontology.utils.Base64ConvertUtil;
 import com.ontology.utils.ErrorInfo;
 import com.ontology.utils.Helper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+@Api(tags = "Ontid 接口")
 @RestController
 public class OntIdController {
 
@@ -37,6 +41,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
+    @ApiOperation("数据需求方注册ontid")
     @RequestMapping(value = "/api/v1/ontid/register/demander/{method}", method = RequestMethod.POST)
     public Result registerDemanderOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "demanderRegister";
@@ -66,6 +71,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
+    @ApiOperation("数据提供方注册ontid")
     @RequestMapping(value = "/api/v1/ontid/register/provider/{method}", method = RequestMethod.POST)
     public Result registerProviderOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "providerRegister";
@@ -95,6 +101,7 @@ public class OntIdController {
      * @param  obj
      * @return ontid
      */
+    @ApiOperation("Ontid 登录")
     @RequestMapping(value = "/api/v1/ontid/login", method = RequestMethod.POST)
     public Result loginOntId(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "login";
@@ -134,6 +141,7 @@ public class OntIdController {
      * @param  req
      * @return true
      */
+    @ApiOperation("Ontid 添加属性")
     @RequestMapping(value = "/api/v1/ontid/addattribute", method = RequestMethod.POST)
     public Result addAttributes(@RequestBody AttributeVo req) throws Exception {
         String action = "addAttribute";
@@ -157,6 +165,7 @@ public class OntIdController {
      * @param  ontid
      * @return ontid
      */
+    @ApiOperation("Ontid 获取 DDO")
     @RequestMapping(value = "/api/v1/ontid/getddo", method = RequestMethod.POST)
     public Result getDDO(@RequestBody String ontid) throws Exception {
         String action = "getDDO";
@@ -174,7 +183,8 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
-    @RequestMapping(value = "/api/v1/ontid/edit/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
+    @ApiIgnore
+    @RequestMapping(value = "/api/v1/ontid/update/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result updateOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "edit";
         switch (method) {
@@ -225,6 +235,7 @@ public class OntIdController {
      * @param method phone
      * @return ontid
      */
+    @ApiIgnore
     @RequestMapping(value = "/api/v1/ontid/export/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result exportOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "export";
@@ -272,6 +283,7 @@ public class OntIdController {
      *
      * @return ontid
      */
+    @ApiIgnore
     @RequestMapping(value = "/api/v1/ontid/binding", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result bindingOntId(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "binding";
@@ -296,6 +308,7 @@ public class OntIdController {
      *
      * @return ontid
      */
+    @ApiIgnore
     @RequestMapping(value = "/api/v1/ontid/verify", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result verifyOntId(@RequestBody LinkedHashMap<String, Object> obj) throws NoSuchAlgorithmException {
         String action = "verify";
@@ -324,6 +337,7 @@ public class OntIdController {
      *
      * @return ontid
      */
+    @ApiIgnore
     @RequestMapping(value = "/api/v1/ontid/decrypt/claim", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result decryptData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
         String action = "decrypt";
@@ -356,6 +370,7 @@ public class OntIdController {
      *
      * @return ontid
      */
+    @ApiIgnore
     @RequestMapping(value = "/api/v1/ontid/gettx/register/ontid", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result getTransaction(@RequestBody LinkedHashMap<String, Object> obj) throws NoSuchAlgorithmException {
         String action = "getTx";

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@Api(tags = "数据提供方接口")
 @RestController
-@Api("数据提供方接口")
 public class SellerController {
 
     @Autowired
