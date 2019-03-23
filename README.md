@@ -238,10 +238,9 @@ method：POST
 |    dataDemander|   String|  数据需求方ontid  |
 |    password|   String|  数据需求方密码  |
 |    dataProvider|   String|  数据提供方ontid  |
-|    tokenContractAddress|   String|  同质化通证的合约地址  |
+|    tokenContractAddress|   String|  同质化通证的合约地址，付款合约地址可以是ont、ong、OEP4  |
 |    dataIdList|   List|  所购数据的 `SHA256` 哈希值列表  |
 |    priceList|   List|  所购数据的价格列表  |
-|    waitSendEncListTime|   Integer|  等待数据提供方在合约中抵押提取数据所必须的加密信息列表的最大时间上限  |
 |    waitReceiveEncListTime|   Integer|  等待数据需求方从合约中取出提取数据所必须的加密信息列表的最大时间上限  |
 
 - 响应：
@@ -252,7 +251,9 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": true
+	"result": {
+	   "orderId": "WfbSPxMR1BNxtenRCCGps"
+	}
 }
 ```
 
