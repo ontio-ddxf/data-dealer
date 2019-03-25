@@ -9,6 +9,8 @@
 * [需求方查询订单](#需求方查询订单)
 * [需求方购买数据](#需求方购买数据)
 * [需求方取消购买](#需求方取消购买)
+* [需求方获取数据](#需求方获取数据)
+* [需求方数据解密](#需求方数据解密)
 
 ### 提供方接口
 * [提供方手机注册Ontid](#提供方手机注册Ontid)
@@ -56,7 +58,7 @@ method：POST
     "version":"v1",
     "error":0,
     "desc":"SUCCESS",
-    "result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+    "result": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
 }
 ```
 
@@ -146,7 +148,7 @@ method：POST
     "version":"v1",
     "error":0,
     "desc":"SUCCESS",
-    "result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+    "result": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
 }
 ```
 
@@ -172,7 +174,7 @@ method：POST
 
 ```json
 {
-	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"dataDemander":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
 }
 ```
 
@@ -188,8 +190,8 @@ method：POST
 	"error":0,
 	"desc":"SUCCESS",
 	"result": [{
-              	"id": "WfbSPxMR1BNxtenRCCGps",
-              	"sellerOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+              	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
+              	"sellerOntid": "did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
               	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
               	"buyDate": "2019-3-20",
               	"state": "deliveredOnchain"
@@ -222,8 +224,8 @@ method：POST
 
 ```json
 {
-	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
-	"password": "123456",
+	"dataDemander":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"password": "12345678",
 	"dataProvider": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
 	"tokenContractAddress": "16edbe366d1337eb510c2ff61099424c94aeef02",
 	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b","d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35","4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"],
@@ -251,7 +253,7 @@ method：POST
 	"error":0,
 	"desc":"SUCCESS",
 	"result": {
-	   "orderId": "WfbSPxMR1BNxtenRCCGps"
+	   "orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed"
 	}
 }
 ```
@@ -281,9 +283,9 @@ method：POST
 
 ```json
 {
-	"dataDemander":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
-	"password": "123456",
-	"orderId": "WfbSPxMR1BNxtenRCCGps"
+	"dataDemander":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"password": "12345678",
+	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed"
 }
 ```
 
@@ -314,6 +316,106 @@ method：POST
 |    result|   String|  成功返回true，失败返回""  |
 
 
+### 需求方获取数据
+
+1. 提供买方信息，订单ID
+2. 验证信息
+3. 调用合约获取加密数据
+4. 返回true
+
+```text
+url：/api/v1/datadealer/buyer/receive
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"dataDemander":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"password": "12345678",
+	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    dataDemander|   String|  数据需求方ontid  |
+|    password|   String|  数据需求方密码  |
+|    orderId|   String|  订单ID  |
+
+- 响应：
+
+```json
+{
+	"action":"receiveMessage",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": true
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回true，失败返回""  |
+
+
+### 需求方数据解密
+
+1. 提供买方信息，加密数据
+2. 验证信息
+3. 根据买方信息对数据解密
+4. 返回解密数据
+
+```text
+url：/api/v1/datadealer/buyer/decode
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"dataDemander": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"password": "12345678",
+	"message": [
+		"[\"5dbdbbecb8243e948e7dc6f3cd9bed96\",\"04ad85664b51b9d4f42f0c5f0c97cf83a129ebdfb7ce18e032ebc7f27ae34757bb341029e7ac88ef52758de45a012c03b5234b7b3913ea05e9a7ef50ec0b783c09\",\"94a5ec821c9df2281c6c0adf1f2e5c68\"]",
+		"[\"b1bf6c4f2e7253df64cf1b739c5c0949\",\"0457182e8f95b54af15c3b17427349bf2599b0695f6e27e5f336d2e625e0743bab4a8cd9e10c2e5900b382e1c3861b66264fc4649e7331a1cc49dc7dfc2f199d62\",\"9e159fdbf61f14351b86e6c05ed7d1be\"]"
+	]
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    dataDemander|   String|  数据需求方ontid  |
+|    password|   String|  数据需求方密码  |
+|    orderId|   String|  订单ID  |
+
+- 响应：
+
+```json
+{
+	"action":"decodeMessage",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": ["http://data1.com","http://data2.com"]
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回解密数据，失败返回""  |
+
 
 ### 提供方查询订单
 
@@ -329,7 +431,7 @@ method：POST
 
 ```json
 {
-	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO"
+	"dataProvider":"did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y"
 }
 ```
 
@@ -345,8 +447,8 @@ method：POST
 	"error":0,
 	"desc":"SUCCESS",
 	"result": [{
-              	"id": "WfbSPxMR1BNxtenRCCGps",
-              	"sellerOntid": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
+              	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
+              	"buyerOntid": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
               	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
               	"buyDate": "2019-3-20",
               	"state": "deliveredOnchain"
@@ -379,9 +481,9 @@ method：POST
 
 ```json
 {
-	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
-	"password":"123456",
-	"orderId": "WfbSPxMR1BNxtenRCCGps",
+	"dataProvider":"did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
+	"password":"12345678",
+	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
 	"encMessageList": ["http://data1.com","http://data2.com"]
 }
 ```
@@ -426,9 +528,9 @@ method：POST
 
 ```json
 {
-	"dataProvider":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
-	"password": "123456",
-	"orderId": "WfbSPxMR1BNxtenRCCGps"
+	"dataProvider":"did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
+	"password": "12345678",
+	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed"
 }
 ```
 
@@ -474,8 +576,8 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL",
-	"password":"123456",
+	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"password":"12345678",
 	"key": "key99",
 	"valueType": "value99",
 	"value": "value01"
@@ -524,7 +626,7 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
+	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
 }
 ```
 

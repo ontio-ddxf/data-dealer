@@ -168,4 +168,20 @@ public class SecureConfig {
             return null;
         }
     }
+
+    private static String CONTRACT_HASH;
+    @Value("${contract.hash}")
+    public void setContractHash(String contractHash) {
+        SecureConfig.CONTRACT_HASH = contractHash;
+    }
+
+    public String getContractHash() {
+        try {
+            return SecureConfig.CONTRACT_HASH;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
 }

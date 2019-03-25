@@ -12,7 +12,7 @@ import java.util.Date;
 public class Order {
     @Id
     @GeneratedValue(generator = "JDBC")
-    private String id;
+    private String orderId;
 
     private String exchangeId;
 

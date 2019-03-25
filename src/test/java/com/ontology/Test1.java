@@ -100,6 +100,12 @@ public class Test1 {
         // 超时时间
         System.out.println(new String(Helper.hexToBytes("5802"),"utf-8"));
     }
+
+    @Test
+    public void testJsonArray(){
+        String[] s = {"aa","bb","cc"};
+        System.out.println(JSON.toJSONString(s));
+    }
     @Test
     public void testList(){
         List productIds = new ArrayList();
@@ -199,7 +205,7 @@ public class Test1 {
     @Test
     public void testOrder() {
         Order order = new Order();
-        order.setId(new Date().toString());
+        order.setOrderId(UUID.randomUUID().toString());
         order.setBuyerOntid("iouowqoijidasd");
         order.setSellerOntid("joijijojklkj");
         order.setBuyDate(new Date());

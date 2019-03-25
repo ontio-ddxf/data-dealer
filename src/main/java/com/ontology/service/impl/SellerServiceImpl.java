@@ -1,6 +1,7 @@
 package com.ontology.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.ontio.account.Account;
 import com.github.ontio.sdk.manager.ECIES;
 import com.ontology.dao.OntId;
@@ -8,6 +9,7 @@ import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
 import com.ontology.mapper.OntIdMapper;
 import com.ontology.mapper.OrderMapper;
+import com.ontology.secure.SecureConfig;
 import com.ontology.service.SellerService;
 import com.ontology.utils.ErrorInfo;
 import com.ontology.utils.Helper;
@@ -27,25 +29,31 @@ public class SellerServiceImpl implements SellerService {
     private OntIdMapper ontIdMapper;
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private SecureConfig secureConfig;
 
     @Override
-    public void deliverData(String action, String ontid, String password, String orderId, List encMsgList) throws Exception {
-        OntId sellerOntId = getOntId(action,ontid,password);
+    public void deliverData(String action, String dataProvider, String password, String orderId, List encMsgList) throws Exception {
+        OntId sellerOntId = getOntId(action,dataProvider,password);
 
         Account payerAcct = sdk.getPayerAcct();
         Account sellerAcct = sdk.getAccount(sellerOntId.getKeystore(),password);
 
         Order order = new Order();
-        order.setId(orderId);
+        order.setOrderId(orderId);
         Order supplyOrder = orderMapper.selectOne(order);
         if (supplyOrder == null) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
-        String publicKeys = sdk.getPublicKeys(supplyOrder.getBuyerOntid());
-
+        // 获取买家公钥
+        OntId ontId = new OntId();
+        ontId.setOntid(supplyOrder.getBuyerOntid());
+        OntId buyerOntId = ontIdMapper.selectOne(ontId);
+        JSONObject keyStore = JSONObject.parseObject(buyerOntId.getKeystore());
+        String publicKeys = keyStore.getString("publicKey");
 
         // TODO 拼接参数
-        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
+//        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
         arg0.put("name","exchange_id");
@@ -56,7 +64,8 @@ public class SellerServiceImpl implements SellerService {
         List<String> dataIdList = new ArrayList<>();
         for (Object o : encMsgList) {
             if(o instanceof String) {
-                dataIdList.add("String:" + o);
+                String secStr = JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(o).getBytes()));
+                dataIdList.add("String:" + secStr);
             }
         }
         arg1.put("value",dataIdList);//JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(encMsgList.get(0)).getBytes()))
@@ -64,7 +73,7 @@ public class SellerServiceImpl implements SellerService {
         argsList.add(arg0);
         argsList.add(arg1);
 
-        String params = Helper.getParams(ontid,contractHash,"sendEncMessage",argsList,payerAcct.getAddressU160().toBase58());
+        String params = Helper.getParams(dataProvider,secureConfig.getContractHash(),"sendEncMessage",argsList,payerAcct.getAddressU160().toBase58());
         log.info("params:{}",params);
         String txHash = (String) sdk.invokeContract(params,sellerAcct, payerAcct,false);
 
@@ -97,14 +106,14 @@ public class SellerServiceImpl implements SellerService {
 
 
     @Override
-    public void confirmExchange(String action, String ontid, String password, String orderId) throws Exception {
-        OntId buyerOntId = getOntId(action,ontid,password);
+    public void confirmExchange(String action, String dataProvider, String password, String orderId) throws Exception {
+        OntId buyerOntId = getOntId(action,dataProvider,password);
 
         Account payerAcct = sdk.getPayerAcct();
         Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
 
         Order order = new Order();
-        order.setId(orderId);
+        order.setOrderId(orderId);
         Order confirmOrder = orderMapper.selectOne(order);
         if (confirmOrder == null) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
@@ -112,13 +121,13 @@ public class SellerServiceImpl implements SellerService {
         log.info("confirmExchange:{}",confirmOrder.getExchangeId());
         // TODO 拼接参数
         List argsList = new ArrayList();
-        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
+//        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
         Map arg0 = new HashMap();
         arg0.put("name","exchange_id");
         arg0.put("value","ByteArray:"+confirmOrder.getExchangeId());
         argsList.add(arg0);
 
-        String params = Helper.getParams(ontid,contractHash,"receiveToken",argsList,payerAcct.getAddressU160().toBase58());
+        String params = Helper.getParams(dataProvider,secureConfig.getContractHash(),"receiveToken",argsList,payerAcct.getAddressU160().toBase58());
         log.info("params:{}",params);
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
@@ -138,7 +147,7 @@ public class SellerServiceImpl implements SellerService {
                         event = sdk.checkEvent(txHash);
                     }
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("buyerConfirmOnchain");
+                    orderState.setState("sellerRecvTokenOnchain");
                     orderState.setConfirmEvent(JSON.toJSONString(event));
                     orderState.setConfirmDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);

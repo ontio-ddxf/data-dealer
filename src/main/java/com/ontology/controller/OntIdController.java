@@ -1,6 +1,7 @@
 package com.ontology.controller;
 
 import com.ontology.controller.vo.AttributeVo;
+import com.ontology.controller.vo.RegisterVo;
 import com.ontology.dao.OntId;
 import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
@@ -43,25 +44,25 @@ public class OntIdController {
      */
     @ApiOperation("数据需求方注册ontid")
     @RequestMapping(value = "/api/v1/ontid/register/demander/{method}", method = RequestMethod.POST)
-    public Result registerDemanderOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+    public Result registerDemanderOntId(@PathVariable("method") String method, @RequestBody RegisterVo req) throws Exception {
         String action = "demanderRegister";
         Integer type = 1;
         if (!method.equals("phone")) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
-        String number = (String) obj.get("phone");
+        String phone = req.getPhone();
 
         //todo 手机号校验，位数校验，dto注解验证
-        Helper.verifyPhone(action, number);
+        Helper.verifyPhone(action, phone);
 
 //        String verifyCode = (String) obj.get("verifyCode");
-        String password = (String) obj.get("password");
+        String password = req.getPassword();
         helpCheckPwd(action, password);
-        ontIdService.checkOntIdExistByPhone(action, number);
+        ontIdService.checkOntIdExistByPhone(action, phone);
 
 //        smsService.verifyPhone(action, number, verifyCode);
 
-        String ontidRes = ontIdService.createOntId(number, password,type);
+        String ontidRes = ontIdService.createOntId(phone, password,type);
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontidRes);
     }
 
@@ -73,40 +74,40 @@ public class OntIdController {
      */
     @ApiOperation("数据提供方注册ontid")
     @RequestMapping(value = "/api/v1/ontid/register/provider/{method}", method = RequestMethod.POST)
-    public Result registerProviderOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+    public Result registerProviderOntId(@PathVariable("method") String method, @RequestBody RegisterVo req) throws Exception {
         String action = "providerRegister";
         Integer type = 2;
         if (!method.equals("phone")) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
-        String number = (String) obj.get("phone");
+        String phone = req.getPhone();
 
         //todo 手机号校验，位数校验，dto注解验证
-        Helper.verifyPhone(action, number);
+        Helper.verifyPhone(action, phone);
 
 //        String verifyCode = (String) obj.get("verifyCode");
-        String password = (String) obj.get("password");
+        String password = req.getPassword();
         helpCheckPwd(action, password);
-        ontIdService.checkOntIdExistByPhone(action, number);
+        ontIdService.checkOntIdExistByPhone(action, phone);
 
 //        smsService.verifyPhone(action, number, verifyCode);
 
-        String ontidRes = ontIdService.createOntId(number, password, type);
+        String ontidRes = ontIdService.createOntId(phone, password, type);
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), ontidRes);
     }
 
     /**
      * 登录
      *
-     * @param  obj
+     * @param  req
      * @return ontid
      */
     @ApiOperation("Ontid 登录")
     @RequestMapping(value = "/api/v1/ontid/login", method = RequestMethod.POST)
-    public Result loginOntId(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+    public Result loginOntId(RegisterVo req) throws Exception {
         String action = "login";
-        String phone = (String) obj.get("phone");
-        String password = (String) obj.get("password");
+        String phone = req.getPhone();
+        String password = req.getPassword();
         helpCheckPwd(action, password);
         return handlePasswordLogin(action, phone, password);
     }
@@ -163,7 +164,7 @@ public class OntIdController {
      * getDDO
      *
      * @param  ontid
-     * @return ontid
+     * @return DDO
      */
     @ApiOperation("Ontid 获取 DDO")
     @RequestMapping(value = "/api/v1/ontid/getddo", method = RequestMethod.POST)
@@ -186,7 +187,7 @@ public class OntIdController {
     @ApiIgnore
     @RequestMapping(value = "/api/v1/ontid/update/{method}", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
     public Result updateOntId(@PathVariable("method") String method, @RequestBody LinkedHashMap<String, Object> obj) throws Exception {
-        String action = "edit";
+        String action = "update";
         switch (method) {
             case "phone":
                 String verifyCode = (String) obj.get("verifyCode");

@@ -5,14 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.Base64;
 import com.github.ontio.OntSdk;
 import com.github.ontio.account.Account;
-import com.github.ontio.common.Address;
-import com.github.ontio.common.Common;
+import com.github.ontio.common.*;
 import com.github.ontio.common.Helper;
-import com.github.ontio.common.WalletQR;
 import com.github.ontio.core.ontid.Attribute;
 import com.github.ontio.core.transaction.Transaction;
 import com.github.ontio.sdk.exception.SDKException;
+import com.github.ontio.sdk.info.AccountInfo;
 import com.github.ontio.sdk.wallet.Identity;
+import com.github.ontio.smartcontract.nativevm.abi.NativeBuildParams;
+import com.github.ontio.smartcontract.nativevm.abi.Struct;
 import com.ontology.ConfigParam;
 import com.ontology.dao.OntId;
 import com.ontology.secure.ECIES;
@@ -21,7 +22,9 @@ import com.ontology.secure.SecureConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +50,7 @@ public class SDKUtil {
         ontSdk.getWalletMgr().getWallet().clearIdentity();
         ontSdk.getWalletMgr().writeWallet();
         Map keystore = WalletQR.exportIdentityQRCode(ontSdk.getWalletMgr().getWallet(), identity);
+        keystore.put("publicKey",identity.controls.get(0).publicKey);
         res.put("ontid", identity.ontid);
         res.put("keystore", JSON.toJSONString(keystore));
         res.put("tx", txhash);
@@ -146,6 +150,7 @@ public class SDKUtil {
         Object result = null;
         if(preExec) {
             result = ontSdk.getConnect().sendRawTransactionPreExec(txs1[0].toHexString());
+            return result;
         }else {
             result = ontSdk.getConnect().sendRawTransaction(txs1[0].toHexString());
         }
@@ -178,8 +183,11 @@ public class SDKUtil {
 
     public void queryBlance() throws Exception {
         OntSdk ontSdk = getOntSdk();
-        String s = ontSdk.neovm().oep4().queryBalanceOf("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y");
-        System.out.println(s);
+//        String s = ontSdk.neovm().oep4().queryBalanceOf("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y");
+        long ontBalance = ontSdk.nativevm().ont().queryBalanceOf("AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN");
+        long ongBalance = ontSdk.nativevm().ong().queryBalanceOf("AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN");
+        System.out.println("ont:"+ontBalance);
+        System.out.println("ong:"+ongBalance);
     }
 
     public String getDDO(String ontid) throws Exception {
@@ -198,7 +206,40 @@ public class SDKUtil {
         Attribute[] attributes = new Attribute[1];
         attributes[0] = new Attribute(key.getBytes(),valueType.getBytes(),value.getBytes());
         Account payerAcct = getPayerAcct();
-        return ontSdk.nativevm().ontId().sendAddAttributes(ontid,password,salt,attributes,payerAcct,20000,500);
+
+        // sendAddAttributes
+        if (ontid == null || ontid.equals("") || password == null || attributes == null || attributes.length == 0 || payerAcct == null) {
+            throw new SDKException(ErrorCode.ParamErr("parameter should not be null"));
+        }
+        String addr = ontid.replace(Common.didont, "");
+
+        // Transaction tx = makeAddAttributes(ontid, password, salt,attributes, payerAcct.getAddressU160().toBase58(), 20000, 500);
+        String contractAddress = "0000000000000000000000000000000000000003";
+        String publicKey = jsonObject.getString("publicKey");
+//        AccountInfo info = ontSdk.getWalletMgr().getAccountInfo(ontid, password,salt);
+//        Account account = ontSdk.getWalletMgr().getAccount(ontid, password, salt);
+//        String pubKey = Helper.toHexString(account.serializePublicKey());
+//        password = null;
+        byte[] pk = Helper.hexToBytes(publicKey);
+        List list = new ArrayList();
+        Struct struct = new Struct().add(ontid.getBytes());
+        struct.add(attributes.length);
+        for (int i = 0; i < attributes.length; i++) {
+            struct.add(attributes[i].key, attributes[i].valueType, attributes[i].value);
+        }
+        struct.add(pk);
+        list.add(struct);
+        byte[] args = NativeBuildParams.createCodeParamsScript(list);
+        Transaction tx = ontSdk.vm().buildNativeParams(new Address(Helper.hexToBytes(contractAddress)),"addAttributes",args,payerAcct.getAddressU160().toBase58(),20000, 500);
+
+        Account account = exportAccount(keystore, password);
+        ontSdk.signTx(tx, new Account[][]{{account}});
+        ontSdk.addSign(tx, payerAcct);
+        boolean b = ontSdk.getConnect().sendRawTransaction(tx.toHexString());
+        if (b) {
+            return tx.hash().toString();
+        }
+        return null;
     }
 
     public void getWalletPk() throws Exception {
