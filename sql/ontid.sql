@@ -78,23 +78,42 @@ CREATE TABLE `tbl_sms` (
 DROP TABLE IF EXISTS `tbl_order`;
 CREATE TABLE `tbl_order`
 (
-  `id`            varchar(255) NOT NULL,
-  `exchange_id`   varchar(255) DEFAULT NULL,
-  `buyer_ontid`   varchar(255) DEFAULT NULL,
-  `seller_ontid`  varchar(255) DEFAULT NULL,
-  `buy_tx`        text,
-  `sell_tx`       text,
-  `cancel_tx`     text,
-  `confirm_tx`    text,
-  `buy_event`     text,
-  `sell_event`    text,
-  `cancel_event`  text,
-  `confirm_event` text,
-  `buy_date`      datetime     DEFAULT NULL,
-  `sell_date`     datetime     DEFAULT NULL,
-  `cancel_date`   datetime     DEFAULT NULL,
-  `confirm_date`  datetime     DEFAULT NULL,
-  `state`         varchar(255) DEFAULT NULL COMMENT 'bought;boughtOnchain;delivered;deliveredOnchain;buyerCancel;buyerCancelOnchain;sellerCancel;sellerCancelOnchain;buyerConfirm;buyerConfirmOnchain',
+  `order_id`         varchar(255) NOT NULL,
+  `exchange_id`      varchar(255) DEFAULT NULL,
+  `buyer_ontid`      varchar(255) DEFAULT NULL,
+  `seller_ontid`     varchar(255) DEFAULT NULL,
+  `buy_tx`           text,
+  `sell_tx`          text,
+  `recv_token_tx`    text,
+  `recv_msg_tx`      text,
+  `cancel_tx`        text,
+  `buy_event`        text,
+  `sell_event`       text,
+  `recv_token_event` text,
+  `recv_msg_event`   text,
+  `cancel_event`     text,
+  `buy_date`         datetime     DEFAULT NULL,
+  `sell_date`        datetime     DEFAULT NULL,
+  `recv_token_date`  datetime     DEFAULT NULL,
+  `recv_msg_date`    datetime     DEFAULT NULL,
+  `cancel_date`      datetime     DEFAULT NULL,
+  `state`            varchar(255) DEFAULT NULL COMMENT 'bought;boughtOnchain;buyerCancel;buyerCancelOnchain;delivered;deliveredOnchain;sellerRecvToken;sellerRecvTokenOnchain;buyerRecvMsg;buyerRecvMsgOnchain',
+  PRIMARY KEY (`order_id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = latin1;
+
+
+-- ----------------------------
+-- Table structure for tbl_event
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_event`;
+CREATE TABLE `tbl_event`
+(
+  `id`    varchar(255) CHARACTER SET latin1 NOT NULL,
+  `ontid` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `tx`    text CHARACTER SET latin1,
+  `event` text CHARACTER SET latin1,
+  `date`  datetime                          DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = latin1;

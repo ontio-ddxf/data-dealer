@@ -159,8 +159,8 @@ public class OntIdServiceImpl implements IOntIdService {
                 try {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.addAttributes(ontId,password,key,valueType,value);
+                    while (Helper.isEmptyOrNull(event)) {
+//                        sdk.addAttributes(ontId,password,key,valueType,value);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -182,7 +182,7 @@ public class OntIdServiceImpl implements IOntIdService {
 
     @Override
     public String getDDO(String action, String ontid) throws Exception {
-        String DDO = sdk.getDDO(ontid);
+        String DDO = sdk.checkOntIdDDO(ontid);
         if (Helper.isEmptyOrNull(DDO)) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }

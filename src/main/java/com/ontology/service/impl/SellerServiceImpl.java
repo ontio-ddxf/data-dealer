@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -52,8 +53,7 @@ public class SellerServiceImpl implements SellerService {
         JSONObject keyStore = JSONObject.parseObject(buyerOntId.getKeystore());
         String publicKeys = keyStore.getString("publicKey");
 
-        // TODO 拼接参数
-//        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
+        // 拼接参数
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
         arg0.put("name","exchange_id");
@@ -68,7 +68,7 @@ public class SellerServiceImpl implements SellerService {
                 dataIdList.add("String:" + secStr);
             }
         }
-        arg1.put("value",dataIdList);//JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(encMsgList.get(0)).getBytes()))
+        arg1.put("value",dataIdList);
 
         argsList.add(arg0);
         argsList.add(arg1);
@@ -81,14 +81,14 @@ public class SellerServiceImpl implements SellerService {
         supplyOrder.setState("delivered");
         orderMapper.updateByPrimaryKey(supplyOrder);
 
-        new Thread(new Runnable(){
+        Executors.newCachedThreadPool().submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
+                    while (Helper.isEmptyOrNull(event)) {
+//                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -101,16 +101,16 @@ public class SellerServiceImpl implements SellerService {
                     e.printStackTrace();
                 }
             }
-        }){}.start();
+        });
     }
 
 
     @Override
     public void confirmExchange(String action, String dataProvider, String password, String orderId) throws Exception {
-        OntId buyerOntId = getOntId(action,dataProvider,password);
+        OntId sellerOntId = getOntId(action,dataProvider,password);
 
         Account payerAcct = sdk.getPayerAcct();
-        Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
+        Account sellerAcct = sdk.getAccount(sellerOntId.getKeystore(),password);
 
         Order order = new Order();
         order.setOrderId(orderId);
@@ -119,9 +119,9 @@ public class SellerServiceImpl implements SellerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
         log.info("confirmExchange:{}",confirmOrder.getExchangeId());
-        // TODO 拼接参数
+
+        // 拼接参数
         List argsList = new ArrayList();
-//        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";
         Map arg0 = new HashMap();
         arg0.put("name","exchange_id");
         arg0.put("value","ByteArray:"+confirmOrder.getExchangeId());
@@ -129,33 +129,33 @@ public class SellerServiceImpl implements SellerService {
 
         String params = Helper.getParams(dataProvider,secureConfig.getContractHash(),"receiveToken",argsList,payerAcct.getAddressU160().toBase58());
         log.info("params:{}",params);
-        String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
+        String txHash = (String) sdk.invokeContract(params,sellerAcct, payerAcct,false);
 
-        confirmOrder.setConfirmTx(txHash);
+        confirmOrder.setRecvTokenTx(txHash);
         confirmOrder.setState("sellerRecvToken");
         orderMapper.updateByPrimaryKey(confirmOrder);
 
-        new Thread(new Runnable(){
+        Executors.newCachedThreadPool().submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
+                    while (Helper.isEmptyOrNull(event)) {
+//                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
                     Order orderState = orderMapper.selectOne(order);
                     orderState.setState("sellerRecvTokenOnchain");
-                    orderState.setConfirmEvent(JSON.toJSONString(event));
-                    orderState.setConfirmDate(new Date());
+                    orderState.setRecvTokenEvent(JSON.toJSONString(event));
+                    orderState.setRecvTokenDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }){}.start();
+        });
     }
     @Override
     public List<Order> findSellList(String action, String sellerOntid) {

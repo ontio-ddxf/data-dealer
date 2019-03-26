@@ -156,12 +156,11 @@ public class SDKUtil {
         }
         return txs1[0].hash().toString();
     }
+
     public Account getPayerAcct() throws Exception {
         OntSdk ontSdk = getOntSdk();
-//        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), ontSdk.getWalletMgr().getSignatureScheme());
-//        Account account = ontSdk.getWalletMgr().getWallet().getAccounts()[0];
-        Account acct = ontSdk.getWalletMgr().getAccount("AGW2QrJZMf2ZWuG7bzwczYE1yHACXjnpZG", secureConfig.getWalletPwd());
-        return acct;
+        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), ontSdk.getWalletMgr().getSignatureScheme());
+        return account;
     }
 
     public Object checkEvent(String txHash) throws Exception {
@@ -170,30 +169,13 @@ public class SDKUtil {
         return event;
     }
 
-    public String getPublicKeys(String ontid) throws Exception {
-        OntSdk ontSdk = getOntSdk();
-        return ontSdk.nativevm().ontId().sendGetPublicKeys(ontid);
-    }
-
-    public int getBlockHeight(String txHash) throws Exception {
-        OntSdk ontSdk = getOntSdk();
-        int height = ontSdk.getConnect().getBlockHeightByTxHash(txHash);
-        return height;
-    }
-
-    public void queryBlance() throws Exception {
+    public void queryBlance(String address) throws Exception {
         OntSdk ontSdk = getOntSdk();
 //        String s = ontSdk.neovm().oep4().queryBalanceOf("AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y");
-        long ontBalance = ontSdk.nativevm().ont().queryBalanceOf("AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN");
-        long ongBalance = ontSdk.nativevm().ong().queryBalanceOf("AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN");
+        long ontBalance = ontSdk.nativevm().ont().queryBalanceOf(address);
+        long ongBalance = ontSdk.nativevm().ong().queryBalanceOf(address);
         System.out.println("ont:"+ontBalance);
         System.out.println("ong:"+ongBalance);
-    }
-
-    public String getDDO(String ontid) throws Exception {
-        OntSdk ontSdk = getOntSdk();
-        String DDO = ontSdk.nativevm().ontId().sendGetDDO(ontid);
-        return DDO;
     }
 
     public String addAttributes(OntId ontId, String password, String key, String valueType, String value) throws Exception {
@@ -216,10 +198,6 @@ public class SDKUtil {
         // Transaction tx = makeAddAttributes(ontid, password, salt,attributes, payerAcct.getAddressU160().toBase58(), 20000, 500);
         String contractAddress = "0000000000000000000000000000000000000003";
         String publicKey = jsonObject.getString("publicKey");
-//        AccountInfo info = ontSdk.getWalletMgr().getAccountInfo(ontid, password,salt);
-//        Account account = ontSdk.getWalletMgr().getAccount(ontid, password, salt);
-//        String pubKey = Helper.toHexString(account.serializePublicKey());
-//        password = null;
         byte[] pk = Helper.hexToBytes(publicKey);
         List list = new ArrayList();
         Struct struct = new Struct().add(ontid.getBytes());
@@ -244,17 +222,18 @@ public class SDKUtil {
 
     public void getWalletPk() throws Exception {
         OntSdk ontSdk = getOntSdk();
-        String privateKey = Account.getGcmDecodedPrivateKey("hiqZ0Ecsd+OTy3AAzLNBIhdYVVYmDiR77meHuMT/v9EJmQIgHWRv54cDAjO1bP28", "87654321",
-                "AGW2QrJZMf2ZWuG7bzwczYE1yHACXjnpZG", Base64.decodeFast("oZ7Ulp8ltLc87z/i+dSLeA=="), 16384, ontSdk.getWalletMgr().getSignatureScheme());
+        String privateKey = Account.getGcmDecodedPrivateKey("9qJrtSiBhyQJ0x4rE0/tzHt+tXMRPk0HMGBgH+WvaGzvbgYZ8jWoFMplba7fWe4x", "87654321",
+                "AeCRx2oYR4GL2djtnMLmtwezPXT1GPNTby", Base64.decodeFast("0NyB//oeI3xoaf9MjdMyJg=="), 16384, ontSdk.getWalletMgr().getSignatureScheme());
+        System.out.println("unencode:{}"+privateKey);
         System.out.println(Base64ConvertUtil.encode(privateKey));
     }
 
-    public Account getPayerAcct2() throws Exception {
+    public Account createPayerAcct() throws Exception {
         OntSdk ontSdk = getOntSdk();
-        System.out.println(secureConfig.getWalletJavaPrivateKey());
-
-        Account account = new Account(Helper.hexToBytes(secureConfig.getWalletJavaPrivateKey()), ontSdk.getWalletMgr().getSignatureScheme());
-        System.out.println(JSON.toJSONString(account));
-        return account;
+        String pwd = "87654321";
+        Identity identity = ontSdk.getWalletMgr().createIdentity(pwd);
+        ontSdk.getWalletMgr().writeWallet();
+        return null;
     }
+
 }

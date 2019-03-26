@@ -11,16 +11,19 @@
     <result column="seller_ontid" jdbcType="VARCHAR" property="sellerOntid" />
     <result column="buy_tx" jdbcType="LONGVARCHAR" property="buyTx" />
     <result column="sell_tx" jdbcType="LONGVARCHAR" property="sellTx" />
+    <result column="recv_token_tx" jdbcType="LONGVARCHAR" property="recvTokenTx" />
+    <result column="recv_msg_tx" jdbcType="LONGVARCHAR" property="recvMsgTx" />
     <result column="cancel_tx" jdbcType="LONGVARCHAR" property="cancelTx" />
-    <result column="confirm_tx" jdbcType="LONGVARCHAR" property="confirmTx" />
     <result column="buy_event" jdbcType="LONGVARCHAR" property="buyEvent" />
     <result column="sell_event" jdbcType="LONGVARCHAR" property="sellEvent" />
+    <result column="recv_token_event" jdbcType="LONGVARCHAR" property="recvTokenEvent" />
+    <result column="recv_msg_event" jdbcType="LONGVARCHAR" property="recvMsgEvent" />
     <result column="cancel_event" jdbcType="LONGVARCHAR" property="cancelEvent" />
-    <result column="confirm_event" jdbcType="LONGVARCHAR" property="confirmEvent" />
     <result column="buy_date" jdbcType="DATE" property="buyDate" />
     <result column="sell_date" jdbcType="DATE" property="sellDate" />
+    <result column="recv_token_date" jdbcType="DATE" property="recvTokenDate" />
+    <result column="recv_msg_date" jdbcType="DATE" property="recvMsgDate" />
     <result column="cancel_date" jdbcType="DATE" property="cancelDate" />
-    <result column="confirm_date" jdbcType="DATE" property="confirmDate" />
     <result column="state" jdbcType="VARCHAR" property="state" />
   </resultMap>
 </mapper>

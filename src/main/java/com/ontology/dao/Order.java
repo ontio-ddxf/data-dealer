@@ -24,25 +24,31 @@ public class Order {
 
     private String sellTx;
 
-    private String cancelTx;
+    private String recvTokenTx;
 
-    private String confirmTx;
+    private String recvMsgTx;
+
+    private String cancelTx;
 
     private String buyEvent;
 
     private String sellEvent;
 
-    private String cancelEvent;
+    private String recvTokenEvent;
 
-    private String confirmEvent;
+    private String recvMsgEvent;
+
+    private String cancelEvent;
 
     private Date buyDate;
 
     private Date sellDate;
 
-    private Date cancelDate;
+    private Date recvTokenDate;
 
-    private Date confirmDate;
+    private Date recvMsgDate;
+
+    private Date cancelDate;
 
     private String state;
 

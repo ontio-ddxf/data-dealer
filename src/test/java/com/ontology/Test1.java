@@ -25,11 +25,9 @@ public class Test1 {
     private SDKUtil sdkUtil;
 
     @Test
-    public void testPubKey() throws Exception {
-        String publicKeys = sdkUtil.getPublicKeys("did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN");
-        System.out.println(publicKeys);
+    public void createPayer() throws Exception {
+        sdkUtil.createPayerAcct();
     }
-
     @Test
     public void testJSON(){
         List argsList = new ArrayList();
@@ -73,17 +71,18 @@ public class Test1 {
     }
     @Test
     public void testBlance() throws Exception {
-        sdkUtil.queryBlance();
+        sdkUtil.queryBlance("Ad2JdksBQcyAQhfK5YEV81k3isJiMQ1KNF");
+    }
+
+    @Test
+    public void testEvent() throws Exception {
+        Object o = sdkUtil.checkEvent("2fb2d3eb8d4874f1cc26fd720ba27500670acae1278cf5a453819f9305c7c12b");
+        System.out.println(o.toString());
     }
 
     @Test
     public void testGetPk() throws Exception {
         sdkUtil.getWalletPk();
-    }
-
-    @Test
-    public void testGetPayer() throws Exception {
-        sdkUtil.getPayerAcct2();
     }
 
     @Test
