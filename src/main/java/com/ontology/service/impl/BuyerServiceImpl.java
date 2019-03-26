@@ -69,8 +69,7 @@ public class BuyerServiceImpl implements BuyerService {
         arg4.put("value",priceList);
         Map arg5 = new HashMap();
         arg5.put("name","wait_send_enc_list_time");
-//        arg5.put("name","wait_send_msg_time");
-        arg5.put("value",120);
+        arg5.put("value",60000);
         argsList.add(arg0);
         argsList.add(arg1);
         argsList.add(arg2);
@@ -182,7 +181,7 @@ public class BuyerServiceImpl implements BuyerService {
     @Override
     public List<Order> findSellList(String action, String buyerOntid) {
         Order order = new Order();
-        order.setSellerOntid(buyerOntid);
+        order.setBuyerOntid(buyerOntid);
         List<Order> orderList = orderMapper.select(order);
         return orderList;
     }
