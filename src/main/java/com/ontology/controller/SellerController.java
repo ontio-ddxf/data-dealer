@@ -48,7 +48,7 @@ public class SellerController {
         }
     }
 
-    @ApiOperation(value="需求方确认收货接口", notes="需求方确认收货接口" ,httpMethod="POST")
+    @ApiOperation(value="提供方收取Token接口", notes="提供方收取Token接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/seller/confirm", method = RequestMethod.POST)
     public Result confirmExchange(@RequestBody ConfirmVo req) throws Exception {
         String action = "confirm";

@@ -153,22 +153,6 @@ public class SecureConfig {
         }
     }
 
-    private static String WALLET_PWD;
-    @Value("${wallet.pwd}")
-    public void setWalletPwd(String pwd) {
-        SecureConfig.WALLET_PWD = pwd;
-    }
-
-    public String getWalletPwd() {
-        try {
-            return Base64ConvertUtil.decode(SecureConfig.WALLET_PWD);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return null;
-        }
-    }
-
     private static String CONTRACT_HASH;
     @Value("${contract.hash}")
     public void setContractHash(String contractHash) {

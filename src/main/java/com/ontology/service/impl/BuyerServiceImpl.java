@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.ontio.account.Account;
-import com.github.ontio.common.Address;
 import com.github.ontio.sdk.manager.ECIES;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Order;
@@ -46,7 +45,7 @@ public class BuyerServiceImpl implements BuyerService {
         String dataProviderAddr = dataProvider.replace("did:ont:","");
 
 
-        // TODO 拼接参数
+        // 拼接参数
 //        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";//"16edbe366d1337eb510c2ff61099424c94aeef02";  //ee07eddc8da6de3eebb4c268b1efcfd9afa61f12
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
@@ -70,7 +69,8 @@ public class BuyerServiceImpl implements BuyerService {
         arg4.put("value",priceList);
         Map arg5 = new HashMap();
         arg5.put("name","wait_send_enc_list_time");
-        arg5.put("value",60000);
+//        arg5.put("name","wait_send_msg_time");
+        arg5.put("value",120);
         argsList.add(arg0);
         argsList.add(arg1);
         argsList.add(arg2);
@@ -89,53 +89,18 @@ public class BuyerServiceImpl implements BuyerService {
         order.setState("bought");
         orderMapper.insertSelective(order);
 
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(20*1000);
-//                    Object event = sdk.checkEvent(txHash);
-//                    while (event == null) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
-//                        Thread.sleep(6*1000);
-//                        event = sdk.checkEvent(txHash);
-//                    }
-//                    String eventStr = JSON.toJSONString(event);
-//                    System.out.println(eventStr);
-//                    String exchangeId = null;
-//                    Order orderState = orderMapper.selectOne(order);
-//                    JSONObject jsonObject = JSONObject.parseObject(eventStr);
-//                    JSONArray notify = jsonObject.getJSONArray("Notify");
-//                    for (int i = 0;i<notify.size();i++) {
-//                        JSONObject obj = notify.getJSONObject(i);
-//                        if ("65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc".equals(obj.getString("ContractAddress"))) {
-//                            exchangeId = obj.getJSONArray("States").getString(1);
-//                        }
-//                    }
-//                    orderState.setBuyEvent(eventStr);
-//                    orderState.setExchangeId(exchangeId);
-//                    orderState.setState("boughtOnchain");
-//                    orderState.setBuyDate(new Date());
-//                    orderMapper.updateByPrimaryKeySelective(orderState);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }){}.start();
-
         Executors.newCachedThreadPool().submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
+                    while (Helper.isEmptyOrNull(event)) {
+//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
                     String eventStr = JSON.toJSONString(event);
-//                    System.out.println(eventStr);
                     String exchangeId = null;
                     Order orderState = orderMapper.selectOne(order);
                     JSONObject jsonObject = JSONObject.parseObject(eventStr);
@@ -156,7 +121,6 @@ public class BuyerServiceImpl implements BuyerService {
                 }
             }
         });
-
     }
 
 
@@ -190,14 +154,14 @@ public class BuyerServiceImpl implements BuyerService {
         cancelOrder.setState("buyerCancel");
         orderMapper.updateByPrimaryKey(cancelOrder);
 
-        new Thread(new Runnable(){
+        Executors.newCachedThreadPool().submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
+                    while (Helper.isEmptyOrNull(event)) {
+//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -210,7 +174,7 @@ public class BuyerServiceImpl implements BuyerService {
                     e.printStackTrace();
                 }
             }
-        }){}.start();
+        });
     }
 
 
@@ -236,7 +200,7 @@ public class BuyerServiceImpl implements BuyerService {
         if (receiveOrder == null) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
-        if (!"deliveredOnchain".equals(receiveOrder.getState())) {
+        if (Helper.isEmptyOrNull(receiveOrder.getSellEvent())) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
 
@@ -269,8 +233,8 @@ public class BuyerServiceImpl implements BuyerService {
         String[] dataArray = data.split("#");
         List<String> dataList = Arrays.asList(dataArray);
 
-        receiveOrder.setConfirmTx(txHash);
-        receiveOrder.setState("buyerConfirm");
+        receiveOrder.setRecvMsgTx(txHash);
+        receiveOrder.setState("buyerRecvMsg");
         orderMapper.updateByPrimaryKey(receiveOrder);
 
         Executors.newCachedThreadPool().submit(new Runnable() {
@@ -279,16 +243,16 @@ public class BuyerServiceImpl implements BuyerService {
                 try {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (event == null) {
-                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
+                    while (Helper.isEmptyOrNull(event)) {
+//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
                     String eventStr = JSON.toJSONString(event);
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setConfirmEvent(eventStr);
-                    orderState.setState("buyerConfirmOnchain");
-                    orderState.setConfirmDate(new Date());
+                    orderState.setRecvMsgEvent(eventStr);
+                    orderState.setState("buyerRecvMsgOnchain");
+                    orderState.setRecvMsgDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -303,7 +267,6 @@ public class BuyerServiceImpl implements BuyerService {
     public List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception {
         OntId buyerOntId = getOntId(action,dataDemander,password);
         Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
-        byte[] priKey = buyerAcct.serializePrivateKey();
         List<String> message = new ArrayList<>();
         for (String s : secStr) {
             Object[] objects = JSONArray.parseArray(s).toArray();
@@ -311,9 +274,8 @@ public class BuyerServiceImpl implements BuyerService {
             for (int i = 0;i<objects.length;i++) {
                 msg[i] = (String) objects[i];
             }
-            log.info("{}",Arrays.toString(msg));
-            byte[] decrypt = ECIES.Decrypt(com.github.ontio.common.Helper.toHexString(priKey), msg);
-            message.add(new String(decrypt,"utf-8"));
+            byte[] decrypt = ECIES.Decrypt(buyerAcct, msg);
+            message.add(new String(decrypt,"utf-8").replace("\"",""));
         }
         log.info("{}",message);
         return message;
@@ -332,6 +294,4 @@ public class BuyerServiceImpl implements BuyerService {
         }
         return ontId;
     }
-
-
 }

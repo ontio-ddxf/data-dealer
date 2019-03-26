@@ -95,7 +95,7 @@ public class BuyerController {
 
 
 
-    @ApiOperation(value="提供方订单查询接口", notes="提供方订单查询接口" ,httpMethod="POST")
+    @ApiOperation(value="需求方订单查询接口", notes="需求方订单查询接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/buyer/list", method = RequestMethod.POST)
     public Result findBuyList(String buyerOntid) throws Exception {
         String action = "buyerList";

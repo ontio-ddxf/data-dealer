@@ -104,7 +104,7 @@ public class OntIdController {
      */
     @ApiOperation("Ontid 登录")
     @RequestMapping(value = "/api/v1/ontid/login", method = RequestMethod.POST)
-    public Result loginOntId(RegisterVo req) throws Exception {
+    public Result loginOntId(@RequestBody RegisterVo req) throws Exception {
         String action = "login";
         String phone = req.getPhone();
         String password = req.getPassword();
