@@ -1,9 +1,12 @@
 package com.ontology.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ontology.ConfigParam;
+import com.ontology.dao.Event;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Secure;
 import com.ontology.exception.OntIdException;
+import com.ontology.mapper.EventMapper;
 import com.ontology.mapper.OntIdMapper;
 import com.ontology.mapper.SecureMapper;
 import com.ontology.secure.RSAUtil;
@@ -15,7 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Executors;
 
 /**
  * Created by ZhouQ on 2017/8/31.
@@ -38,6 +44,9 @@ public class OntIdServiceImpl implements IOntIdService {
 
     @Autowired
     private ConfigParam param;
+
+    @Autowired
+    private EventMapper eventMapper;
 
 
     @Override
@@ -142,7 +151,33 @@ public class OntIdServiceImpl implements IOntIdService {
         if (!Helper.sha256(password).equals(ontId.getPwd())) {
             throw new OntIdException(action, ErrorInfo.VERIFY_FAILED.descCN(), ErrorInfo.VERIFY_FAILED.descEN(), ErrorInfo.VERIFY_FAILED.code());
         }
-        sdk.addAttributes(ontId,password,key,valueType,value);
+        String txHash = sdk.addAttributes(ontId,password,key,valueType,value);
+
+        Executors.newCachedThreadPool().submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(6*1000);
+                    Object event = sdk.checkEvent(txHash);
+                    while (event == null) {
+                        sdk.addAttributes(ontId,password,key,valueType,value);
+                        Thread.sleep(6*1000);
+                        event = sdk.checkEvent(txHash);
+                    }
+                    String eventStr = JSON.toJSONString(event);
+                    Event record = new Event();
+                    record.setId(UUID.randomUUID().toString());
+                    record.setOntid(ontId.getOntid());
+                    record.setTx(txHash);
+                    record.setEvent(eventStr);
+                    record.setDate(new Date());
+                    eventMapper.insertSelective(record);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        System.out.println(txHash);
     }
 
     @Override

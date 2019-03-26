@@ -1,5 +1,8 @@
 package com.ontology.controller;
 
+import com.ontology.controller.vo.BuyVo;
+import com.ontology.controller.vo.BuyerOptVo;
+import com.ontology.controller.vo.DecodeVo;
 import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
@@ -13,11 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
+@Api(tags = "数据需求方接口")
 @RestController
-@Api("数据需求方接口")
 public class BuyerController {
 
     @Autowired
@@ -25,17 +27,17 @@ public class BuyerController {
 
     @ApiOperation(value="数据交易请求接口", notes="数据交易请求接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/buyer/buy", method = RequestMethod.POST)
-    public Result purchaseData(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+    public Result purchaseData(@RequestBody BuyVo req) throws Exception {
         String action = "buy";
-        String ontid = (String) obj.get("ontid");
-        String password = (String) obj.get("password");
-        String supplyOntid = (String) obj.get("supplyOntid");
-        List<String> productIds = (List<String>) obj.get("productIds");
-        List<Integer> price = (List<Integer>) obj.get("price");
+        String dataDemander = req.getDataDemander();
+        String password = req.getPassword();
+        String dataProvider = req.getDataProvider();
+        List<String> dataIdList = req.getDataIdList();
+        List<Long> priceList = req.getPriceList();
 
         helpCheckPwd(action,password);
 
-        buyerService.purchaseData(action,ontid,password,supplyOntid,productIds,price);
+        buyerService.purchaseData(action,dataDemander,password,dataProvider,dataIdList,priceList);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
     }
@@ -47,38 +49,55 @@ public class BuyerController {
     }
 
     @ApiOperation(value="需求方交易取消接口", notes="需求方交易取消接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/cancel", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
-    public Result cancelExchange(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
+    @RequestMapping(value = "/api/v1/datadealer/buyer/cancel", method = RequestMethod.POST)
+    public Result cancelExchange(@RequestBody BuyerOptVo req) throws Exception {
         String action = "buyerCancel";
-        String ontid = (String) obj.get("ontid");
-        String password = (String) obj.get("password");
-        String orderId = (String) obj.get("orderId");
+        String dataDemander = req.getDataDemander();
+        String password = req.getPassword();
+        String orderId = req.getOrderId();
 
         helpCheckPwd(action,password);
 
-        buyerService.cancelExchange(action,ontid,password,orderId);
+        buyerService.cancelExchange(action,dataDemander,password,orderId);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
     }
 
-    @ApiOperation(value="需求方确认收货接口", notes="需求方确认收货接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/confirm", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
-    public Result confirmExchange(@RequestBody LinkedHashMap<String, Object> obj) throws Exception {
-        String action = "confirm";
-        String ontid = (String) obj.get("ontid");
-        String password = (String) obj.get("password");
-        String orderId = (String) obj.get("orderId");
+    @ApiOperation(value="需求方获取数据", notes="需求方获取数据" ,httpMethod="POST")
+    @RequestMapping(value = "/api/v1/datadealer/buyer/receive", method = RequestMethod.POST)
+    public Result receiveEncMessage(@RequestBody BuyerOptVo req) throws Exception {
+        String action = "receiveMessage";
+        String dataDemander = req.getDataDemander();
+        String password = req.getPassword();
+        String orderId = req.getOrderId();
 
         helpCheckPwd(action,password);
 
-        buyerService.confirmExchange(action,ontid,password,orderId);
+        List<String> message = buyerService.receiveEncMessage(action,dataDemander,password,orderId);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), message);
     }
+
+    @ApiOperation(value="需求方数据解密", notes="需求方数据解密" ,httpMethod="POST")
+    @RequestMapping(value = "/api/v1/datadealer/buyer/decode", method = RequestMethod.POST)
+    public Result decodeMessage(@RequestBody DecodeVo req) throws Exception {
+        String action = "decodeMessage";
+        String dataDemander = req.getDataDemander();
+        String password = req.getPassword();
+        List<String> secStr = req.getMessage();
+
+        helpCheckPwd(action,password);
+
+        List<String> message = buyerService.decodeMessage(action,dataDemander,password,secStr);
+
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), message);
+    }
+
+
 
     @ApiOperation(value="提供方订单查询接口", notes="提供方订单查询接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/list", method = RequestMethod.POST, consumes = {"application/ontid.manage.api.v1+json"}, produces = {"application/ontid.manage.api.v1+json"})
-    public Result findSellList(String buyerOntid) throws Exception {
+    @RequestMapping(value = "/api/v1/datadealer/buyer/list", method = RequestMethod.POST)
+    public Result findBuyList(String buyerOntid) throws Exception {
         String action = "buyerList";
 
         List<Order> orderList = buyerService.findSellList(action,buyerOntid);
