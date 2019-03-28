@@ -191,7 +191,7 @@ method：POST
 	"desc":"SUCCESS",
 	"result": [{
               	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
-              	"sellerOntid": "did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
+              	"dataProvider": "did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
               	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
               	"buyDate": "2019-3-20",
               	"state": "deliveredOnchain"
@@ -448,7 +448,7 @@ method：POST
 	"desc":"SUCCESS",
 	"result": [{
               	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
-              	"buyerOntid": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+              	"dataDemander": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
               	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
               	"buyDate": "2019-3-20",
               	"state": "deliveredOnchain"

@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.ontio.account.Account;
 import com.github.ontio.sdk.manager.ECIES;
+import com.ontology.controller.vo.OrderListResp;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Order;
+import com.ontology.dao.OrderData;
 import com.ontology.exception.OntIdException;
 import com.ontology.mapper.OntIdMapper;
 import com.ontology.mapper.OrderMapper;
@@ -17,12 +19,14 @@ import com.ontology.utils.SDKUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SellerServiceImpl implements SellerService {
     @Autowired
     private SDKUtil sdk;
@@ -158,11 +162,25 @@ public class SellerServiceImpl implements SellerService {
         });
     }
     @Override
-    public List<Order> findSellList(String action, String sellerOntid) {
-        Order order = new Order();
-        order.setSellerOntid(sellerOntid);
-        List<Order> orderList = orderMapper.select(order);
-        return orderList;
+    public List<OrderListResp> findSellList(String action, String sellerOntid) {
+        String queryType = "seller_ontid";
+        List<Order> orderList = orderMapper.getBuyerList(queryType,sellerOntid);
+        List<OrderListResp> resps = new ArrayList<>();
+        for (Order order:orderList) {
+            OrderListResp resp = new OrderListResp();
+            resp.setOrderId(order.getOrderId());
+            resp.setBuyDate(order.getBuyDate());
+            resp.setDataDemander(order.getBuyerOntid());
+            resp.setState(order.getState());
+            List<String> dataList = new ArrayList<>();
+            for (OrderData data:order.getOrderData()){
+                String dataId = data.getDataId();
+                dataList.add(dataId);
+            }
+            resp.setDataIdList(dataList);
+            resps.add(resp);
+        }
+        return resps;
     }
 
     private OntId getOntId(String action, String ontid, String password) {

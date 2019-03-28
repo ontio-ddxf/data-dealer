@@ -35,7 +35,7 @@ public class OntidManageApplication {
 
 		final Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
 		builder.indentOutput(true)
-				.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+				.propertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE);
 
 		HttpMessageConverter<?> mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter(builder.build());
 		return new HttpMessageConverters(secureHttpMessageConverter
