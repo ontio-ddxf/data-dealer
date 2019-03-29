@@ -1,5 +1,7 @@
 package com.ontology.controller.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -17,6 +19,7 @@ public class OrderListResp {
     @ApiModelProperty(name="dataIdList",value = "dataIdList")
     private List<String> dataIdList;
     @ApiModelProperty(name="buyDate",value = "buyDate")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date buyDate;
     @ApiModelProperty(name="state",value = "state")
     private String state;
