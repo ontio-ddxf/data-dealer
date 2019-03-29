@@ -68,8 +68,9 @@ public class SellerServiceImpl implements SellerService {
         List<String> dataIdList = new ArrayList<>();
         for (Object o : encMsgList) {
             if(o instanceof String) {
-                String secStr = JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(o).getBytes()));
-                dataIdList.add("String:" + secStr);
+//                String secStr = JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(o).getBytes()));
+//                dataIdList.add("String:" + secStr);
+                dataIdList.add("String:" + o);
             }
         }
         arg1.put("value",dataIdList);
@@ -160,27 +161,6 @@ public class SellerServiceImpl implements SellerService {
                 }
             }
         });
-    }
-    @Override
-    public List<OrderListResp> findSellList(String action, String sellerOntid) {
-        String queryType = "seller_ontid";
-        List<Order> orderList = orderMapper.getBuyerList(queryType,sellerOntid);
-        List<OrderListResp> resps = new ArrayList<>();
-        for (Order order:orderList) {
-            OrderListResp resp = new OrderListResp();
-            resp.setOrderId(order.getOrderId());
-            resp.setBuyDate(order.getBuyDate());
-            resp.setDataDemander(order.getBuyerOntid());
-            resp.setState(order.getState());
-            List<String> dataList = new ArrayList<>();
-            for (OrderData data:order.getOrderData()){
-                String dataId = data.getDataId();
-                dataList.add(dataId);
-            }
-            resp.setDataIdList(dataList);
-            resps.add(resp);
-        }
-        return resps;
     }
 
     private OntId getOntId(String action, String ontid, String password) {

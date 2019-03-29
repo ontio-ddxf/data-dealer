@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContractController {
 
     @Autowired
-    ContractService contractService;
+    private ContractService contractService;
     @Autowired
-    IOntIdService ontIdService;
+    private IOntIdService ontIdService;
 
     @ApiOperation(value="合约调用接口", notes="合约调用接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/contract/invoke", method = RequestMethod.POST)

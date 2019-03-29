@@ -193,30 +193,6 @@ public class BuyerServiceImpl implements BuyerService {
         });
     }
 
-
-
-    @Override
-    public List<OrderListResp> findSellList(String action, String buyerOntid) {
-        String queryType = "buyer_ontid";
-        List<Order> orderList = orderMapper.getBuyerList(queryType,buyerOntid);
-        List<OrderListResp> resps = new ArrayList<>();
-        for (Order order:orderList) {
-            OrderListResp resp = new OrderListResp();
-            resp.setOrderId(order.getOrderId());
-            resp.setBuyDate(order.getBuyDate());
-            resp.setDataProvider(order.getSellerOntid());
-            resp.setState(order.getState());
-            List<String> dataList = new ArrayList<>();
-            for (OrderData data:order.getOrderData()){
-                String dataId = data.getDataId();
-                dataList.add(dataId);
-            }
-            resp.setDataIdList(dataList);
-            resps.add(resp);
-        }
-        return resps;
-    }
-
     @Override
     public List<String> receiveEncMessage(String action, String dataDemander, String password, String orderId) throws Exception {
         OntId buyerOntId = getOntId(action,dataDemander,password);
@@ -293,23 +269,23 @@ public class BuyerServiceImpl implements BuyerService {
 
     }
 
-    @Override
-    public List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception {
-        OntId buyerOntId = getOntId(action,dataDemander,password);
-        Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
-        List<String> message = new ArrayList<>();
-        for (String s : secStr) {
-            Object[] objects = JSONArray.parseArray(s).toArray();
-            String[] msg = new String[objects.length];
-            for (int i = 0;i<objects.length;i++) {
-                msg[i] = (String) objects[i];
-            }
-            byte[] decrypt = ECIES.Decrypt(buyerAcct, msg);
-            message.add(new String(decrypt,"utf-8").replace("\"",""));
-        }
-        log.info("{}",message);
-        return message;
-    }
+//    @Override
+//    public List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception {
+//        OntId buyerOntId = getOntId(action,dataDemander,password);
+//        Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
+//        List<String> message = new ArrayList<>();
+//        for (String s : secStr) {
+//            Object[] objects = JSONArray.parseArray(s).toArray();
+//            String[] msg = new String[objects.length];
+//            for (int i = 0;i<objects.length;i++) {
+//                msg[i] = (String) objects[i];
+//            }
+//            byte[] decrypt = ECIES.Decrypt(buyerAcct, msg);
+//            message.add(new String(decrypt,"utf-8").replace("\"",""));
+//        }
+//        log.info("{}",message);
+//        return message;
+//    }
 
     private OntId getOntId(String action, String ontid, String password) {
         OntId ontId = new OntId();

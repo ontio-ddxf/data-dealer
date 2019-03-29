@@ -11,9 +11,7 @@ public interface BuyerService {
 
     void cancelExchange(String action, String dataDemander, String password, String orderId) throws Exception;
 
-    List<OrderListResp> findSellList(String action, String buyerOntid);
-
     List<String> receiveEncMessage(String action, String dataDemander, String password, String orderId) throws Exception;
 
-    List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception;
+//    List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception;
 }
