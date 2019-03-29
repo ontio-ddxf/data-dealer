@@ -521,10 +521,8 @@ method：POST
 #### 数据加密
 
 1. 提供 `ONTID`，`kid` 以及 `password`。
-2. 从区块链上查询指定公钥。
-3. 从 `KeyStore` 中匹配对应的私钥。
-4. 根据 `password` 对私钥进行解密，得到解密后的私钥 `sk`。
-5. 使用私钥 `sk` 对数据进行加密。
+2. 从区块链上查询指定公钥 `pk`。
+3. 使用公钥 `pk` 对数据加密。
 
 ```text
 url：/api/v1/datadealer/tools/encrypt
@@ -537,7 +535,7 @@ method：POST
 {
   "ONTID": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
   "kid": 2,
-  "cipher": "http://data1.com"
+  "message": "http://data1.com"
 }
 ```
 
@@ -545,7 +543,7 @@ method：POST
 |:----------:|:------:|:------------:|
 |   ONTID    | String | 本体身份标识 |
 |    kid     |  Int   |   公钥编号   |
-|   cipher   | String |  待解密数据  |
+|  message   | String |  待加密数据  |
 
 - 响应：
 
@@ -571,7 +569,9 @@ method：POST
 
 1. 提供数据提供方的 `ONTID`，`kid`。
 2. 从区块链上查询指定公钥。
-3. 解密数据。
+3. 从 `KeyStore` 中匹配对应的私钥。
+4. 根据 `password` 对私钥进行解密，得到解密后的私钥 `sk`。
+5. 使用私钥 `sk` 对数据进行解密。
 
 ```text
 url：/api/v1/datadealer/tools/decrypt
@@ -584,15 +584,16 @@ method：POST
 {
   "ONTID": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
   "kid": 2,
-  "cipher": "5dbdbbecb8243e948e7dc6f3cd9bed96"
+  "cipher": "5dbdbbecb8243e948e7dc6f3cd9bed96",
+  "password": "password"
 }
 ```
 
-|  Field_Name  |  Type  |   Description   |
-|:------------:|:------:|:---------------:|
-| dataDemander | String | 数据需求方ontid |
-|   password   | String | 数据需求方密码  |
-|   orderId    | String |     订单ID      |
+| Field_Name | Type   | Description    |
+|:-----------|:-------|:---------------|
+| ONTID      | String | ONT ID         |
+| password   | String | 加密私钥的密码 |
+| cipher     | String | 待解密的密文   |
 
 - 响应：
 
