@@ -1,32 +1,41 @@
 # Data Dealer
 
+- [简介](#简介)
+- [接口规范](#接口规范)
+	- [账户管理](#账户管理)
+		- [数据需求方注册](#数据需求方注册)
+		- [数据提供方注册](#数据提供方注册)
+		- [登录](#登录)
+	- [数据需求方](#数据需求方)
+		- [查询订单](#查询订单)
+		- [购买数据](#购买数据)
+		- [取消订单](#取消订单)
+		- [获取数据提取信息](#获取数据提取信息)
+	- [数据提供方](#数据提供方)
+		- [发送加密数据提取信息](#发送加密数据提取信息)
+		- [收取通证](#收取通证)
+	- [工具接口](#工具接口)
+		- [查询订单](#查询订单-1)
+		- [数据加密](#数据加密)
+		- [数据解密](#数据解密)
 
-### 登录接口
-* [手机密码登录](#手机密码登录)
+## 简介
 
-### 需求方接口
-* [需求方手机注册Ontid](#需求方手机注册Ontid)
-* [需求方查询订单](#需求方查询订单)
-* [需求方购买数据](#需求方购买数据)
-* [需求方取消购买](#需求方取消购买)
-* [需求方获取数据](#需求方获取数据)
-* [需求方数据解密](#需求方数据解密)
+在本体去中心化数据交换框架（DDXF）中，`Data Dealer` 作为中间层，用于降低数据需求方与数据提供方接入到 DDXF 的复杂度，让分散在全球的数据交换方能够便捷地在区块链上进行可信数据交换。
 
-### 提供方接口
-* [提供方手机注册Ontid](#提供方手机注册Ontid)
-* [提供方查询订单](#提供方查询订单)
-* [提供方发货](#提供方发货)
-* [提供方确认收款](#提供方确认收款)
+- 端到端数据加密。
+- 实时化交易清算。
+- 交易摩擦系数小。
+- 广泛的开放市场。
+- 可追溯的交易记录。
 
-### 存证接口
-* [添加ontid属性](#添加ontid属性)
-* [获取DDO](#获取DDO)
-
+![](img/framework.png)
 
 ## 接口规范
 
+### 账户管理
 
-### 需求方手机注册Ontid
+#### 数据需求方注册
 
 1. 提交手机号码，密码
 2. 返回 `ONT ID`
@@ -47,7 +56,7 @@ method：POST
 
 | Field_Name | Type   | Description |
 |:-----------|:-------|:------------|
-| phone     | String | 手机号码    |
+| phone      | String | 手机号码    |
 | password   | String | 设置密码    |
 
 - 响应：
@@ -70,8 +79,7 @@ method：POST
 | desc       | String | 成功为SUCCESS，失败为错误描述 |
 | result     | String | 成功返回ontid，失败返回""     |
 
-
-### 提供方手机注册Ontid
+#### 数据提供方注册
 
 1. 提交手机号码，密码
 2. 返回 `ONT ID`
@@ -92,7 +100,7 @@ method：POST
 
 | Field_Name | Type   | Description |
 |:-----------|:-------|:------------|
-| phone     | String | 手机号码    |
+| phone      | String | 手机号码    |
 | password   | String | 设置密码    |
 
 - 响应：
@@ -115,8 +123,7 @@ method：POST
 | desc       | String | 成功为SUCCESS，失败为错误描述 |
 | result     | String | 成功返回ontid，失败返回""     |
 
-
-### 手机密码登录
+#### 登录
 
 1. 提交号码，密码
 2. 返回ontid
@@ -135,10 +142,10 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    phone|   String|  手机号码  |
-|    password|   String|  用户密码  |
+| Field_Name |  Type  | Description |
+|:----------:|:------:|:-----------:|
+|   phone    | String |  手机号码   |
+|  password  | String |  用户密码   |
 
 - 响应：
 
@@ -152,15 +159,17 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回ontid，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回ontid，失败返回""   |
 
-### 需求方查询订单
+### 数据需求方
+
+#### 查询订单
 
 1. 提供买方信息
 2. 返回购买订单列表
@@ -178,11 +187,12 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
+|  Field_Name  |  Type  |   Description   |
+|:------------:|:------:|:---------------:|
+| dataDemander | String | 数据需求方ontid |
 
 - 响应：
+
 ```json
 {
 	"action":"buyerList",
@@ -191,7 +201,7 @@ method：POST
 	"desc":"SUCCESS",
 	"result": [{
               	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
-              	"sellerOntid": "did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
+              	"dataProvider": "did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
               	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
               	"buyDate": "2019-3-20",
               	"state": "deliveredOnchain"
@@ -199,16 +209,15 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回orderList，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String | 成功返回orderList，失败返回"" |
 
-
-### 需求方购买数据
+#### 购买数据
 
 1. 提供买方，卖方，数据信息
 2. 验证信息
@@ -234,15 +243,15 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  数据需求方密码  |
-|    dataProvider|   String|  数据提供方ontid  |
-|    tokenContractAddress|   String|  同质化通证的合约地址，付款合约地址可以是ont、ong、OEP4  |
-|    dataIdList|   List|  所购数据的 `SHA256` 哈希值列表  |
-|    priceList|   List|  所购数据的价格列表  |
-|    waitReceiveEncListTime|   Integer|  等待数据需求方从合约中取出提取数据所必须的加密信息列表的最大时间上限  |
+|       Field_Name       |  Type   |                             Description                              |
+|:----------------------:|:-------:|:--------------------------------------------------------------------:|
+|      dataDemander      | String  |                           数据需求方ontid                            |
+|        password        | String  |                            数据需求方密码                            |
+|      dataProvider      | String  |                           数据提供方ontid                            |
+|  tokenContractAddress  | String  |        同质化通证的合约地址，付款合约地址可以是ont、ong、OEP4        |
+|       dataIdList       |  List   |                    所购数据的 `SHA256` 哈希值列表                    |
+|       priceList        |  List   |                          所购数据的价格列表                          |
+| waitReceiveEncListTime | Integer | 等待数据需求方从合约中取出提取数据所必须的加密信息列表的最大时间上限 |
 
 - 响应：
 
@@ -258,16 +267,15 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回true，失败返回""    |
 
-
-### 需求方取消购买
+#### 取消订单
 
 1. 提供买方信息，订单ID
 2. 验证信息
@@ -289,11 +297,11 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  数据需求方密码  |
-|    orderId|   String|  订单ID  |
+|  Field_Name  |  Type  |   Description   |
+|:------------:|:------:|:---------------:|
+| dataDemander | String | 数据需求方ontid |
+|   password   | String | 数据需求方密码  |
+|   orderId    | String |     订单ID      |
 
 - 响应：
 
@@ -307,20 +315,19 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回true，失败返回""    |
 
-
-### 需求方获取数据
+#### 获取数据提取信息
 
 1. 提供买方信息，订单ID
 2. 验证信息
-3. 调用合约获取加密数据
+3. 调用合约获取加密后的数据提取信息
 4. 返回true
 
 ```text
@@ -338,11 +345,11 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  数据需求方密码  |
-|    orderId|   String|  订单ID  |
+|  Field_Name  |  Type  |   Description   |
+|:------------:|:------:|:---------------:|
+| dataDemander | String | 数据需求方ontid |
+|   password   | String | 数据需求方密码  |
+|   orderId    | String |     订单ID      |
 
 - 响应：
 
@@ -356,116 +363,17 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回true，失败返回""    |
 
+### 数据提供方
 
-### 需求方数据解密
-
-1. 提供买方信息，加密数据
-2. 验证信息
-3. 根据买方信息对数据解密
-4. 返回解密数据
-
-```text
-url：/api/v1/datadealer/buyer/decode
-method：POST
-```
-
-- 请求：
-
-```json
-{
-	"dataDemander": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
-	"password": "12345678",
-	"message": [
-		"[\"5dbdbbecb8243e948e7dc6f3cd9bed96\",\"04ad85664b51b9d4f42f0c5f0c97cf83a129ebdfb7ce18e032ebc7f27ae34757bb341029e7ac88ef52758de45a012c03b5234b7b3913ea05e9a7ef50ec0b783c09\",\"94a5ec821c9df2281c6c0adf1f2e5c68\"]",
-		"[\"b1bf6c4f2e7253df64cf1b739c5c0949\",\"0457182e8f95b54af15c3b17427349bf2599b0695f6e27e5f336d2e625e0743bab4a8cd9e10c2e5900b382e1c3861b66264fc4649e7331a1cc49dc7dfc2f199d62\",\"9e159fdbf61f14351b86e6c05ed7d1be\"]"
-	]
-}
-```
-
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  数据需求方密码  |
-|    orderId|   String|  订单ID  |
-
-- 响应：
-
-```json
-{
-	"action":"decodeMessage",
-	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
-	"result": ["http://data1.com","http://data2.com"]
-}
-```
-
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回解密数据，失败返回""  |
-
-
-### 提供方查询订单
-
-1. 提供卖方信息
-2. 返回收到订单列表
-
-```text
-url：/api/v1/datadealer/seller/list
-method：POST
-```
-
-- 请求：
-
-```json
-{
-	"dataProvider":"did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y"
-}
-```
-
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-| dataProvider|   String|  数据提供方ontid  |
-
-- 响应：
-```json
-{
-	"action":"sellerList",
-	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
-	"result": [{
-              	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
-              	"buyerOntid": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
-              	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
-              	"buyDate": "2019-3-20",
-              	"state": "deliveredOnchain"
-              }]
- }
-```
-
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回orderList，失败返回""  |
-
-
-### 提供方发货
+#### 发送加密数据提取信息
 
 1. 提供卖方信息，订单ID，url，一次性密码
 2. 获取买方信息
@@ -488,14 +396,15 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataProvider|   String|  数据提供方ontid  |
-|    password|   String|  数据提供方密码  |
-|    orderId|   String|  订单id  |
-|    encMessageList|   List|  加密消息列表，数据提供方在其中添加数据需求方用于提取数据所必须的加密信息  |
+|   Field_Name   |  Type  |                               Description                                |
+|:--------------:|:------:|:------------------------------------------------------------------------:|
+|  dataProvider  | String |                             数据提供方ontid                              |
+|    password    | String |                              数据提供方密码                              |
+|    orderId     | String |                                  订单id                                  |
+| encMessageList |  List  | 加密消息列表，数据提供方在其中添加数据需求方用于提取数据所必须的加密信息 |
 
 - 响应：
+
 ```json
 {
 	"action":"deliver",
@@ -506,18 +415,15 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回true，失败返回""    |
 
-
-### 提供方确认收款
-
-
+#### 收取通证
 
 ```text
 url：/api/v1/datadealer/seller/confirm
@@ -534,11 +440,11 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    dataDemander|   String|  数据需求方ontid  |
-|    password|   String|  数据需求方密码  |
-|    orderId|   String|  订单ID  |
+|  Field_Name  |  Type  |   Description   |
+|:------------:|:------:|:---------------:|
+| dataDemander | String | 数据需求方ontid |
+|   password   | String | 数据需求方密码  |
+|   orderId    | String |     订单ID      |
 
 - 响应：
 
@@ -552,23 +458,23 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回true，失败返回""    |
 
+### 工具接口
 
-### 添加ontid属性
+#### 查询订单
 
-1. 提供ontid，密码，属性
-2. 验证信息，添加属性
-3. 返回true
+1. 提供 `ONTID`。
+2. 查询 `ONTID` 所对应的订单列表。
 
 ```text
-url：/api/v1/ontid/addattribute
+url：/api/v1/datadealer/tools/orders
 method：POST
 ```
 
@@ -576,49 +482,52 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
-	"password":"12345678",
-	"key": "key99",
-	"valueType": "value99",
-	"value": "value01"
+	"ONTID":"did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
+	"provider": 0
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    ontid|   String|  需要添加属性的ontid  |
-|    password|   String|  ontid的密码  |
-|    key|   Sting|  属性的key  |
-|    key|   Sting|  属性的valueType  |
-|    key|   Sting|  属性的value  |
+| Field_Name |  Type  |                              Description                              |
+|:----------:|:------:|:---------------------------------------------------------------------:|
+|   ONTID    | String |                                 ONTID                                 |
+|  provider  |  Int   | is data provider if and noly if equals to 0, otherwise, data demander |
 
 - 响应：
+
 ```json
-{
-	"action":"addAttribute",
+	{
+	"action":"queryOrders",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": true
-}
+	"result": [{
+		"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
+		"dataDemander": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+		"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
+		"buyDate": "2019-3-20",
+		"state": "deliveredOnchain"
+	}]
+	}
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回true，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String | 成功返回orderList，失败返回"" |
 
+#### 数据加密
 
-### 获取DDO
-
-1. 提供ontid
-2. 返回DDO
+1. 提供 `ONTID`，`kid` 以及 `password`。
+2. 从区块链上查询指定公钥。
+3. 从 `KeyStore` 中匹配对应的私钥。
+4. 根据 `password` 对私钥进行解密，得到解密后的私钥 `sk`。
+5. 使用私钥 `sk` 对数据进行加密。
 
 ```text
-url：/api/v1/ontid/getddo
+url：/api/v1/datadealer/tools/encrypt
 method：POST
 ```
 
@@ -626,38 +535,81 @@ method：POST
 
 ```json
 {
-	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
+  "ONTID": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+  "kid": 2,
+  "cipher": "http://data1.com"
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    ontid|   String|  ontid  |
+| Field_Name |  Type  | Description  |
+|:----------:|:------:|:------------:|
+|   ONTID    | String | 本体身份标识 |
+|    kid     |  Int   |   公钥编号   |
+|   cipher   | String |  待解密数据  |
 
 - 响应：
+
 ```json
 {
-	"action":"getDDO",
+	"action":"encrypt",
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": {
-              	"Attributes": [],
-              	"OntId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
-              	"Owners": [{
-              		"Type": "ECDSA",
-              		"Curve": "P-256",
-              		"Value": "0206590ae715755f0f1fd235726957f8e11cd0b13b22c67c2404a5e3fd8d303b65",
-              		"PubKeyId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN#keys-1"
-              	}]
-              }
+	"result": "5dbdbbecb8243e948e7dc6f3cd9bed96"
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    action|   String|  动作标志  |
-|    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
-|    result|   String|  成功返回DDO，失败返回""  |
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String | 成功返回解密数据，失败返回""  |
+
+#### 数据解密
+
+1. 提供数据提供方的 `ONTID`，`kid`。
+2. 从区块链上查询指定公钥。
+3. 解密数据。
+
+```text
+url：/api/v1/datadealer/tools/decrypt
+method：POST
+```
+
+- 请求：
+
+```json
+{
+  "ONTID": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+  "kid": 2,
+  "cipher": "5dbdbbecb8243e948e7dc6f3cd9bed96"
+}
+```
+
+|  Field_Name  |  Type  |   Description   |
+|:------------:|:------:|:---------------:|
+| dataDemander | String | 数据需求方ontid |
+|   password   | String | 数据需求方密码  |
+|   orderId    | String |     订单ID      |
+
+- 响应：
+
+```json
+{
+	"action":"decrypt",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": "http://data1.com"
+}
+```
+
+| Field_Name |  Type  |          Description          |
+|:----------:|:------:|:-----------------------------:|
+|   action   | String |           动作标志            |
+|  version   | String |            版本号             |
+|   error    |  int   |            错误码             |
+|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String | 成功返回解密数据，失败返回""  |

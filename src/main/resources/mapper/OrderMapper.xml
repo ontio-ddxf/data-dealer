@@ -19,11 +19,28 @@
     <result column="recv_token_event" jdbcType="LONGVARCHAR" property="recvTokenEvent" />
     <result column="recv_msg_event" jdbcType="LONGVARCHAR" property="recvMsgEvent" />
     <result column="cancel_event" jdbcType="LONGVARCHAR" property="cancelEvent" />
-    <result column="buy_date" jdbcType="DATE" property="buyDate" />
-    <result column="sell_date" jdbcType="DATE" property="sellDate" />
-    <result column="recv_token_date" jdbcType="DATE" property="recvTokenDate" />
-    <result column="recv_msg_date" jdbcType="DATE" property="recvMsgDate" />
-    <result column="cancel_date" jdbcType="DATE" property="cancelDate" />
+    <result column="buy_date" jdbcType="TIMESTAMP" property="buyDate" />
+    <result column="sell_date" jdbcType="TIMESTAMP" property="sellDate" />
+    <result column="recv_token_date" jdbcType="TIMESTAMP" property="recvTokenDate" />
+    <result column="recv_msg_date" jdbcType="TIMESTAMP" property="recvMsgDate" />
+    <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
     <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+
+  <select id="getBuyerList" parameterType="String" resultMap="BuyerResultMap">
+         select o.order_id,o.seller_ontid,o.buy_date,o.state,od.data_id
+          from tbl_order o INNER JOIN tbl_order_data od ON o.order_id = od.order_id
+          where o.${queryType}=#{ontid}
+     </select>
+  <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+  <resultMap type="com.ontology.dao.Order" id="BuyerResultMap">
+    <id property="orderId" column="order_id"/>
+    <result column="seller_ontid" jdbcType="VARCHAR" property="sellerOntid" />
+    <result column="buy_date" jdbcType="TIMESTAMP" property="buyDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <collection  property="orderData" ofType="com.ontology.dao.OrderData">
+      <id property="id" column="id"/>
+      <result property="dataId" column="data_id"/>
+    </collection >
   </resultMap>
 </mapper>

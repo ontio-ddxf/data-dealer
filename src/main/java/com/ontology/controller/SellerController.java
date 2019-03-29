@@ -1,6 +1,7 @@
 package com.ontology.controller;
 
 import com.ontology.controller.vo.ConfirmVo;
+import com.ontology.controller.vo.OrderListResp;
 import com.ontology.controller.vo.SellVo;
 import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
@@ -68,7 +69,7 @@ public class SellerController {
     public Result findSellList(String sellerOntid) throws Exception {
         String action = "sellerList";
 
-        List<Order> orderList = sellerService.findSellList(action,sellerOntid);
+        List<OrderListResp> orderList = sellerService.findSellList(action,sellerOntid);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }

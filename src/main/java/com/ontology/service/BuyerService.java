@@ -1,6 +1,7 @@
 package com.ontology.service;
 
 
+import com.ontology.controller.vo.OrderListResp;
 import com.ontology.dao.Order;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface BuyerService {
 
     void cancelExchange(String action, String dataDemander, String password, String orderId) throws Exception;
 
-    List<Order> findSellList(String action, String buyerOntid);
+    List<OrderListResp> findSellList(String action, String buyerOntid);
 
     List<String> receiveEncMessage(String action, String dataDemander, String password, String orderId) throws Exception;
 

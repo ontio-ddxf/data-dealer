@@ -117,3 +117,16 @@ CREATE TABLE `tbl_event`
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
+
+-- ----------------------------
+-- Table structure for tbl_order_data
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_order_data`;
+CREATE TABLE `tbl_order_data`
+(
+  `id`       varchar(255) CHARACTER SET latin1 NOT NULL,
+  `order_id` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `data_id`  varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = latin1;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ontology.mapper.OrderDataMapper">
+  <resultMap id="BaseResultMap" type="com.ontology.dao.OrderData">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="data_id" jdbcType="VARCHAR" property="dataId" />
+  </resultMap>
+
+  <insert id="insertList" parameterType="java.util.List">
+    insert into tbl_order_data
+    (id, order_id, data_id)
+    values
+    <foreach collection="list" item="od" separator=",">
+      (
+      #{od.id}, #{od.orderId}, #{od.dataId}
+      )
+    </foreach>
+  </insert>
+
+</mapper>

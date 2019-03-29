@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.ontio.account.Account;
 import com.github.ontio.sdk.manager.ECIES;
+import com.ontology.controller.vo.OrderListResp;
 import com.ontology.dao.OntId;
 import com.ontology.dao.Order;
+import com.ontology.dao.OrderData;
 import com.ontology.exception.OntIdException;
 import com.ontology.mapper.OntIdMapper;
+import com.ontology.mapper.OrderDataMapper;
 import com.ontology.mapper.OrderMapper;
 import com.ontology.secure.SecureConfig;
 import com.ontology.service.BuyerService;
@@ -18,12 +21,14 @@ import com.ontology.utils.SDKUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class BuyerServiceImpl implements BuyerService {
     @Autowired
     private SDKUtil sdk;
@@ -33,6 +38,8 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderMapper orderMapper;
     @Autowired
     private SecureConfig secureConfig;
+    @Autowired
+    private OrderDataMapper orderDataMapper;
 
     @Override
     public void purchaseData(String action, String dataDemander, String password, String dataProvider, List<String> productIds, List<Long> priceList) throws Exception {
@@ -69,8 +76,7 @@ public class BuyerServiceImpl implements BuyerService {
         arg4.put("value",priceList);
         Map arg5 = new HashMap();
         arg5.put("name","wait_send_enc_list_time");
-//        arg5.put("name","wait_send_msg_time");
-        arg5.put("value",120);
+        arg5.put("value",60000);
         argsList.add(arg0);
         argsList.add(arg1);
         argsList.add(arg2);
@@ -88,6 +94,16 @@ public class BuyerServiceImpl implements BuyerService {
         order.setBuyTx(txHash);
         order.setState("bought");
         orderMapper.insertSelective(order);
+
+        List<OrderData> ods = new ArrayList<>();
+        for (String dataId : productIds) {
+            OrderData od = new OrderData();
+            od.setId(UUID.randomUUID().toString());
+            od.setOrderId(order.getOrderId());
+            od.setDataId(dataId);
+            ods.add(od);
+        }
+        orderDataMapper.insertList(ods);
 
         Executors.newCachedThreadPool().submit(new Runnable() {
             @Override
@@ -180,11 +196,25 @@ public class BuyerServiceImpl implements BuyerService {
 
 
     @Override
-    public List<Order> findSellList(String action, String buyerOntid) {
-        Order order = new Order();
-        order.setSellerOntid(buyerOntid);
-        List<Order> orderList = orderMapper.select(order);
-        return orderList;
+    public List<OrderListResp> findSellList(String action, String buyerOntid) {
+        String queryType = "buyer_ontid";
+        List<Order> orderList = orderMapper.getBuyerList(queryType,buyerOntid);
+        List<OrderListResp> resps = new ArrayList<>();
+        for (Order order:orderList) {
+            OrderListResp resp = new OrderListResp();
+            resp.setOrderId(order.getOrderId());
+            resp.setBuyDate(order.getBuyDate());
+            resp.setDataProvider(order.getSellerOntid());
+            resp.setState(order.getState());
+            List<String> dataList = new ArrayList<>();
+            for (OrderData data:order.getOrderData()){
+                String dataId = data.getDataId();
+                dataList.add(dataId);
+            }
+            resp.setDataIdList(dataList);
+            resps.add(resp);
+        }
+        return resps;
     }
 
     @Override

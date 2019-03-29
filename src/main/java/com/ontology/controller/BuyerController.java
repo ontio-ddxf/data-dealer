@@ -3,6 +3,7 @@ package com.ontology.controller;
 import com.ontology.controller.vo.BuyVo;
 import com.ontology.controller.vo.BuyerOptVo;
 import com.ontology.controller.vo.DecodeVo;
+import com.ontology.controller.vo.OrderListResp;
 import com.ontology.dao.Order;
 import com.ontology.exception.OntIdException;
 import com.ontology.model.Result;
@@ -100,7 +101,7 @@ public class BuyerController {
     public Result findBuyList(String buyerOntid) throws Exception {
         String action = "buyerList";
 
-        List<Order> orderList = buyerService.findSellList(action,buyerOntid);
+        List<OrderListResp> orderList = buyerService.findSellList(action,buyerOntid);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }
