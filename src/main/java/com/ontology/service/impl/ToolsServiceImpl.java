@@ -79,7 +79,7 @@ public class ToolsServiceImpl implements ToolsService {
     public String encrypt(String action, String ddo, Integer kid, String message) {
         String publicKey = getPublicKey(action,ddo,kid);
 
-        String secStr = JSON.toJSONString(ECIES.Encrypt(publicKey,JSON.toJSONString(message).getBytes()));
+        String secStr = JSON.toJSONString(ECIES.Encrypt(publicKey,message.getBytes()));
         return secStr;
     }
 

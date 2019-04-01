@@ -51,11 +51,11 @@ public class SellerServiceImpl implements SellerService {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
         // 获取买家公钥
-        OntId ontId = new OntId();
-        ontId.setOntid(supplyOrder.getBuyerOntid());
-        OntId buyerOntId = ontIdMapper.selectOne(ontId);
-        JSONObject keyStore = JSONObject.parseObject(buyerOntId.getKeystore());
-        String publicKeys = keyStore.getString("publicKey");
+//        OntId ontId = new OntId();
+//        ontId.setOntid(supplyOrder.getBuyerOntid());
+//        OntId buyerOntId = ontIdMapper.selectOne(ontId);
+//        JSONObject keyStore = JSONObject.parseObject(buyerOntId.getKeystore());
+//        String publicKeys = keyStore.getString("publicKey");
 
         // 拼接参数
         List argsList = new ArrayList();
