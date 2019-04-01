@@ -160,7 +160,6 @@ public class OntIdServiceImpl implements IOntIdService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (Helper.isEmptyOrNull(event)) {
-//                        sdk.addAttributes(ontId,password,key,valueType,value);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }

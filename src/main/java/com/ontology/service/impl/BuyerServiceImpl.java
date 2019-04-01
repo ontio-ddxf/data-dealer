@@ -53,7 +53,6 @@ public class BuyerServiceImpl implements BuyerService {
 
 
         // 拼接参数
-//        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";//"16edbe366d1337eb510c2ff61099424c94aeef02";  //ee07eddc8da6de3eebb4c268b1efcfd9afa61f12
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
         arg0.put("name","data_demander");
@@ -112,7 +111,6 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -177,7 +175,6 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -250,7 +247,6 @@ public class BuyerServiceImpl implements BuyerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -268,24 +264,6 @@ public class BuyerServiceImpl implements BuyerService {
         return dataList;
 
     }
-
-//    @Override
-//    public List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception {
-//        OntId buyerOntId = getOntId(action,dataDemander,password);
-//        Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
-//        List<String> message = new ArrayList<>();
-//        for (String s : secStr) {
-//            Object[] objects = JSONArray.parseArray(s).toArray();
-//            String[] msg = new String[objects.length];
-//            for (int i = 0;i<objects.length;i++) {
-//                msg[i] = (String) objects[i];
-//            }
-//            byte[] decrypt = ECIES.Decrypt(buyerAcct, msg);
-//            message.add(new String(decrypt,"utf-8").replace("\"",""));
-//        }
-//        log.info("{}",message);
-//        return message;
-//    }
 
     private OntId getOntId(String action, String ontid, String password) {
         OntId ontId = new OntId();

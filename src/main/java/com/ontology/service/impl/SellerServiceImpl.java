@@ -50,12 +50,6 @@ public class SellerServiceImpl implements SellerService {
         if (supplyOrder == null) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
-        // 获取买家公钥
-//        OntId ontId = new OntId();
-//        ontId.setOntid(supplyOrder.getBuyerOntid());
-//        OntId buyerOntId = ontIdMapper.selectOne(ontId);
-//        JSONObject keyStore = JSONObject.parseObject(buyerOntId.getKeystore());
-//        String publicKeys = keyStore.getString("publicKey");
 
         // 拼接参数
         List argsList = new ArrayList();
@@ -68,9 +62,9 @@ public class SellerServiceImpl implements SellerService {
         List<String> dataIdList = new ArrayList<>();
         for (Object o : encMsgList) {
             if(o instanceof String) {
-//                String secStr = JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(o).getBytes()));
-//                dataIdList.add("String:" + secStr);
                 dataIdList.add("String:" + o);
+            } else {
+                throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
             }
         }
         arg1.put("value",dataIdList);
@@ -93,7 +87,6 @@ public class SellerServiceImpl implements SellerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
@@ -147,7 +140,6 @@ public class SellerServiceImpl implements SellerService {
                     Thread.sleep(6*1000);
                     Object event = sdk.checkEvent(txHash);
                     while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
                         Thread.sleep(6*1000);
                         event = sdk.checkEvent(txHash);
                     }
