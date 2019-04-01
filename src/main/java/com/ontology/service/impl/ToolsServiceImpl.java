@@ -41,7 +41,7 @@ public class ToolsServiceImpl implements ToolsService {
     private OrderDataMapper orderDataMapper;
 
     @Override
-    public List<OrderListResp> queryList(String action, Integer provider, String buyerOntid) {
+    public List<OrderListResp> queryList(String action, Integer provider, String ontid) {
         String queryType = null;
         if (0==provider) {
             // 需求方
@@ -52,7 +52,7 @@ public class ToolsServiceImpl implements ToolsService {
         } else {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
-        List<Order> orderList = orderMapper.getOrderList(queryType,buyerOntid);
+        List<Order> orderList = orderMapper.getOrderList(queryType,ontid);
         List<OrderListResp> resps = new ArrayList<>();
         for (Order order:orderList) {
             OrderListResp resp = new OrderListResp();
@@ -107,13 +107,13 @@ public class ToolsServiceImpl implements ToolsService {
         OntId OntId = getOntId(action, ontid, password);
         JSONObject jsonObject = JSONObject.parseObject(OntId.getKeystore());
         if (publicKey.equals(jsonObject.getString("publicKey"))) {
-            Account buyerAcct = sdk.getAccount(OntId.getKeystore(), password);
+            Account acct = sdk.getAccount(OntId.getKeystore(), password);
             Object[] objects = JSONArray.parseArray(secStr).toArray();
             String[] msg = new String[objects.length];
             for (int i = 0; i < objects.length; i++) {
                 msg[i] = (String) objects[i];
             }
-            byte[] decrypt = ECIES.Decrypt(buyerAcct, msg);
+            byte[] decrypt = ECIES.Decrypt(acct, msg);
             String message = new String(decrypt, "utf-8").replace("\"", "");
             log.info("{}", message);
             return message;

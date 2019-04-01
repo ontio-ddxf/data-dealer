@@ -157,11 +157,13 @@ public class OntIdServiceImpl implements IOntIdService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     String eventStr = JSON.toJSONString(event);
                     Event record = new Event();

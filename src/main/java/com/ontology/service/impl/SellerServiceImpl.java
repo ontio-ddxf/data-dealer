@@ -84,15 +84,21 @@ public class SellerServiceImpl implements SellerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("deliveredOnchain");
-                    orderState.setSellEvent(JSON.toJSONString(event));
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("deliveredOnchainNotFound");
+                    } else {
+                        orderState.setState("deliveredOnchain");
+                        orderState.setSellEvent(JSON.toJSONString(event));
+                    }
                     orderState.setSellDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
@@ -137,15 +143,21 @@ public class SellerServiceImpl implements SellerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("sellerRecvTokenOnchain");
-                    orderState.setRecvTokenEvent(JSON.toJSONString(event));
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("sellerRecvTokenOnchainNotFound");
+                    } else {
+                        orderState.setState("sellerRecvTokenOnchain");
+                        orderState.setRecvTokenEvent(JSON.toJSONString(event));
+                    }
                     orderState.setRecvTokenDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
