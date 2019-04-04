@@ -18,6 +18,9 @@
 		- [查询订单](#查询订单-1)
 		- [数据加密](#数据加密)
 		- [数据解密](#数据解密)
+	- [存证接口](#存证接口)
+        - [添加ontid属性](#添加ontid属性)
+        - [获取DDO](#获取DDO)
 
 ## 简介
 
@@ -614,3 +617,107 @@ method：POST
 |   error    |  int   |            错误码             |
 |    desc    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String | 成功返回解密数据，失败返回""  |
+
+
+### 存证接口
+
+#### 添加ontid属性
+
+1. 提供ontid，密码，属性
+2. 验证信息，添加属性
+3. 返回true
+
+```text
+url：/api/v1/ontid/addattribute
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"password":"12345678",
+	"key": "key99",
+	"valueType": "value99",
+	"value": "value01"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    ontid|   String|  需要添加属性的ontid  |
+|    password|   String|  ontid的密码  |
+|    key|   Sting|  属性的key  |
+|    key|   Sting|  属性的valueType  |
+|    key|   Sting|  属性的value  |
+
+- 响应：
+```json
+{
+	"action":"addAttribute",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": true
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回true，失败返回""  |
+
+
+#### 获取DDO
+
+1. 提供ontid
+2. 返回DDO
+
+```text
+url：/api/v1/ontid/getddo
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    ontid|   String|  ontid  |
+
+- 响应：
+```json
+{
+	"action":"getDDO",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": {
+              	"Attributes": [],
+              	"OntId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+              	"Owners": [{
+              		"Type": "ECDSA",
+              		"Curve": "P-256",
+              		"Value": "0206590ae715755f0f1fd235726957f8e11cd0b13b22c67c2404a5e3fd8d303b65",
+              		"PubKeyId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN#keys-1"
+              	}]
+              }
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回DDO，失败返回""  |

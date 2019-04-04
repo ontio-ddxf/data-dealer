@@ -71,7 +71,7 @@ public class Test1 {
     }
     @Test
     public void testBlance() throws Exception {
-        sdkUtil.queryBlance("Ad2JdksBQcyAQhfK5YEV81k3isJiMQ1KNF");
+        sdkUtil.queryBlance("AcdBfqe7SG8xn4wfGrtUbbBDxw2x1e8UKm");
     }
 
     @Test
@@ -204,12 +204,15 @@ public class Test1 {
     @Test
     public void testOrder() {
         Order order = new Order();
-        order.setOrderId(UUID.randomUUID().toString());
-        order.setBuyerOntid("iouowqoijidasd");
-        order.setSellerOntid("joijijojklkj");
-        order.setBuyDate(new Date());
-        order.setBuyTx("jojsdajosjdasd");
-        order.setState("bought");
-        orderMapper.insertSelective(order);
+        order.setOrderId("90a3b7cd-167d-4cd8-b975-00960b3295e3");
+        order = orderMapper.selectOne(order);
+        order.setState("testUpdate");
+        orderMapper.updateByPrimaryKey(order);
+//        order.setBuyerOntid("iouowqoijidasd");
+//        order.setSellerOntid("joijijojklkj");
+//        order.setBuyDate(new Date());
+//        order.setBuyTx("jojsdajosjdasd");
+//        order.setState("bought");
+//        orderMapper.insertSelective(order);
     }
 }
