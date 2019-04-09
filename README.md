@@ -239,7 +239,7 @@ method：POST
 	"dataDemander":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
 	"password": "12345678",
 	"dataProvider": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuO",
-	"tokenContractAddress": "16edbe366d1337eb510c2ff61099424c94aeef02",
+	"tokenContractAddress": "ong",
 	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b","d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35","4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"],
 	"priceList": [1,1,1],
 	"waitReceiveEncListTime": 5000
@@ -362,7 +362,10 @@ method：POST
 	"version":"v1",
 	"error":0,
 	"desc":"SUCCESS",
-	"result": true
+	"result": [
+              		"[\"5dbdbbecb8243e948e7dc6f3cd9bed96\",\"04ad85664b51b9d4f42f0c5f0c97cf83a129ebdfb7ce18e032ebc7f27ae34757bb341029e7ac88ef52758de45a012c03b5234b7b3913ea05e9a7ef50ec0b783c09\",\"94a5ec821c9df2281c6c0adf1f2e5c68\"]",
+              		"[\"b1bf6c4f2e7253df64cf1b739c5c0949\",\"0457182e8f95b54af15c3b17427349bf2599b0695f6e27e5f336d2e625e0743bab4a8cd9e10c2e5900b382e1c3861b66264fc4649e7331a1cc49dc7dfc2f199d62\",\"9e159fdbf61f14351b86e6c05ed7d1be\"]"
+              	]
 }
 ```
 
@@ -372,7 +375,7 @@ method：POST
 |  version   | String |            版本号             |
 |   error    |  int   |            错误码             |
 |    desc    | String | 成功为SUCCESS，失败为错误描述 |
-|   result   | String |   成功返回true，失败返回""    |
+|   result   | String |   成功返回卖家填写信息，失败返回""    |
 
 ### 数据提供方
 
