@@ -331,7 +331,7 @@ method：POST
 1. 提供买方信息，订单ID
 2. 验证信息
 3. 调用合约获取加密后的数据提取信息
-4. 返回true
+4. 返回卖家填写信息
 
 ```text
 url：/api/v1/datadealer/buyer/receive
