@@ -21,6 +21,8 @@
 	- [存证接口](#存证接口)
         - [添加ontid属性](#添加ontid属性)
         - [获取DDO](#获取DDO)
+        - [根据key获取存证](#根据key获取存证)
+        
 
 ## 简介
 
@@ -724,3 +726,51 @@ method：POST
 |    error|   int|  错误码  |
 |    desc|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回DDO，失败返回""  |
+
+
+#### 根据key获取存证
+
+1. 提供ontid,存证的key
+2. 返回存证
+
+```text
+url：/api/v1/ontid/getkey
+method：POST
+```
+
+- 请求：
+
+```json
+{
+	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
+	"key": "key123"
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    ontid|   String|  ontid  |
+|    key|   String|  存证的key  |
+
+- 响应：
+```json
+{
+	"action":"getDdoByKey",
+	"version":"v1",
+	"error":0,
+	"desc":"SUCCESS",
+	"result": {
+              	"Type": "string",
+              	"Value": "value123",
+              	"Key": "key123"
+              }
+}
+```
+
+| Field_Name|     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    action|   String|  动作标志  |
+|    version|   String|  版本号  |
+|    error|   int|  错误码  |
+|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    result|   String|  成功返回存证，失败返回null  |

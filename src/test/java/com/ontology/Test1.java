@@ -1,6 +1,7 @@
 package com.ontology;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.ontio.common.Address;
 import com.github.ontio.common.Helper;
 import com.ontology.dao.Order;
@@ -71,7 +72,12 @@ public class Test1 {
     }
     @Test
     public void testBlance() throws Exception {
-        sdkUtil.queryBlance("AcdBfqe7SG8xn4wfGrtUbbBDxw2x1e8UKm");
+        sdkUtil.queryBlance("AXWVPAxBwnzCsCSmQWNZnaF8HhhVdfDhBV");
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        sdkUtil.createOntId("12345678");
     }
 
     @Test
@@ -199,6 +205,27 @@ public class Test1 {
 
                 "}" + // params
                 "}"; // str
+    }
+
+    @Test
+    public void testListArray() {
+        List<String[]> list = new ArrayList();
+        String[] s1 = {"5dbdbbecb8243e948e7dc6f3cd9bed96","04ad85664b51b9d4f42f0c5f0c97cf83a129ebdfb7ce18e032ebc7f27ae34757bb341029e7ac88ef52758de45a012c03b5234b7b3913ea05e9a7ef50ec0b783c09","94a5ec821c9df2281c6c0adf1f2e5c68"};
+        String[] s2 = {"b1bf6c4f2e7253df64cf1b739c5c0949","0457182e8f95b54af15c3b17427349bf2599b0695f6e27e5f336d2e625e0743bab4a8cd9e10c2e5900b382e1c3861b66264fc4649e7331a1cc49dc7dfc2f199d62","9e159fdbf61f14351b86e6c05ed7d1be"};
+        list.add(s1);
+        list.add(s2);
+        System.out.println(JSON.toJSONString(list));
+        for (String[] s : list) {
+            System.out.println(Arrays.toString(s));
+        }
+    }
+
+    @Test
+    public void testCompare() {
+        String s1 = "r";
+        String s2 = "z";
+        int i = s1.compareTo(s2);
+        System.out.println(i);
     }
 
     @Test

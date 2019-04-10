@@ -1,6 +1,7 @@
 package com.ontology.controller;
 
 import com.ontology.controller.vo.AttributeVo;
+import com.ontology.controller.vo.DdoVo;
 import com.ontology.controller.vo.RegisterVo;
 import com.ontology.dao.OntId;
 import com.ontology.exception.OntIdException;
@@ -21,6 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Api(tags = "Ontid 接口")
 @RestController
@@ -174,6 +176,24 @@ public class OntIdController {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }
         String DDO = ontIdService.getDDO(action,ontid);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), DDO);
+    }
+
+    /**
+     * 根据key查询存证
+     * @param  req
+     * @return DDO
+     */
+    @ApiOperation("根据key查询存证")
+    @RequestMapping(value = "/api/v1/ontid/getkey", method = RequestMethod.POST)
+    public Result getDdoByKey(@RequestBody DdoVo req) throws Exception {
+        String action = "getDdoByKey";
+        String ontid = req.getOntid();
+        String key = req.getKey();
+        if (Helper.isEmptyOrNull(ontid) || Helper.isEmptyOrNull(key)) {
+            throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
+        }
+        Map<String,Object> DDO = ontIdService.getDdoByKey(action,ontid,key);
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), DDO);
     }
 

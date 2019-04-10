@@ -3,6 +3,7 @@ package com.ontology.service;
 import com.ontology.dao.OntId;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 public interface IOntIdService {
     String createOntId(String phone, String pwd, Integer type) throws Exception;
@@ -27,4 +28,6 @@ public interface IOntIdService {
     String getDDO(String action, String ontid) throws Exception;
 
     void addAttributes(String action, OntId ontId, String password, String key, String valueType, String value) throws Exception;
+
+    Map<String,Object> getDdoByKey(String action, String ontid, String key) throws Exception;
 }
