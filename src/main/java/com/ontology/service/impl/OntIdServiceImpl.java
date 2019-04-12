@@ -1,6 +1,8 @@
 package com.ontology.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ontology.ConfigParam;
 import com.ontology.dao.Event;
 import com.ontology.dao.OntId;
@@ -157,12 +159,13 @@ public class OntIdServiceImpl implements IOntIdService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-//                        sdk.addAttributes(ontId,password,key,valueType,value);
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     String eventStr = JSON.toJSONString(event);
                     Event record = new Event();
@@ -178,6 +181,25 @@ public class OntIdServiceImpl implements IOntIdService {
             }
         });
         System.out.println(txHash);
+    }
+
+    @Override
+    public Map<String,Object> getDdoByKey(String action, String ontid, String key) throws Exception {
+        String DDO = sdk.checkOntIdDDO(ontid);
+        if (Helper.isEmptyOrNull(DDO)) {
+            throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
+        }
+        Map<String,Object> result = null;
+        JSONArray attributes = JSONObject.parseObject(DDO).getJSONArray("Attributes");
+        for (int i = 0; i<attributes.size();i++) {
+            JSONObject attribute = attributes.getJSONObject(i);
+            String attriKey = attribute.getString("Key");
+            if (key.equals(attriKey)) {
+                result = attribute;
+                break;
+            }
+        }
+        return result;
     }
 
     @Override

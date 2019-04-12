@@ -53,7 +53,6 @@ public class BuyerServiceImpl implements BuyerService {
 
 
         // 拼接参数
-//        String contractHash = "65fe1aee5ab6a4bdb976c842b29bdbcdb1d2aacc";//"16edbe366d1337eb510c2ff61099424c94aeef02";  //ee07eddc8da6de3eebb4c268b1efcfd9afa61f12
         List argsList = new ArrayList();
         Map arg0 = new HashMap();
         arg0.put("name","data_demander");
@@ -109,27 +108,32 @@ public class BuyerServiceImpl implements BuyerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
-                    String eventStr = JSON.toJSONString(event);
-                    String exchangeId = null;
                     Order orderState = orderMapper.selectOne(order);
-                    JSONObject jsonObject = JSONObject.parseObject(eventStr);
-                    JSONArray notify = jsonObject.getJSONArray("Notify");
-                    for (int i = 0;i<notify.size();i++) {
-                        JSONObject obj = notify.getJSONObject(i);
-                        if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
-                            exchangeId = obj.getJSONArray("States").getString(1);
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("boughtOnchainNotFound");
+                    } else {
+                        String eventStr = JSON.toJSONString(event);
+                        String exchangeId = null;
+                        JSONObject jsonObject = JSONObject.parseObject(eventStr);
+                        JSONArray notify = jsonObject.getJSONArray("Notify");
+                        for (int j = 0;j<notify.size();j++) {
+                            JSONObject obj = notify.getJSONObject(j);
+                            if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
+                                exchangeId = obj.getJSONArray("States").getString(1);
+                            }
                         }
+                        orderState.setBuyEvent(eventStr);
+                        orderState.setExchangeId(exchangeId);
+                        orderState.setState("boughtOnchain");
                     }
-                    orderState.setBuyEvent(eventStr);
-                    orderState.setExchangeId(exchangeId);
-                    orderState.setState("boughtOnchain");
                     orderState.setBuyDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
@@ -174,16 +178,21 @@ public class BuyerServiceImpl implements BuyerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("buyerCancelOnchain");
-                    orderState.setCancelEvent(JSON.toJSONString(event));
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("buyerCancelOnchainNotFound");
+                    } else {
+                        orderState.setState("buyerCancelOnchain");
+                        orderState.setCancelEvent(JSON.toJSONString(event));
+                    }
                     orderState.setCancelDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
@@ -191,30 +200,6 @@ public class BuyerServiceImpl implements BuyerService {
                 }
             }
         });
-    }
-
-
-
-    @Override
-    public List<OrderListResp> findSellList(String action, String buyerOntid) {
-        String queryType = "buyer_ontid";
-        List<Order> orderList = orderMapper.getBuyerList(queryType,buyerOntid);
-        List<OrderListResp> resps = new ArrayList<>();
-        for (Order order:orderList) {
-            OrderListResp resp = new OrderListResp();
-            resp.setOrderId(order.getOrderId());
-            resp.setBuyDate(order.getBuyDate());
-            resp.setDataProvider(order.getSellerOntid());
-            resp.setState(order.getState());
-            List<String> dataList = new ArrayList<>();
-            for (OrderData data:order.getOrderData()){
-                String dataId = data.getDataId();
-                dataList.add(dataId);
-            }
-            resp.setDataIdList(dataList);
-            resps.add(resp);
-        }
-        return resps;
     }
 
     @Override
@@ -271,17 +256,21 @@ public class BuyerServiceImpl implements BuyerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,buyerAcct, payerAcct,false);
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
-                    String eventStr = JSON.toJSONString(event);
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setRecvMsgEvent(eventStr);
-                    orderState.setState("buyerRecvMsgOnchain");
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("buyerRecvMsgOnchainNotFound");
+                    } else {
+                        orderState.setRecvMsgEvent(JSON.toJSONString(event));
+                        orderState.setState("buyerRecvMsgOnchain");
+                    }
                     orderState.setRecvMsgDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
@@ -291,24 +280,6 @@ public class BuyerServiceImpl implements BuyerService {
         });
         return dataList;
 
-    }
-
-    @Override
-    public List<String> decodeMessage(String action, String dataDemander, String password, List<String> secStr) throws Exception {
-        OntId buyerOntId = getOntId(action,dataDemander,password);
-        Account buyerAcct = sdk.getAccount(buyerOntId.getKeystore(),password);
-        List<String> message = new ArrayList<>();
-        for (String s : secStr) {
-            Object[] objects = JSONArray.parseArray(s).toArray();
-            String[] msg = new String[objects.length];
-            for (int i = 0;i<objects.length;i++) {
-                msg[i] = (String) objects[i];
-            }
-            byte[] decrypt = ECIES.Decrypt(buyerAcct, msg);
-            message.add(new String(decrypt,"utf-8").replace("\"",""));
-        }
-        log.info("{}",message);
-        return message;
     }
 
     private OntId getOntId(String action, String ontid, String password) {

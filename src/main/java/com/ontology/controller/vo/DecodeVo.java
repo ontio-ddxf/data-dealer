@@ -8,9 +8,11 @@ import java.util.List;
 @Data
 public class DecodeVo {
     @ApiModelProperty(name="dataDemander",value = "数据需求方ontid")
-    private String dataDemander;
+    private String ontid;
     @ApiModelProperty(name="password",value = "数据需求方密码")
     private String password;
+    @ApiModelProperty(name="kid",value = "kid")
+    private Integer kid;
     @ApiModelProperty(name="message",value = "加密信息")
-    private List<String> message;
+    private String cipher;
 }

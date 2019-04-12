@@ -24,7 +24,7 @@ import java.util.List;
 public class SellerController {
 
     @Autowired
-    SellerService sellerService;
+    private SellerService sellerService;
 
     @ApiOperation(value="数据发货接口", notes="数据发货接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/seller/sell", method = RequestMethod.POST)
@@ -62,15 +62,5 @@ public class SellerController {
         sellerService.confirmExchange(action,dataProvider,password,orderId);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
-    }
-
-    @ApiOperation(value="提供方订单查询接口", notes="提供方订单查询接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/seller/list", method = RequestMethod.POST)
-    public Result findSellList(String sellerOntid) throws Exception {
-        String action = "sellerList";
-
-        List<OrderListResp> orderList = sellerService.findSellList(action,sellerOntid);
-
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }
 }

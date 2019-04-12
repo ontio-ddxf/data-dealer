@@ -26,9 +26,9 @@ import java.util.List;
 public class ContractServiceImpl implements ContractService {
 
     @Autowired
-    SDKUtil sdk;
+    private SDKUtil sdk;
     @Autowired
-    OntIdMapper ontIdMapper;
+    private OntIdMapper ontIdMapper;
     @Override
     public void invokeContract(String action, ContractVo contractVo) throws Exception {
         String ontid = contractVo.getOntid();

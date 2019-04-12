@@ -50,12 +50,6 @@ public class SellerServiceImpl implements SellerService {
         if (supplyOrder == null) {
             throw new OntIdException(action, ErrorInfo.NOT_EXIST.descCN(), ErrorInfo.NOT_EXIST.descEN(), ErrorInfo.NOT_EXIST.code());
         }
-        // 获取买家公钥
-        OntId ontId = new OntId();
-        ontId.setOntid(supplyOrder.getBuyerOntid());
-        OntId buyerOntId = ontIdMapper.selectOne(ontId);
-        JSONObject keyStore = JSONObject.parseObject(buyerOntId.getKeystore());
-        String publicKeys = keyStore.getString("publicKey");
 
         // 拼接参数
         List argsList = new ArrayList();
@@ -68,8 +62,9 @@ public class SellerServiceImpl implements SellerService {
         List<String> dataIdList = new ArrayList<>();
         for (Object o : encMsgList) {
             if(o instanceof String) {
-                String secStr = JSON.toJSONString(ECIES.Encrypt(publicKeys,JSON.toJSONString(o).getBytes()));
-                dataIdList.add("String:" + secStr);
+                dataIdList.add("String:" + o);
+            } else {
+                throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
             }
         }
         arg1.put("value",dataIdList);
@@ -89,16 +84,21 @@ public class SellerServiceImpl implements SellerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("deliveredOnchain");
-                    orderState.setSellEvent(JSON.toJSONString(event));
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("deliveredOnchainNotFound");
+                    } else {
+                        orderState.setState("deliveredOnchain");
+                        orderState.setSellEvent(JSON.toJSONString(event));
+                    }
                     orderState.setSellDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
@@ -143,16 +143,21 @@ public class SellerServiceImpl implements SellerService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6*1000);
+                    Thread.sleep(7*1000);
                     Object event = sdk.checkEvent(txHash);
-                    while (Helper.isEmptyOrNull(event)) {
-//                        sdk.invokeContract(params,sellerAcct, payerAcct,false);
-                        Thread.sleep(6*1000);
+                    int i = 0;
+                    while (Helper.isEmptyOrNull(event) && i < 5) {
+                        Thread.sleep(7*1000);
                         event = sdk.checkEvent(txHash);
+                        i++;
                     }
                     Order orderState = orderMapper.selectOne(order);
-                    orderState.setState("sellerRecvTokenOnchain");
-                    orderState.setRecvTokenEvent(JSON.toJSONString(event));
+                    if (Helper.isEmptyOrNull(event)) {
+                        orderState.setState("sellerRecvTokenOnchainNotFound");
+                    } else {
+                        orderState.setState("sellerRecvTokenOnchain");
+                        orderState.setRecvTokenEvent(JSON.toJSONString(event));
+                    }
                     orderState.setRecvTokenDate(new Date());
                     orderMapper.updateByPrimaryKeySelective(orderState);
                 } catch (Exception e) {
@@ -160,27 +165,6 @@ public class SellerServiceImpl implements SellerService {
                 }
             }
         });
-    }
-    @Override
-    public List<OrderListResp> findSellList(String action, String sellerOntid) {
-        String queryType = "seller_ontid";
-        List<Order> orderList = orderMapper.getBuyerList(queryType,sellerOntid);
-        List<OrderListResp> resps = new ArrayList<>();
-        for (Order order:orderList) {
-            OrderListResp resp = new OrderListResp();
-            resp.setOrderId(order.getOrderId());
-            resp.setBuyDate(order.getBuyDate());
-            resp.setDataDemander(order.getBuyerOntid());
-            resp.setState(order.getState());
-            List<String> dataList = new ArrayList<>();
-            for (OrderData data:order.getOrderData()){
-                String dataId = data.getDataId();
-                dataList.add(dataId);
-            }
-            resp.setDataIdList(dataList);
-            resps.add(resp);
-        }
-        return resps;
     }
 
     private OntId getOntId(String action, String ontid, String password) {

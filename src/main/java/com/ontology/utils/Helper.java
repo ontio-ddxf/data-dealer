@@ -262,7 +262,7 @@ public class Helper {
      * lijie 2019/3/20
      */
     public static String getParams(String ontid, String contractHash, String method, List argsList, String payer) {
-        Map str = new HashMap();
+        Map map = new HashMap();
         Map parms = new HashMap();
         Map invokeConfig = new HashMap();
         List functions = new ArrayList();
@@ -282,8 +282,8 @@ public class Helper {
         parms.put("invokeConfig",invokeConfig);
         parms.put("ontid",ontid);
 
-        str.put("action","invoke");
-        str.put("params",parms);
-        return JSON.toJSONString(str);
+        map.put("action","invoke");
+        map.put("params",parms);
+        return JSON.toJSONString(map);
     }
 }

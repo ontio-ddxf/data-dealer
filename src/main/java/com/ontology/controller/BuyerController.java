@@ -24,7 +24,7 @@ import java.util.List;
 public class BuyerController {
 
     @Autowired
-    BuyerService buyerService;
+    private BuyerService buyerService;
 
     @ApiOperation(value="数据交易请求接口", notes="数据交易请求接口" ,httpMethod="POST")
     @RequestMapping(value = "/api/v1/datadealer/buyer/buy", method = RequestMethod.POST)
@@ -77,33 +77,6 @@ public class BuyerController {
         List<String> message = buyerService.receiveEncMessage(action,dataDemander,password,orderId);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), message);
-    }
-
-    @ApiOperation(value="需求方数据解密", notes="需求方数据解密" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/decode", method = RequestMethod.POST)
-    public Result decodeMessage(@RequestBody DecodeVo req) throws Exception {
-        String action = "decodeMessage";
-        String dataDemander = req.getDataDemander();
-        String password = req.getPassword();
-        List<String> secStr = req.getMessage();
-
-        helpCheckPwd(action,password);
-
-        List<String> message = buyerService.decodeMessage(action,dataDemander,password,secStr);
-
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), message);
-    }
-
-
-
-    @ApiOperation(value="需求方订单查询接口", notes="需求方订单查询接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/list", method = RequestMethod.POST)
-    public Result findBuyList(String buyerOntid) throws Exception {
-        String action = "buyerList";
-
-        List<OrderListResp> orderList = buyerService.findSellList(action,buyerOntid);
-
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }
 
 }
