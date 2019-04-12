@@ -91,11 +91,10 @@ local.properties
 *.iml
 *.ipr
 *.iws
-.idea
- 
+.idea\
+
 ## .gitignore for linux
 .*
-!.gitignore
 *~
  
 ## .gitignore for windows
