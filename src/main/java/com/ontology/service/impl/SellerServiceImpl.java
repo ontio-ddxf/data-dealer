@@ -78,34 +78,35 @@ public class SellerServiceImpl implements SellerService {
 
         supplyOrder.setSellTx(txHash);
         supplyOrder.setState("delivered");
+        supplyOrder.setCheckTime(new Date(new Date().getTime()+10*1000));
         orderMapper.updateByPrimaryKey(supplyOrder);
 
-        Executors.newCachedThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(7*1000);
-                    Object event = sdk.checkEvent(txHash);
-                    int i = 0;
-                    while (Helper.isEmptyOrNull(event) && i < 5) {
-                        Thread.sleep(7*1000);
-                        event = sdk.checkEvent(txHash);
-                        i++;
-                    }
-                    Order orderState = orderMapper.selectOne(order);
-                    if (Helper.isEmptyOrNull(event)) {
-                        orderState.setState("deliveredOnchainNotFound");
-                    } else {
-                        orderState.setState("deliveredOnchain");
-                        orderState.setSellEvent(JSON.toJSONString(event));
-                    }
-                    orderState.setSellDate(new Date());
-                    orderMapper.updateByPrimaryKeySelective(orderState);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Executors.newCachedThreadPool().submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(7*1000);
+//                    Object event = sdk.checkEvent(txHash);
+//                    int i = 0;
+//                    while (Helper.isEmptyOrNull(event) && i < 5) {
+//                        Thread.sleep(7*1000);
+//                        event = sdk.checkEvent(txHash);
+//                        i++;
+//                    }
+//                    Order orderState = orderMapper.selectOne(order);
+//                    if (Helper.isEmptyOrNull(event)) {
+//                        orderState.setState("deliveredOnchainNotFound");
+//                    } else {
+//                        orderState.setState("deliveredOnchain");
+//                        orderState.setSellEvent(JSON.toJSONString(event));
+//                    }
+//                    orderState.setSellDate(new Date());
+//                    orderMapper.updateByPrimaryKeySelective(orderState);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
 
@@ -137,34 +138,35 @@ public class SellerServiceImpl implements SellerService {
 
         confirmOrder.setRecvTokenTx(txHash);
         confirmOrder.setState("sellerRecvToken");
+        confirmOrder.setCheckTime(new Date(new Date().getTime()+10*1000));
         orderMapper.updateByPrimaryKey(confirmOrder);
 
-        Executors.newCachedThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(7*1000);
-                    Object event = sdk.checkEvent(txHash);
-                    int i = 0;
-                    while (Helper.isEmptyOrNull(event) && i < 5) {
-                        Thread.sleep(7*1000);
-                        event = sdk.checkEvent(txHash);
-                        i++;
-                    }
-                    Order orderState = orderMapper.selectOne(order);
-                    if (Helper.isEmptyOrNull(event)) {
-                        orderState.setState("sellerRecvTokenOnchainNotFound");
-                    } else {
-                        orderState.setState("sellerRecvTokenOnchain");
-                        orderState.setRecvTokenEvent(JSON.toJSONString(event));
-                    }
-                    orderState.setRecvTokenDate(new Date());
-                    orderMapper.updateByPrimaryKeySelective(orderState);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Executors.newCachedThreadPool().submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(7*1000);
+//                    Object event = sdk.checkEvent(txHash);
+//                    int i = 0;
+//                    while (Helper.isEmptyOrNull(event) && i < 5) {
+//                        Thread.sleep(7*1000);
+//                        event = sdk.checkEvent(txHash);
+//                        i++;
+//                    }
+//                    Order orderState = orderMapper.selectOne(order);
+//                    if (Helper.isEmptyOrNull(event)) {
+//                        orderState.setState("sellerRecvTokenOnchainNotFound");
+//                    } else {
+//                        orderState.setState("sellerRecvTokenOnchain");
+//                        orderState.setRecvTokenEvent(JSON.toJSONString(event));
+//                    }
+//                    orderState.setRecvTokenDate(new Date());
+//                    orderMapper.updateByPrimaryKeySelective(orderState);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     private OntId getOntId(String action, String ontid, String password) {

@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -92,6 +93,7 @@ public class BuyerServiceImpl implements BuyerService {
         order.setSellerOntid(dataProvider);
         order.setBuyTx(txHash);
         order.setState("bought");
+        order.setCheckTime(new Date(new Date().getTime()+10*1000));
         orderMapper.insertSelective(order);
 
         List<OrderData> ods = new ArrayList<>();
@@ -104,43 +106,43 @@ public class BuyerServiceImpl implements BuyerService {
         }
         orderDataMapper.insertList(ods);
 
-        Executors.newCachedThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(7*1000);
-                    Object event = sdk.checkEvent(txHash);
-                    int i = 0;
-                    while (Helper.isEmptyOrNull(event) && i < 5) {
-                        Thread.sleep(7*1000);
-                        event = sdk.checkEvent(txHash);
-                        i++;
-                    }
-                    Order orderState = orderMapper.selectOne(order);
-                    if (Helper.isEmptyOrNull(event)) {
-                        orderState.setState("boughtOnchainNotFound");
-                    } else {
-                        String eventStr = JSON.toJSONString(event);
-                        String exchangeId = null;
-                        JSONObject jsonObject = JSONObject.parseObject(eventStr);
-                        JSONArray notify = jsonObject.getJSONArray("Notify");
-                        for (int j = 0;j<notify.size();j++) {
-                            JSONObject obj = notify.getJSONObject(j);
-                            if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
-                                exchangeId = obj.getJSONArray("States").getString(1);
-                            }
-                        }
-                        orderState.setBuyEvent(eventStr);
-                        orderState.setExchangeId(exchangeId);
-                        orderState.setState("boughtOnchain");
-                    }
-                    orderState.setBuyDate(new Date());
-                    orderMapper.updateByPrimaryKeySelective(orderState);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Executors.newCachedThreadPool().submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(7*1000);
+//                    Object event = sdk.checkEvent(txHash);
+//                    int i = 0;
+//                    while (Helper.isEmptyOrNull(event) && i < 5) {
+//                        Thread.sleep(7*1000);
+//                        event = sdk.checkEvent(txHash);
+//                        i++;
+//                    }
+//                    Order orderState = orderMapper.selectOne(order);
+//                    if (Helper.isEmptyOrNull(event)) {
+//                        orderState.setState("boughtOnchainNotFound");
+//                    } else {
+//                        String eventStr = JSON.toJSONString(event);
+//                        String exchangeId = null;
+//                        JSONObject jsonObject = JSONObject.parseObject(eventStr);
+//                        JSONArray notify = jsonObject.getJSONArray("Notify");
+//                        for (int j = 0;j<notify.size();j++) {
+//                            JSONObject obj = notify.getJSONObject(j);
+//                            if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
+//                                exchangeId = obj.getJSONArray("States").getString(1);
+//                            }
+//                        }
+//                        orderState.setBuyEvent(eventStr);
+//                        orderState.setExchangeId(exchangeId);
+//                        orderState.setState("boughtOnchain");
+//                    }
+//                    orderState.setBuyDate(new Date());
+//                    orderMapper.updateByPrimaryKeySelective(orderState);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
 
@@ -172,34 +174,35 @@ public class BuyerServiceImpl implements BuyerService {
 
         cancelOrder.setCancelTx(txHash);
         cancelOrder.setState("buyerCancel");
+        cancelOrder.setCheckTime(new Date(new Date().getTime()+10*1000));
         orderMapper.updateByPrimaryKey(cancelOrder);
 
-        Executors.newCachedThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(7*1000);
-                    Object event = sdk.checkEvent(txHash);
-                    int i = 0;
-                    while (Helper.isEmptyOrNull(event) && i < 5) {
-                        Thread.sleep(7*1000);
-                        event = sdk.checkEvent(txHash);
-                        i++;
-                    }
-                    Order orderState = orderMapper.selectOne(order);
-                    if (Helper.isEmptyOrNull(event)) {
-                        orderState.setState("buyerCancelOnchainNotFound");
-                    } else {
-                        orderState.setState("buyerCancelOnchain");
-                        orderState.setCancelEvent(JSON.toJSONString(event));
-                    }
-                    orderState.setCancelDate(new Date());
-                    orderMapper.updateByPrimaryKeySelective(orderState);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Executors.newCachedThreadPool().submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(7*1000);
+//                    Object event = sdk.checkEvent(txHash);
+//                    int i = 0;
+//                    while (Helper.isEmptyOrNull(event) && i < 5) {
+//                        Thread.sleep(7*1000);
+//                        event = sdk.checkEvent(txHash);
+//                        i++;
+//                    }
+//                    Order orderState = orderMapper.selectOne(order);
+//                    if (Helper.isEmptyOrNull(event)) {
+//                        orderState.setState("buyerCancelOnchainNotFound");
+//                    } else {
+//                        orderState.setState("buyerCancelOnchain");
+//                        orderState.setCancelEvent(JSON.toJSONString(event));
+//                    }
+//                    orderState.setCancelDate(new Date());
+//                    orderMapper.updateByPrimaryKeySelective(orderState);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -250,34 +253,35 @@ public class BuyerServiceImpl implements BuyerService {
 
         receiveOrder.setRecvMsgTx(txHash);
         receiveOrder.setState("buyerRecvMsg");
+        receiveOrder.setCheckTime(new Date(new Date().getTime()+10*1000));
         orderMapper.updateByPrimaryKey(receiveOrder);
 
-        Executors.newCachedThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(7*1000);
-                    Object event = sdk.checkEvent(txHash);
-                    int i = 0;
-                    while (Helper.isEmptyOrNull(event) && i < 5) {
-                        Thread.sleep(7*1000);
-                        event = sdk.checkEvent(txHash);
-                        i++;
-                    }
-                    Order orderState = orderMapper.selectOne(order);
-                    if (Helper.isEmptyOrNull(event)) {
-                        orderState.setState("buyerRecvMsgOnchainNotFound");
-                    } else {
-                        orderState.setRecvMsgEvent(JSON.toJSONString(event));
-                        orderState.setState("buyerRecvMsgOnchain");
-                    }
-                    orderState.setRecvMsgDate(new Date());
-                    orderMapper.updateByPrimaryKeySelective(orderState);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Executors.newCachedThreadPool().submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(7*1000);
+//                    Object event = sdk.checkEvent(txHash);
+//                    int i = 0;
+//                    while (Helper.isEmptyOrNull(event) && i < 5) {
+//                        Thread.sleep(7*1000);
+//                        event = sdk.checkEvent(txHash);
+//                        i++;
+//                    }
+//                    Order orderState = orderMapper.selectOne(order);
+//                    if (Helper.isEmptyOrNull(event)) {
+//                        orderState.setState("buyerRecvMsgOnchainNotFound");
+//                    } else {
+//                        orderState.setRecvMsgEvent(JSON.toJSONString(event));
+//                        orderState.setState("buyerRecvMsgOnchain");
+//                    }
+//                    orderState.setRecvMsgDate(new Date());
+//                    orderMapper.updateByPrimaryKeySelective(orderState);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
         return dataList;
 
     }

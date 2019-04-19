@@ -98,6 +98,7 @@ CREATE TABLE `tbl_order`
   `recv_msg_date`    datetime     DEFAULT NULL,
   `cancel_date`      datetime     DEFAULT NULL,
   `state`            varchar(255) DEFAULT NULL COMMENT 'bought;boughtOnchain;buyerCancel;buyerCancelOnchain;delivered;deliveredOnchain;sellerRecvToken;sellerRecvTokenOnchain;buyerRecvMsg;buyerRecvMsgOnchain',
+  `check_time`       datetime     DEFAULT NULL,
   PRIMARY KEY (`order_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = latin1;

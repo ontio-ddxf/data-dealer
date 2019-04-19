@@ -25,6 +25,7 @@
     <result column="recv_msg_date" jdbcType="TIMESTAMP" property="recvMsgDate" />
     <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
     <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="check_Time" jdbcType="TIMESTAMP" property="checkTime" />
   </resultMap>
 
   <select id="getOrderList" parameterType="String" resultMap="BuyerResultMap">

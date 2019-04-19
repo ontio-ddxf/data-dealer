@@ -54,6 +54,8 @@ public class Order {
 
     private String state;
 
+    private Date checkTime;
+
     @Transient
     private List<OrderData> orderData;
 

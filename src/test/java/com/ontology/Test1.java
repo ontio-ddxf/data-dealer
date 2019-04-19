@@ -6,6 +6,7 @@ import com.github.ontio.common.Address;
 import com.github.ontio.common.Helper;
 import com.ontology.dao.Order;
 import com.ontology.mapper.OrderMapper;
+import com.ontology.service.BuyerService;
 import com.ontology.utils.Base64ConvertUtil;
 import com.ontology.utils.SDKUtil;
 import org.junit.Test;
@@ -24,6 +25,8 @@ public class Test1 {
     OrderMapper orderMapper;
     @Autowired
     private SDKUtil sdkUtil;
+    @Autowired
+    private BuyerService buyerService;
 
     @Test
     public void createPayer() throws Exception {
@@ -70,10 +73,49 @@ public class Test1 {
         argsList.add(arg6);
         System.out.println(JSON.toJSONString(argsList));
     }
+
+    @Test
+    public void testConcurrent() throws Exception {
+        String action = "testConcurrent";
+        String dataDemander = "did:ont:AcdBfqe7SG8xn4wfGrtUbbBDxw2x1e8UKm";
+        String password = "12345678";
+        String dataProvider = "did:ont:AFsPutgDdVujxQe7KBqfK9Jom8AFMGB2x8";
+        List<String> dataList = new ArrayList<>();
+        dataList.add("test1");
+        dataList.add("test2");
+        dataList.add("test3");
+        List<Long> priceList = new ArrayList<>();
+        priceList.add(1L);
+        priceList.add(1L);
+        priceList.add(1L);
+        buyerService.purchaseData(action,dataDemander,password,dataProvider,dataList,priceList);
+
+    }
+
     @Test
     public void testBlance() throws Exception {
-        sdkUtil.queryBlance("AXWVPAxBwnzCsCSmQWNZnaF8HhhVdfDhBV");
+        sdkUtil.queryBlance("AcdBfqe7SG8xn4wfGrtUbbBDxw2x1e8UKm");
     }
+
+    @Test
+    public void testBolckHeight() throws Exception {
+        int blockHeight = sdkUtil.getBlockHeight();
+        System.out.println(blockHeight);
+    }
+
+    @Test
+    public void testEventByHeight() throws Exception {
+        JSONArray smartCodeEvent = (JSONArray) sdkUtil.getSmartCodeEvent(1611704);
+//        Object smartCodeEvent = sdkUtil.getSmartCodeEvent(1);
+        System.out.println(smartCodeEvent);
+    }
+
+    @Test
+    public void tesHeightBytx() throws Exception {
+        int height = sdkUtil.HeightBytx("16164476f21a43f36b4a2d23a5164da36ffbf2bd4f68609966aa1adae7c3ee31");
+        System.out.println(height);
+    }
+
 
     @Test
     public void testCreate() throws Exception {
@@ -94,7 +136,7 @@ public class Test1 {
     @Test
     public void testHexString() throws Exception {
         // 方法名，十六进制转成字节，再转成String
-        System.out.println(new String(Helper.hexToBytes("7472616e73666572"),"utf-8"));
+        System.out.println(new String(Helper.hexToBytes("73656e64546f6b656e"),"utf-8"));
         // 地址，解析十六进制字符串，再Base58加密
         System.out.println(Address.parse("66d5850e8a78e67325428ad77f91c913f7919ace").toBase58());
         System.out.println(Address.parse("281bc93aaa774edf88a3bdf7680fc8d119452607").toBase58());
@@ -104,6 +146,13 @@ public class Test1 {
         System.out.println(new String(Helper.hexToBytes("687474703a2f2f64617461312e636f6d23687474703a2f2f64617461322e636f6d23"),"utf-8"));
         // 超时时间
         System.out.println(new String(Helper.hexToBytes("5802"),"utf-8"));
+        // productId
+//        System.out.println(new String("","utf-8"));
+    }
+
+    @Test
+    public void testBytes() throws Exception {
+        System.out.println(Arrays.toString("".getBytes()));
     }
 
     @Test

@@ -236,4 +236,22 @@ public class SDKUtil {
         return null;
     }
 
+    public int getBlockHeight() throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        int blockHeight = ontSdk.getConnect().getBlockHeight();
+        return blockHeight;
+    }
+
+    public Object getSmartCodeEvent(int height) throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        Object smartCodeEvent = ontSdk.getConnect().getSmartCodeEvent(height);
+        return smartCodeEvent;
+    }
+
+    public int HeightBytx(String s) throws Exception {
+        OntSdk ontSdk = getOntSdk();
+        int smartCodeEvent = ontSdk.getConnect().getBlockHeightByTxHash(s);
+        return smartCodeEvent;
+
+    }
 }
