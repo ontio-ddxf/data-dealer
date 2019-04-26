@@ -41,20 +41,16 @@ public class OntIdController {
     /**
      * 数据需求方注册ontid
      *
-     * @param method phone
      * @return ontid
      */
     @ApiOperation("数据需求方注册ontid")
-    @RequestMapping(value = "/api/v1/ontid/register/demander/{method}", method = RequestMethod.POST)
-    public Result registerDemanderOntId(@PathVariable("method") String method, @RequestBody RegisterVo req) throws Exception {
+    @RequestMapping(value = "/api/v1/ontid/register/demander/phone", method = RequestMethod.POST)
+    public Result registerDemanderOntId(@RequestBody RegisterVo req) throws Exception {
         String action = "demanderRegister";
         Integer type = 1;
-        if (!method.equals("phone")) {
-            throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
-        }
+
         String phone = req.getPhone();
 
-        //todo 手机号校验，位数校验，dto注解验证
         Helper.verifyPhone(action, phone);
 
 //        String verifyCode = (String) obj.get("verifyCode");
@@ -71,20 +67,16 @@ public class OntIdController {
     /**
      * 数据提供方注册ontid
      *
-     * @param method phone
      * @return ontid
      */
     @ApiOperation("数据提供方注册ontid")
-    @RequestMapping(value = "/api/v1/ontid/register/provider/{method}", method = RequestMethod.POST)
-    public Result registerProviderOntId(@PathVariable("method") String method, @RequestBody RegisterVo req) throws Exception {
+    @RequestMapping(value = "/api/v1/ontid/register/provider/phone", method = RequestMethod.POST)
+    public Result registerProviderOntId(@RequestBody RegisterVo req) throws Exception {
         String action = "providerRegister";
         Integer type = 2;
-        if (!method.equals("phone")) {
-            throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
-        }
+
         String phone = req.getPhone();
 
-        //todo 手机号校验，位数校验，dto注解验证
         Helper.verifyPhone(action, phone);
 
 //        String verifyCode = (String) obj.get("verifyCode");
@@ -145,7 +137,7 @@ public class OntIdController {
      * @return true
      */
     @ApiOperation("Ontid 添加属性")
-    @RequestMapping(value = "/api/v1/ontid/addattribute", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/ontid/attribute", method = RequestMethod.PUT)
     public Result addAttributes(@RequestBody AttributeVo req) throws Exception {
         String action = "addAttribute";
         String ontid = req.getOntid();
@@ -169,8 +161,8 @@ public class OntIdController {
      * @return DDO
      */
     @ApiOperation("Ontid 获取 DDO")
-    @RequestMapping(value = "/api/v1/ontid/getddo", method = RequestMethod.POST)
-    public Result getDDO(@RequestBody String ontid) throws Exception {
+    @RequestMapping(value = "/api/v1/ontid/ddo", method = RequestMethod.GET)
+    public Result getDDO(String ontid) throws Exception {
         String action = "getDDO";
         if (Helper.isEmptyOrNull(ontid)) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
@@ -181,15 +173,11 @@ public class OntIdController {
 
     /**
      * 根据key查询存证
-     * @param  req
-     * @return DDO
      */
     @ApiOperation("根据key查询存证")
-    @RequestMapping(value = "/api/v1/ontid/getkey", method = RequestMethod.POST)
-    public Result getDdoByKey(@RequestBody DdoVo req) throws Exception {
+    @RequestMapping(value = "/api/v1/ontid/key", method = RequestMethod.GET)
+    public Result getDdoByKey(String ontid,String key) throws Exception {
         String action = "getDdoByKey";
-        String ontid = req.getOntid();
-        String key = req.getKey();
         if (Helper.isEmptyOrNull(ontid) || Helper.isEmptyOrNull(key)) {
             throw new OntIdException(action, ErrorInfo.PARAM_ERROR.descCN(), ErrorInfo.PARAM_ERROR.descEN(), ErrorInfo.PARAM_ERROR.code());
         }

@@ -10,10 +10,7 @@ import com.ontology.utils.Helper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,19 +25,17 @@ public class ToolsController {
 
 
     @ApiOperation(value="查询订单", notes="查询订单" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/tools/orders", method = RequestMethod.POST)
-    public Result queryList(@RequestBody OrderListVo req) throws Exception {
+    @RequestMapping(value = "/api/v1/data-dealer/tools/orders/{type}", method = RequestMethod.GET)
+    public Result queryList(@PathVariable Integer type, String ontid) {
         String action = "queryList";
-        String ontid = req.getOntid();
-        Integer provider = req.getProvider();
 
-        List<OrderListResp> orderList = toolsService.queryList(action, provider, ontid);
+        List<OrderListResp> orderList = toolsService.queryList(action, type, ontid);
 
         return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderList);
     }
 
     @ApiOperation(value="数据加密", notes="数据加密" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/tools/encrypt", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/tools/encrypt", method = RequestMethod.POST)
     public Result encrypt(@RequestBody EncryptVo req) throws Exception {
         String action = "encrypt";
         String ontid = req.getOntid();
@@ -57,7 +52,7 @@ public class ToolsController {
     }
 
     @ApiOperation(value="数据解密", notes="数据解密" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/tools/decrypt", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/tools/decrypt", method = RequestMethod.POST)
     public Result decrypt(@RequestBody DecodeVo req) throws Exception {
         String action = "decrypt";
         String ontid = req.getOntid();

@@ -70,8 +70,8 @@ method：POST
 {
     "action":"demanderRegister",
     "version":"v1",
-    "error":0,
-    "desc":"SUCCESS",
+    "code":0,
+    "msg":"SUCCESS",
     "result": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
 }
 ```
@@ -80,8 +80,8 @@ method：POST
 |:-----------|:-------|:------------------------------|
 | action     | String | 动作标志                      |
 | version    | String | 版本号                        |
-| error      | int    | 错误码                        |
-| desc       | String | 成功为SUCCESS，失败为错误描述 |
+| code       | int    | 错误码                        |
+| msg        | String | 成功为SUCCESS，失败为错误描述 |
 | result     | String | 成功返回ontid，失败返回""     |
 
 #### 数据提供方注册
@@ -114,8 +114,8 @@ method：POST
 {
     "action":"providerRegister",
     "version":"v1",
-    "error":0,
-    "desc":"SUCCESS",
+    "code":0,
+    "msg":"SUCCESS",
     "result": "did:ont:AcrgWfbSPxMR1BNxtenRCCGpspamMWhLuL"
 }
 ```
@@ -124,8 +124,8 @@ method：POST
 |:-----------|:-------|:------------------------------|
 | action     | String | 动作标志                      |
 | version    | String | 版本号                        |
-| error      | int    | 错误码                        |
-| desc       | String | 成功为SUCCESS，失败为错误描述 |
+| code       | int    | 错误码                        |
+| msg        | String | 成功为SUCCESS，失败为错误描述 |
 | result     | String | 成功返回ontid，失败返回""     |
 
 #### 登录
@@ -158,8 +158,8 @@ method：POST
 {
     "action":"login",
     "version":"v1",
-    "error":0,
-    "desc":"SUCCESS",
+    "code":0,
+    "msg":"SUCCESS",
     "result": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
 }
 ```
@@ -168,59 +168,11 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|    code    |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String |   成功返回ontid，失败返回""   |
 
 ### 数据需求方
-
-#### 查询订单
-
-1. 提供买方信息
-2. 返回购买订单列表
-
-```text
-url：/api/v1/datadealer/buyer/list
-method：POST
-```
-
-- 请求：
-
-```json
-{
-	"dataDemander":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
-}
-```
-
-|  Field_Name  |  Type  |   Description   |
-|:------------:|:------:|:---------------:|
-| dataDemander | String | 数据需求方ontid |
-
-- 响应：
-
-```json
-{
-	"action":"buyerList",
-	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
-	"result": [{
-              	"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
-              	"dataProvider": "did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
-              	"dataIdList": ["6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"],
-              	"buyDate": "2019-3-20",
-              	"state": "deliveredOnchain"
-              }]
-}
-```
-
-| Field_Name |  Type  |          Description          |
-|:----------:|:------:|:-----------------------------:|
-|   action   | String |           动作标志            |
-|  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
-|   result   | String | 成功返回orderList，失败返回"" |
 
 #### 购买数据
 
@@ -230,7 +182,7 @@ method：POST
 4. 返回true
 
 ```text
-url：/api/v1/datadealer/buyer/buy
+url：/api/v1/data-dealer/buyer
 method：POST
 ```
 
@@ -264,8 +216,8 @@ method：POST
 {
 	"action":"buy",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": {
 	   "orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed"
 	}
@@ -276,9 +228,9 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
-|   result   | String |   成功返回true，失败返回""    |
+|   code     |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String |   成功返回orderId，失败返回""    |
 
 #### 取消订单
 
@@ -288,7 +240,7 @@ method：POST
 4. 返回true
 
 ```text
-url：/api/v1/datadealer/buyer/cancel
+url：/api/v1/data-dealer/buyer/cancel
 method：POST
 ```
 
@@ -314,8 +266,8 @@ method：POST
 {
 	"action":"buyerCancel",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": true
 }
 ```
@@ -324,8 +276,8 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   code     |  int   |            错误码             |
+|    msg     | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String |   成功返回true，失败返回""    |
 
 #### 获取数据提取信息
@@ -336,7 +288,7 @@ method：POST
 4. 返回卖家填写信息
 
 ```text
-url：/api/v1/datadealer/buyer/receive
+url：/api/v1/data-dealer/buyer/receive
 method：POST
 ```
 
@@ -362,8 +314,8 @@ method：POST
 {
 	"action":"receiveMessage",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": [
               	"[\"5dbdbbecb8243e948e7dc6f3cd9bed96\",\"04ad85664b51b9d4f42f0c5f0c97cf83a129ebdfb7ce18e032ebc7f27ae34757bb341029e7ac88ef52758de45a012c03b5234b7b3913ea05e9a7ef50ec0b783c09\",\"94a5ec821c9df2281c6c0adf1f2e5c68\"]",
               	"[\"b1bf6c4f2e7253df64cf1b739c5c0949\",\"0457182e8f95b54af15c3b17427349bf2599b0695f6e27e5f336d2e625e0743bab4a8cd9e10c2e5900b382e1c3861b66264fc4649e7331a1cc49dc7dfc2f199d62\",\"9e159fdbf61f14351b86e6c05ed7d1be\"]"
@@ -375,9 +327,9 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
-|   result   | String |   成功返回卖家填写信息，失败返回""    |
+|   code     |  int   |            错误码             |
+|    msg     | String | 成功为SUCCESS，失败为错误描述 |
+|   result   | String | 成功返回卖家填写信息，失败返回""    |
 
 ### 数据提供方
 
@@ -389,7 +341,7 @@ method：POST
 4. 返回true
 
 ```text
-url：/api/v1/datadealer/seller/sell
+url：/api/v1/data-dealer/seller
 method：POST
 ```
 
@@ -417,8 +369,8 @@ method：POST
 {
 	"action":"deliver",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": true
 }
 ```
@@ -427,14 +379,14 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   code     |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String |   成功返回true，失败返回""    |
 
 #### 收取通证
 
 ```text
-url：/api/v1/datadealer/seller/confirm
+url：/api/v1/data-dealer/seller/token
 method：POST
 ```
 
@@ -458,10 +410,10 @@ method：POST
 
 ```json
 {
-	"action":"confirm",
+	"action":"getToken",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": true
 }
 ```
@@ -470,35 +422,29 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   code     |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String |   成功返回true，失败返回""    |
 
 ### 工具接口
 
 #### 查询订单
 
-1. 提供 `ONTID`。
-2. 查询 `ONTID` 所对应的订单列表。
+1. 提供 `ontid`和用户类型。
+2. 查询 `ontid` 所对应的订单列表。
 
 ```text
-url：/api/v1/datadealer/tools/orders
-method：POST
+url：/api/v1/data-dealer/tools/orders/{type}?{ontid=}
+method：GET
 ```
 
 - 请求：
 
-```json
-{
-	"ONTID":"did:ont:AKRwxnCzPgBHRKczVxranWimQBFBsVkb1y",
-	"provider": 0
-}
-```
 
-| Field_Name |  Type  |                              Description                              |
+| Field_Name |  Type  |   Description   |
 |:----------:|:------:|:---------------------------------------------------------------------:|
-|   ONTID    | String |                                 ONTID                                 |
-|  provider  |  Int   | is data provider if and noly if equals to 0, otherwise, data demander |
+|  type   | Integer | 查询用户类型:0-需求方;1-提供方|
+|  ontid  |  String | ontid |
 
 - 响应：
 
@@ -506,8 +452,8 @@ method：POST
 	{
 	"action":"queryOrders",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": [{
 		"orderId": "22bb3e7b-e1f1-4c32-a646-6e0611cf78ed",
 		"dataDemander": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
@@ -522,8 +468,8 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   code     |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String | 成功返回orderList，失败返回"" |
 
 #### 数据加密
@@ -533,7 +479,7 @@ method：POST
 3. 使用公钥 `pk` 对数据加密。
 
 ```text
-url：/api/v1/datadealer/tools/encrypt
+url：/api/v1/data-dealer/tools/encrypt
 method：POST
 ```
 
@@ -559,8 +505,8 @@ method：POST
 {
 	"action":"encrypt",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": "5dbdbbecb8243e948e7dc6f3cd9bed96"
 }
 ```
@@ -569,8 +515,8 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   code     |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String | 成功返回解密数据，失败返回""  |
 
 #### 数据解密
@@ -582,7 +528,7 @@ method：POST
 5. 使用私钥 `sk` 对数据进行解密。
 
 ```text
-url：/api/v1/datadealer/tools/decrypt
+url：/api/v1/data-dealer/tools/decrypt
 method：POST
 ```
 
@@ -609,8 +555,8 @@ method：POST
 {
 	"action":"decrypt",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": "http://data1.com"
 }
 ```
@@ -619,8 +565,8 @@ method：POST
 |:----------:|:------:|:-----------------------------:|
 |   action   | String |           动作标志            |
 |  version   | String |            版本号             |
-|   error    |  int   |            错误码             |
-|    desc    | String | 成功为SUCCESS，失败为错误描述 |
+|   code     |  int   |            错误码             |
+|    msg    | String | 成功为SUCCESS，失败为错误描述 |
 |   result   | String | 成功返回解密数据，失败返回""  |
 
 
@@ -633,8 +579,8 @@ method：POST
 3. 返回true
 
 ```text
-url：/api/v1/ontid/addattribute
-method：POST
+url：/api/v1/ontid/attribute
+method：PUT
 ```
 
 - 请求：
@@ -649,21 +595,21 @@ method：POST
 }
 ```
 
-| Field_Name|     Type |   Description   | 
-| :--------------: | :--------:| :------: |
-|    ontid|   String|  需要添加属性的ontid  |
-|    password|   String|  ontid的密码  |
-|    key|   Sting|  属性的key  |
-|    key|   Sting|  属性的valueType  |
-|    key|   Sting|  属性的value  |
+| Field_Name| Type  |  Description         | 
+| :-------: | :----:| :-------------------:|
+|  ontid    | String|  需要添加属性的ontid |
+|  password | String|  ontid的密码         |
+|  key      | String|  属性的key           |
+|  valueType| String|  属性的valueType     |
+|  value    | String|  属性的value         |
 
 - 响应：
 ```json
 {
 	"action":"addAttribute",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": true
 }
 ```
@@ -672,8 +618,8 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    action|   String|  动作标志  |
 |    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    code|   int|  错误码  |
+|    msg|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回true，失败返回""  |
 
 
@@ -683,16 +629,12 @@ method：POST
 2. 返回DDO
 
 ```text
-url：/api/v1/ontid/getddo
-method：POST
+url：/api/v1/ontid/ddo?{ontid=}
+method：GET
 ```
 
 - 请求：
 
-```json
-{
-	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN"
-}
 ```
 
 | Field_Name|     Type |   Description   | 
@@ -704,8 +646,8 @@ method：POST
 {
 	"action":"getDDO",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": {
               	"Attributes": [],
               	"OntId": "did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
@@ -723,8 +665,8 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    action|   String|  动作标志  |
 |    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    code|   int|  错误码  |
+|    msg|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回DDO，失败返回""  |
 
 
@@ -734,18 +676,12 @@ method：POST
 2. 返回存证
 
 ```text
-url：/api/v1/ontid/getkey
-method：POST
+url：/api/v1/ontid/key?{ontid=}&{key=}
+method：GET
 ```
 
 - 请求：
 
-```json
-{
-	"ontid":"did:ont:AR9cMgFaPNDw82v1aGjmB18dfA4BvtmoeN",
-	"key": "key123"
-}
-```
 
 | Field_Name|     Type |   Description   | 
 | :--------------: | :--------:| :------: |
@@ -757,8 +693,8 @@ method：POST
 {
 	"action":"getDdoByKey",
 	"version":"v1",
-	"error":0,
-	"desc":"SUCCESS",
+	"code":0,
+	"msg":"SUCCESS",
 	"result": {
               	"Type": "string",
               	"Value": "value123",
@@ -771,6 +707,6 @@ method：POST
 | :--------------: | :--------:| :------: |
 |    action|   String|  动作标志  |
 |    version|   String|  版本号  |
-|    error|   int|  错误码  |
-|    desc|   String|  成功为SUCCESS，失败为错误描述  |
+|    code|   int|  错误码  |
+|    msg|   String|  成功为SUCCESS，失败为错误描述  |
 |    result|   String|  成功返回存证，失败返回null  |

@@ -112,7 +112,7 @@ public class Test1 {
 
     @Test
     public void tesHeightBytx() throws Exception {
-        int height = sdkUtil.HeightBytx("16164476f21a43f36b4a2d23a5164da36ffbf2bd4f68609966aa1adae7c3ee31");
+        int height = sdkUtil.HeightBytx("16d0d9a6c984276af5b793b3e242867d178c9d3fc0a92f4bc0d825dcb358b998");
         System.out.println(height);
     }
 

@@ -27,7 +27,7 @@ public class SellerController {
     private SellerService sellerService;
 
     @ApiOperation(value="数据发货接口", notes="数据发货接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/seller/sell", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/seller", method = RequestMethod.POST)
     public Result deliverData(@RequestBody SellVo req) throws Exception {
         String action = "deliver";
         String dataProvider = req.getDataProvider();
@@ -50,9 +50,9 @@ public class SellerController {
     }
 
     @ApiOperation(value="提供方收取Token接口", notes="提供方收取Token接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/seller/confirm", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/seller/token", method = RequestMethod.POST)
     public Result confirmExchange(@RequestBody ConfirmVo req) throws Exception {
-        String action = "confirm";
+        String action = "getToken";
         String dataProvider = req.getDataProvider();
         String password = req.getPassword();
         String orderId = req.getOrderId();

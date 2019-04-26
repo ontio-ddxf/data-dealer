@@ -8,26 +8,26 @@ import lombok.Data;
 @Data
 public class Result {
     public String Action;
-    public int Error;
-    public String Desc;
+    public int Code;
+    public String Msg;
     public Object Result;
     public String Version;
 
     public Result() {
     }
 
-    public Result(String action, int error, String desc, Object result) {
+    public Result(String action, int code, String msg, Object result) {
         Action = action;
-        Error = error;
-        Desc = desc;
+        Code = code;
+        Msg = msg;
         Result = result;
         Version = "v1";
     }
 
-    private Result(String action, int error, String desc, Object result, String version) {
+    private Result(String action, int code, String msg, Object result, String version) {
         Action = action;
-        Error = error;
-        Desc = desc;
+        Code = code;
+        Msg = msg;
         Result = result;
         Version = version;
     }

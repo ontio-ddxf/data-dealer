@@ -56,18 +56,22 @@ public class OrderScheduler extends BaseScheduler {
                     String eventStr = JSON.toJSONString(event);
                     String exchangeId = null;
                     JSONObject jsonObject = JSONObject.parseObject(eventStr);
-                    JSONArray notify = jsonObject.getJSONArray("Notify");
-                    for (int j = 0;j<notify.size();j++) {
-                        JSONObject obj = notify.getJSONObject(j);
-                        if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
-                            exchangeId = obj.getJSONArray("States").getString(1);
+                    if (jsonObject.getIntValue("State") == 0) {
+                        order.setState("boughtFailure");
+                    } else {
+                        JSONArray notify = jsonObject.getJSONArray("Notify");
+                        for (int j = 0;j<notify.size();j++) {
+                            JSONObject obj = notify.getJSONObject(j);
+                            if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
+                                exchangeId = obj.getJSONArray("States").getString(1);
+                            }
                         }
+                        order.setBuyEvent(eventStr);
+                        order.setExchangeId(exchangeId);
+                        order.setState("boughtOnchain");
+                        order.setBuyDate(new Date());
+                        order.setCheckTime(new Date());
                     }
-                    order.setBuyEvent(eventStr);
-                    order.setExchangeId(exchangeId);
-                    order.setState("boughtOnchain");
-                    order.setBuyDate(new Date());
-                    order.setCheckTime(new Date());
                 }
                 orderMapper.updateByPrimaryKeySelective(order);
             } catch (Exception e) {

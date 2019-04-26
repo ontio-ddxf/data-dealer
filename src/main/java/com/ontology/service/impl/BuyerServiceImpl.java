@@ -43,7 +43,7 @@ public class BuyerServiceImpl implements BuyerService {
     private OrderDataMapper orderDataMapper;
 
     @Override
-    public void purchaseData(String action, String dataDemander, String password, String dataProvider, List<String> productIds, List<Long> priceList) throws Exception {
+    public String purchaseData(String action, String dataDemander, String password, String dataProvider, List<String> productIds, List<Long> priceList) throws Exception {
         OntId ontId = getOntId(action,dataDemander,password);
 
         Account payerAcct = sdk.getPayerAcct();
@@ -88,7 +88,8 @@ public class BuyerServiceImpl implements BuyerService {
         String txHash = (String) sdk.invokeContract(params,buyerAcct, payerAcct,false);
 
         Order order = new Order();
-        order.setOrderId(UUID.randomUUID().toString());
+        String orderId = UUID.randomUUID().toString();
+        order.setOrderId(orderId);
         order.setBuyerOntid(dataDemander);
         order.setSellerOntid(dataProvider);
         order.setBuyTx(txHash);
@@ -105,44 +106,7 @@ public class BuyerServiceImpl implements BuyerService {
             ods.add(od);
         }
         orderDataMapper.insertList(ods);
-
-//        Executors.newCachedThreadPool().submit(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(7*1000);
-//                    Object event = sdk.checkEvent(txHash);
-//                    int i = 0;
-//                    while (Helper.isEmptyOrNull(event) && i < 5) {
-//                        Thread.sleep(7*1000);
-//                        event = sdk.checkEvent(txHash);
-//                        i++;
-//                    }
-//                    Order orderState = orderMapper.selectOne(order);
-//                    if (Helper.isEmptyOrNull(event)) {
-//                        orderState.setState("boughtOnchainNotFound");
-//                    } else {
-//                        String eventStr = JSON.toJSONString(event);
-//                        String exchangeId = null;
-//                        JSONObject jsonObject = JSONObject.parseObject(eventStr);
-//                        JSONArray notify = jsonObject.getJSONArray("Notify");
-//                        for (int j = 0;j<notify.size();j++) {
-//                            JSONObject obj = notify.getJSONObject(j);
-//                            if (secureConfig.getContractHash().equals(obj.getString("ContractAddress"))) {
-//                                exchangeId = obj.getJSONArray("States").getString(1);
-//                            }
-//                        }
-//                        orderState.setBuyEvent(eventStr);
-//                        orderState.setExchangeId(exchangeId);
-//                        orderState.setState("boughtOnchain");
-//                    }
-//                    orderState.setBuyDate(new Date());
-//                    orderMapper.updateByPrimaryKeySelective(orderState);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+        return orderId;
     }
 
 

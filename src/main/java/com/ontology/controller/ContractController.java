@@ -3,7 +3,6 @@ package com.ontology.controller;
 import com.ontology.controller.vo.ContractVo;
 import com.ontology.model.Result;
 import com.ontology.service.ContractService;
-import com.ontology.service.IOntIdService;
 import com.ontology.utils.ErrorInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,11 +18,10 @@ public class ContractController {
 
     @Autowired
     private ContractService contractService;
-    @Autowired
-    private IOntIdService ontIdService;
+
 
     @ApiOperation(value="合约调用接口", notes="合约调用接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/contract/invoke", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/contract", method = RequestMethod.POST)
     public Result invokeContract(@RequestBody ContractVo contractVo) throws Exception {
         String action = "invokeContract";
         contractService.invokeContract(action,contractVo);

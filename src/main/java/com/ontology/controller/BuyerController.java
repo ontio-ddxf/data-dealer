@@ -27,7 +27,7 @@ public class BuyerController {
     private BuyerService buyerService;
 
     @ApiOperation(value="数据交易请求接口", notes="数据交易请求接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/buy", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/buyer", method = RequestMethod.POST)
     public Result purchaseData(@RequestBody BuyVo req) throws Exception {
         String action = "buy";
         String dataDemander = req.getDataDemander();
@@ -38,9 +38,9 @@ public class BuyerController {
 
         helpCheckPwd(action,password);
 
-        buyerService.purchaseData(action,dataDemander,password,dataProvider,dataIdList,priceList);
+        String orderId = buyerService.purchaseData(action, dataDemander, password, dataProvider, dataIdList, priceList);
 
-        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), true);
+        return new Result(action, ErrorInfo.SUCCESS.code(), ErrorInfo.SUCCESS.descEN(), orderId);
     }
 
     private void helpCheckPwd(String action, String pwd) {
@@ -50,7 +50,7 @@ public class BuyerController {
     }
 
     @ApiOperation(value="需求方交易取消接口", notes="需求方交易取消接口" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/cancel", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/buyer/cancel", method = RequestMethod.POST)
     public Result cancelExchange(@RequestBody BuyerOptVo req) throws Exception {
         String action = "buyerCancel";
         String dataDemander = req.getDataDemander();
@@ -65,7 +65,7 @@ public class BuyerController {
     }
 
     @ApiOperation(value="需求方获取数据", notes="需求方获取数据" ,httpMethod="POST")
-    @RequestMapping(value = "/api/v1/datadealer/buyer/receive", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/data-dealer/buyer/receive", method = RequestMethod.POST)
     public Result receiveEncMessage(@RequestBody BuyerOptVo req) throws Exception {
         String action = "receiveMessage";
         String dataDemander = req.getDataDemander();
