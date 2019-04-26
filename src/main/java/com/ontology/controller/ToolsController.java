@@ -24,7 +24,7 @@ public class ToolsController {
     private IOntIdService ontIdService;
 
 
-    @ApiOperation(value="查询订单", notes="查询订单" ,httpMethod="POST")
+    @ApiOperation(value="查询订单", notes="查询订单" ,httpMethod="GET")
     @RequestMapping(value = "/api/v1/data-dealer/tools/orders/{type}", method = RequestMethod.GET)
     public Result queryList(@PathVariable Integer type, String ontid) {
         String action = "queryList";
